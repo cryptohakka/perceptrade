@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PercepTrade</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #09090f;
+  --surface: #0d0d16;
+  --surface2: #12121c;
+  --border: rgba(168,223,240,0.09);
+  --border2: rgba(168,223,240,0.20);
+  --accent: #a8dff0;
+  --accent-dim: rgba(168,223,240,0.10);
+  --accent-dim2: rgba(168,223,240,0.16);
+  --cyan: #7ec8e3;
+  --yellow: #f0c94a;
+  --red: #f05a5a;
+  --green: #4ad295;
+  --text: #cce4ee;
+  --muted: #4e6e7a;
+  --label: #2e4e5a;
+}
+html, body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+.wrap { padding: 1.25rem 1rem; max-width: 1400px; margin: 0 auto; }
+
+/* HEADER */
+.header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
+.header h1 { font-size: 17px; font-weight: 500; color: var(--accent); letter-spacing: 0.08em; font-family: 'Space Mono', monospace; }
+.tab-nav { display: flex; gap: 4px; margin-left: 16px; }
+.tab-link { font-size: 11px; padding: 4px 12px; border-radius: 4px; color: var(--muted); text-decoration: none; letter-spacing: 0.06em; text-transform: uppercase; transition: all 0.2s; }
+.tab-link:hover { color: var(--accent); }
+.tab-link.active { background: var(--accent-dim); color: var(--accent); }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); transition: background 0.3s; }
+.status-dot.live { background: var(--green); animation: pulse 2s infinite; }
+.status-dot.error { background: var(--red); animation: none; }
+.status-text { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+/* COLUMNS */
+.columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; align-items: start; }
+@media (max-width: 900px) { .columns { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .columns { grid-template-columns: 1fr; } }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 10px; }
+.card-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; font-family: 'Space Mono', monospace; }
+
+/* RISK UNIFIED */
+.risk-unified {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  position: relative;
+}
+.risk-unified::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--accent-color, var(--accent));
+  transition: background 0.4s;
+}
+.risk-top { padding: 0.9rem 1.1rem 0.75rem; border-bottom: 1px solid var(--border); }
+.risk-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; font-family: 'Space Mono', monospace; }
+.risk-value { font-size: 24px; font-weight: 500; transition: color 0.4s; }
+.risk-meta { display: flex; gap: 1.2rem; margin-top: 8px; flex-wrap: wrap; }
+.meta-item { display: flex; flex-direction: column; gap: 2px; }
+.meta-label { font-size: 9px; color: var(--label); font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
+.meta-val { font-size: 12px; font-weight: 500; color: var(--text); }
+.cycle-bar-wrap { width: 100%; height: 2px; background: rgba(255,255,255,0.05); margin-top: 8px; border-radius: 1px; overflow: hidden; }
+.cycle-bar { height: 100%; background: var(--accent); opacity: 0.4; transition: width 1s linear; }
+
+/* SCORE BARS */
+.score-section { padding: 0.7rem 1.1rem; border-top: 1px solid var(--border); }
+.score-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.score-row:last-child { margin-bottom: 0; }
+.score-lbl { width: 78px; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'Space Mono', monospace; }
+.score-bar-wrap { flex: 1; height: 5px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+.score-bar { height: 100%; border-radius: 3px; transition: width 0.6s, background 0.4s; }
+.score-val { width: 30px; text-align: right; font-size: 10px; color: var(--text); font-family: 'Space Mono', monospace; }
+
+/* CEX TABLE */
+.cex-table { padding: 0.7rem 1.1rem; }
+.cex-row {
+  display: flex; align-items: center;
+  padding: 5px 8px; border-radius: 4px;
+  border: 1px solid var(--border);
+  margin-bottom: 4px; background: var(--bg);
+  font-family: 'Space Mono', monospace;
+  transition: border-color 0.2s;
+}
+.cex-row:hover { border-color: var(--border2); }
+.cex-name { width: 90px; font-size: 9px; font-weight: 700; letter-spacing: 0.05em; color: var(--text); }
+.cex-bar-wrap { flex: 1; height: 3px; background: rgba(255,255,255,0.05); border-radius: 2px; margin: 0 8px; overflow: hidden; }
+.cex-bar { height: 100%; border-radius: 2px; background: var(--accent); opacity: 0.55; transition: width 0.5s; }
+.cex-fr { width: 72px; text-align: right; font-size: 9px; }
+.cex-fr.pos { color: var(--green); }
+.cex-fr.neg { color: var(--red); }
+.cex-fr.neu { color: var(--muted); }
+
+/* COUNCIL UNIFIED */
+.council-unified {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  position: relative;
+}
+.council-unified::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: var(--cyan);
+}
+.council-top { padding: 0.9rem 1.1rem 0.75rem; border-bottom: 1px solid var(--border); }
+.council-action { font-size: 24px; font-weight: 500; transition: color 0.4s; }
+.council-meta { display: flex; gap: 1rem; margin-top: 6px; }
+
+.council-body { padding: 0.75rem 1.1rem; }
+.council-row { display: flex; gap: 8px; margin-bottom: 7px; align-items: flex-start; }
+.council-row:last-child { margin-bottom: 0; }
+.council-deliberation .council-row { opacity: 0.72; }
+.council-badge { font-size: 9px; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; font-weight: 700; margin-top: 1px; white-space: nowrap; font-family: 'Space Mono', monospace; letter-spacing: 0.04em; }
+.badge-arch { background: rgba(168,223,240,0.12); color: var(--accent); }
+.badge-aud  { background: rgba(240,201,74,0.12); color: var(--yellow); }
+.council-text { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+.arbiter-row {
+  background: rgba(74,210,149,0.05);
+  border: 1px solid rgba(74,210,149,0.16);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-top: 8px;
+  transition: background 0.4s, border-color 0.4s;
+}
+.arbiter-label { font-size: 9px; color: var(--green); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 4px; font-weight: 700; font-family: 'Space Mono', monospace; }
+.arbiter-text { font-size: 11px; color: var(--text); line-height: 1.5; }
+
+/* POSITION */
+.pos-empty { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; padding: 4px 0; }
+.pos-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--border); }
+.pos-row:last-child { border-bottom: none; }
+.pos-label { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; }
+.pos-val { font-size: 11px; color: var(--text); font-family: 'Space Mono', monospace; font-weight: 500; }
+.pos-val.long { color: var(--green); }
+.pos-val.short { color: var(--red); }
+.pos-val.profit { color: var(--green); }
+.pos-val.loss { color: var(--red); }
+
+/* LOG */
+.log-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; position: sticky; top: 1rem; }
+.log-header { padding: 0.75rem 1.1rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.log-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Space Mono', monospace; display: flex; align-items: center; gap: 6px; }
+.log-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+.log-body { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); overflow-y: auto; min-height: 200px; max-height: calc(100vh - 160px); }
+.log-line { padding: 3px 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.025); line-height: 1.6; }
+.log-line:last-child { border-bottom: none; }
+.log-ts { color: var(--label); margin-right: 6px; }
+.log-tag { font-weight: 700; margin-right: 4px; }
+.tag-perception { color: var(--cyan); }
+.tag-risk       { color: var(--yellow); }
+.tag-architect  { color: var(--accent); }
+.tag-auditor    { color: var(--yellow); }
+.tag-arbiter    { color: var(--green); }
+.tag-execute    { color: var(--green); }
+.tag-action     { color: #ff6b6b; }
+.tag-error      { color: var(--red); }
+.log-val { color: var(--text); }
+
+/* BUTTON */
+.btn { padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; border: 1px solid var(--border2); background: transparent; color: var(--muted); transition: all 0.15s; outline: none; font-family: 'Space Mono', monospace; letter-spacing: 0.04em; }
+.btn:hover { color: var(--accent); border-color: var(--border2); background: var(--accent-dim); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <svg width="22" height="22" viewBox="0 0 28 28" fill="none">
+      <circle cx="14" cy="14" r="13" stroke="#a8dff0" stroke-width="1.5"/>
+      <circle cx="14" cy="14" r="6" stroke="#a8dff0" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
+      <circle cx="14" cy="14" r="2.5" fill="#a8dff0"/>
+      <line x1="14" y1="1" x2="14" y2="6" stroke="#a8dff0" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="14" y1="22" x2="14" y2="27" stroke="#a8dff0" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="1" y1="14" x2="6" y2="14" stroke="#a8dff0" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="22" y1="14" x2="27" y2="14" stroke="#a8dff0" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+    <h1>PERCEPTRADE</h1>
+    <nav class="tab-nav">
+      <a href="/landing" class="tab-link">Home</a>
+      <a href="/app" class="tab-link active">Dashboard</a>
+    </nav>
+    <div class="header-right">
+      <div class="status-dot" id="statusDot"></div>
+      <span class="status-text" id="statusText">connecting...</span>
+    </div>
+  </div>
+
+  <div class="columns">
+
+    <!-- COL 1: Risk + CEX -->
+    <div>
+      <div class="risk-unified" id="riskCard">
+        <div class="risk-top">
+          <div class="risk-label">Risk Assessment</div>
+          <div class="risk-value" id="riskLevel">—</div>
+          <div class="risk-meta">
+            <div class="meta-item">
+              <span class="meta-label">Score</span>
+              <span class="meta-val" id="riskScore">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">FR Bias</span>
+              <span class="meta-val" id="frBias">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">OI Conc</span>
+              <span class="meta-val" id="oiConc">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Avg FR</span>
+              <span class="meta-val" id="avgFR">—</span>
+            </div>
+          </div>
+          <div class="cycle-bar-wrap"><div class="cycle-bar" id="cycleBar" style="width:100%"></div></div>
+        </div>
+        <div class="score-section">
+          <div class="score-row">
+            <span class="score-lbl">Heat</span>
+            <div class="score-bar-wrap"><div class="score-bar" id="heatBar" style="width:0%;background:var(--yellow)"></div></div>
+            <span class="score-val" id="heatScore">0</span>
+          </div>
+          <div class="score-row">
+            <span class="score-lbl">Deviation</span>
+            <div class="score-bar-wrap"><div class="score-bar" id="devBar" style="width:0%;background:var(--accent)"></div></div>
+            <span class="score-val" id="devScore">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Perception Layer · 5 CEX + 1 DEX</div>
+        <div class="cex-table" id="cexTable">
+          <div class="cex-row"><span class="cex-name">BINANCE</span><div class="cex-bar-wrap"><div class="cex-bar" style="width:0%"></div></div><span class="cex-fr neu">—</span></div>
+          <div class="cex-row"><span class="cex-name">BITGET</span><div class="cex-bar-wrap"><div class="cex-bar" style="width:0%"></div></div><span class="cex-fr neu">—</span></div>
+          <div class="cex-row"><span class="cex-name">BYBIT</span><div class="cex-bar-wrap"><div class="cex-bar" style="width:0%"></div></div><span class="cex-fr neu">—</span></div>
+          <div class="cex-row"><span class="cex-name">KUCOIN</span><div class="cex-bar-wrap"><div class="cex-bar" style="width:0%"></div></div><span class="cex-fr neu">—</span></div>
+          <div class="cex-row"><span class="cex-name">OKX</span><div class="cex-bar-wrap"><div class="cex-bar" style="width:0%"></div></div><span class="cex-fr neu">—</span></div>
+          <div class="cex-row"><span class="cex-name cex-dex">HYPERLIQUID <span style="font-size:8px;color:var(--cyan);border:1px solid rgba(126,200,227,0.3);padding:1px 4px;border-radius:2px;margin-left:2px;">DEX</span></span><div class="cex-bar-wrap"><div class="cex-bar" style="width:0%;background:var(--cyan)"></div></div><span class="cex-fr neu">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 2: Council + Position -->
+    <div>
+      <div class="council-unified" id="councilCard">
+        <div class="council-top">
+          <div class="risk-label">Agent Council · Decision</div>
+          <div class="council-action" id="councilAction">HOLD</div>
+          <div class="council-meta">
+            <div class="meta-item">
+              <span class="meta-label">Confidence</span>
+              <span class="meta-val" id="councilConf">—</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Size</span>
+              <span class="meta-val" id="councilSize">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="council-body">
+          <div class="council-deliberation">
+            <div class="council-row">
+              <span class="council-badge badge-arch">ARCHITECT</span>
+              <span class="council-text" id="archText">Waiting for data...</span>
+            </div>
+            <div class="council-row">
+              <span class="council-badge badge-aud">AUDITOR</span>
+              <span class="council-text" id="audText">Waiting for data...</span>
+            </div>
+          </div>
+          <div class="arbiter-row" id="arbiterRow">
+            <div class="arbiter-label">▸ Arbiter verdict</div>
+            <div class="arbiter-text" id="arbText">Waiting for data...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Open Position · BTCUSDT</div>
+        <div id="positionContent">
+          <div class="pos-empty">No open position</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COL 3: Log -->
+    <div>
+      <div class="log-card">
+        <div class="log-header">
+          <span class="log-title"><span class="log-dot"></span>Live Log</span>
+          <button class="btn" onclick="clearLog()">Clear</button>
+        </div>
+        <div class="log-body" id="logBody"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const CYCLE_MS = 60000;
+let cycleStart = Date.now();
+let lastRiskHash = '';
+
+function clearLog() { document.getElementById('logBody').innerHTML = ''; }
+
+function addLog(tagClass, tag, msg) {
+  const body = document.getElementById('logBody');
+  const ts = new Date().toTimeString().slice(0, 8);
+  const div = document.createElement('div');
+  div.className = 'log-line';
+  div.innerHTML = `<span class="log-ts">${ts}</span><span class="log-tag ${tagClass}">[${tag}]</span><span class="log-val">${msg}</span>`;
+  body.insertBefore(div, body.firstChild);
+  while (body.children.length > 150) body.removeChild(body.lastChild);
+}
+
+// cycle bar
+setInterval(() => {
+  const pct = Math.max(0, 100 - ((Date.now() - cycleStart) / CYCLE_MS * 100));
+  document.getElementById('cycleBar').style.width = pct + '%';
+}, 1000);
+
+function fmtFR(fr) {
+  if (fr == null) return '—';
+  return (fr >= 0 ? '+' : '') + (fr * 100).toFixed(4) + '%';
+}
+
+function fmtOI(oi) {
+  if (!oi) return '';
+  if (oi > 1e9) return (oi / 1e9).toFixed(1) + 'B';
+  if (oi > 1e6) return (oi / 1e6).toFixed(1) + 'M';
+  if (oi > 1e3) return (oi / 1e3).toFixed(0) + 'K';
+  return oi.toFixed(0);
+}
+
+function frBarWidth(fr) {
+  return Math.min(100, Math.abs(fr) / 0.001 * 100);
+}
+
+const CEX_ORDER = ['binance','bitget','bybit','kucoin','okx','hyperliquid'];
+
+function updateCEX(sources) {
+  const rows = document.querySelectorAll('#cexTable .cex-row');
+  CEX_ORDER.forEach((name, i) => {
+    const src = sources.find(s => s.exchange === name);
+    if (!src || !rows[i]) return;
+    rows[i].querySelector('.cex-bar').style.width = frBarWidth(src.fr) + '%';
+    const frEl = rows[i].querySelector('.cex-fr');
+    frEl.textContent = fmtFR(src.fr);
+    frEl.className = 'cex-fr ' + (src.fr > 0.00005 ? 'pos' : src.fr < -0.00005 ? 'neg' : 'neu');
+  });
+}
+
+function updateRisk(risk) {
+  const level = risk.riskLevel || 'risk_on';
+  const color = level === 'risk_on' ? 'var(--green)' : level === 'neutral' ? 'var(--yellow)' : 'var(--red)';
+  const el = document.getElementById('riskLevel');
+  el.textContent = level.replace('_', ' ').toUpperCase();
+  el.style.color = color;
+  document.getElementById('riskCard').style.setProperty('--accent-color', color.replace('var(--','').replace(')',''));
+  document.getElementById('riskScore').textContent = (risk.riskScore ?? 0).toFixed(1);
+  document.getElementById('frBias').textContent = risk.frBias ?? '—';
+  document.getElementById('oiConc').textContent = (risk.oiConcentration ?? 0).toFixed(2);
+  document.getElementById('avgFR').textContent = fmtFR(risk.avgFR);
+
+  const heat = risk.heatScore ?? 0;
+  const dev  = risk.deviationScore ?? 0;
+  document.getElementById('heatScore').textContent = heat.toFixed(0);
+  document.getElementById('devScore').textContent  = dev.toFixed(0);
+  document.getElementById('heatBar').style.width = heat + '%';
+  document.getElementById('devBar').style.width  = dev + '%';
+}
+
+function updateCouncil(proposal, audit, decision) {
+  if (!decision) return;
+  const action = decision.action || 'hold';
+  const color  = action === 'long' ? 'var(--green)' : action === 'short' ? 'var(--red)' : 'var(--muted)';
+  const el = document.getElementById('councilAction');
+  el.textContent = action.toUpperCase();
+  el.style.color = color;
+
+  document.getElementById('councilConf').textContent = decision.confidence != null ? (decision.confidence * 100).toFixed(0) + '%' : '—';
+  document.getElementById('councilSize').textContent = decision.size_pct != null ? (decision.size_pct * 100).toFixed(0) + '%' : '0%';
+
+  if (proposal) {
+    document.getElementById('archText').textContent =
+      `${(proposal.action||'').toUpperCase()} (${((proposal.confidence||0)*100).toFixed(0)}%) — ${proposal.reasoning || ''}`;
+  }
+  if (audit) {
+    document.getElementById('audText').textContent =
+      `${audit.approved ? '✓ Approved' : '✗ Rejected'} (${((audit.confidence||0)*100).toFixed(0)}%) — ${audit.feedback || ''}`;
+  }
+  if (decision) {
+    document.getElementById('arbText').textContent =
+      `${(decision.action||'').toUpperCase()} @ ${((decision.size_pct||0)*100).toFixed(0)}% — ${decision.reasoning || ''}`;
+  }
+
+  // arbiter box color follows action
+  const arb = document.getElementById('arbiterRow');
+  if (action === 'long') {
+    arb.style.background = 'rgba(74,210,149,0.05)';
+    arb.style.borderColor = 'rgba(74,210,149,0.18)';
+    arb.querySelector('.arbiter-label').style.color = 'var(--green)';
+  } else if (action === 'short') {
+    arb.style.background = 'rgba(240,90,90,0.05)';
+    arb.style.borderColor = 'rgba(240,90,90,0.18)';
+    arb.querySelector('.arbiter-label').style.color = 'var(--red)';
+  } else {
+    arb.style.background = 'rgba(255,255,255,0.03)';
+    arb.style.borderColor = 'rgba(255,255,255,0.08)';
+    arb.querySelector('.arbiter-label').style.color = 'var(--muted)';
+  }
+}
+
+function updatePosition(pos) {
+  const el = document.getElementById('positionContent');
+  if (!pos) {
+    el.innerHTML = '<div class="pos-empty">No open position</div>';
+    return;
+  }
+  const side = pos.holdSide || '—';
+  const upl  = parseFloat(pos.unrealizedPL || 0);
+  el.innerHTML = `
+    <div class="pos-row"><span class="pos-label">Side</span><span class="pos-val ${side}">${side.toUpperCase()}</span></div>
+    <div class="pos-row"><span class="pos-label">Size</span><span class="pos-val">${pos.total} BTC</span></div>
+    <div class="pos-row"><span class="pos-label">Entry</span><span class="pos-val">$${parseFloat(pos.openPriceAvg||0).toLocaleString()}</span></div>
+    <div class="pos-row"><span class="pos-label">Unrealized PnL</span><span class="pos-val ${upl>=0?'profit':'loss'}">${upl>=0?'+':''}${upl.toFixed(2)} USDT</span></div>
+    <div class="pos-row"><span class="pos-label">Margin</span><span class="pos-val">${parseFloat(pos.marginSize||0).toFixed(2)} USDT</span></div>
+  `;
+}
+
+function syncLogHeight() {
+  const col2 = document.querySelector('.columns > div:nth-child(2)');
+  const logBody = document.getElementById('logBody');
+  if (!col2 || !logBody) return;
+  const col2H = col2.getBoundingClientRect().height;
+  const logCard = logBody.closest('.log-card');
+  const headerH = logCard.querySelector('.log-header').getBoundingClientRect().height;
+  logBody.style.maxHeight = Math.max(200, col2H - headerH - 2) + 'px';
+}
+window.addEventListener('resize', syncLogHeight);
+setTimeout(syncLogHeight, 600);
+
+async function poll() {
+  try {
+    const res = await fetch('/api/state');
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+
+    document.getElementById('statusDot').className = 'status-dot live';
+    document.getElementById('statusText').textContent = 'live';
+
+    const riskHash = JSON.stringify(data.risk);
+    const isNew = riskHash !== lastRiskHash;
+
+    if (data.market?.sources) updateCEX(data.market.sources);
+    if (data.risk) updateRisk(data.risk);
+    if (data.decision) updateCouncil(data.proposal, data.audit, data.decision);
+    updatePosition(data.position || null);
+
+    if (isNew && data.risk) {
+      lastRiskHash = riskHash;
+      cycleStart = Date.now();
+      if (data.market) addLog('tag-perception', 'perception', `${data.market.sources?.length} CEX · avgFR ${fmtFR(data.market.avgFR)}`);
+      if (data.risk)     addLog('tag-risk',       'risk',       data.risk.summary || '');
+      if (data.proposal) addLog('tag-architect',  'architect',  `${data.proposal.action} conf=${((data.proposal.confidence||0)*100).toFixed(0)}%`);
+      if (data.audit)    addLog('tag-auditor',    'auditor',    `${data.audit.approved?'approved':'rejected'} conf=${((data.audit.confidence||0)*100).toFixed(0)}%`);
+      if (data.decision) {
+        const isAction = data.decision.action !== 'hold';
+        addLog(isAction ? 'tag-action' : 'tag-execute', 'arbiter',
+          `${data.decision.action} conf=${((data.decision.confidence||0)*100).toFixed(0)}% size=${((data.decision.size_pct||0)*100).toFixed(0)}%`);
+      }
+    }
+  } catch(e) {
+    document.getElementById('statusDot').className = 'status-dot error';
+    document.getElementById('statusText').textContent = 'offline';
+  }
+}
+
+poll();
+setInterval(poll, 5000);
+</script>
+</body>
+</html>
