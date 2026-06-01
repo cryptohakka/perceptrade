@@ -1,6 +1,6 @@
 require('dotenv').config();
 const { collectMarketData } = require('./perception');
-const { assess, calcSizeMultiplier } = require('./risk');
+const { assess, calcSizeMultiplier, detectCrowdRisk } = require('./risk');
 const bitget = require('./bitget');
 const MAX_SIZE = parseFloat(process.env.MAX_POSITION_SIZE_USDT || '100');
 const CYCLE_MS = parseInt(process.env.CYCLE_INTERVAL_MS || '300000');
@@ -30,7 +30,7 @@ Propose: { action: "long"|"short"|"hold", confidence: 0-1, reasoning: "..." }
 JSON only.
 `;
 
-const AUDITOR_PROMPT = (proposal, risk) => `
+const AUDITOR_PROMPT = (proposal, risk, crowd) => `
 You are the Auditor. Review this proposal focusing on position sizing risk.
 
 Proposal: ${JSON.stringify(proposal)}
@@ -41,9 +41,13 @@ Risk Assessment:
 - oiChangeScore: ${risk.oiChangeScore.toFixed(1)} (OI momentum risk)
 - oiConcentration: ${risk.oiConcentration.toFixed(2)}
 
+Crowd Risk Detection:
+${crowd.hasCrowdRisk ? '⚠ ' + crowd.summary : 'none'}
+
 Rules:
 - If riskLevel="risk_off": recommend size reduction, but do NOT reject direction
 - If oiConcentration > 0.7: flag liquidity concentration risk
+- If crowd.hasCrowdRisk: flag the anomalous exchange and recommend reducing size
 - Focus on WHETHER to reduce size, not whether to change direction
 
 Respond: { approved: true|false, confidence: 0-1, feedback: "..." }
@@ -97,11 +101,13 @@ async function runCycle(server) {
     const risk = assess(market, prev);
     console.log(`[perception] ${market.sources.length} CEX sources, dir=${market.directionSignal.direction} strength=${market.directionSignal.strength}`);
     console.log(`[risk] ${risk.summary}`);
+    const crowd = detectCrowdRisk(market.sources, risk.frChanges, risk.oiChanges);
+    if (crowd.hasCrowdRisk) console.log(`[crowd] ${crowd.summary}`);
 
     const proposal = await callLLM(ARCHITECT_PROMPT(market, risk));
     console.log(`[architect] action=${proposal.action} confidence=${proposal.confidence}`);
 
-    const audit = await callLLM(AUDITOR_PROMPT(proposal, risk));
+    const audit = await callLLM(AUDITOR_PROMPT(proposal, risk, crowd));
     console.log(`[auditor] approved=${audit.approved} confidence=${audit.confidence}`);
 
     const decision = await callLLM(ARBITER_PROMPT(proposal, audit, risk));
@@ -121,7 +127,7 @@ async function runCycle(server) {
     }
 
     // server用にstate更新
-    if (server.updateState) server.updateState({ market, risk, proposal, audit, decision, timestamp });
+    if (server.updateState) server.updateState({ market, risk, crowd, proposal, audit, decision, timestamp });
 
   } catch (err) {
     console.error(`[error] ${err.message}`);

@@ -206,6 +206,10 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
               <span class="council-badge badge-aud">AUDITOR</span>
               <span class="council-text" id="audText">Waiting for data...</span>
             </div>
+            <div class="council-row" id="crowdRow" style="display:none">
+              <span class="council-badge" style="background:rgba(255,80,80,0.15);color:#ff5050">CROWD</span>
+              <span class="council-text" id="crowdText" style="color:#ff5050"></span>
+            </div>
           </div>
           <div class="arbiter-row" id="arbiterRow">
             <div class="arbiter-label">▸ Arbiter verdict</div>
@@ -277,6 +281,14 @@ function updateCouncil(proposal, audit, decision) {
 
   document.getElementById('councilConf').textContent = decision.confidence != null ? (decision.confidence * 100).toFixed(0) + '%' : '—';
   document.getElementById('councilSize').textContent = decision.size_pct != null ? (decision.size_pct * 100).toFixed(0) + '%' : '0%';
+  const crowdRow = document.getElementById('crowdRow');
+  const crowdText = document.getElementById('crowdText');
+  if (data.crowd && data.crowd.hasCrowdRisk) {
+    crowdText.textContent = data.crowd.summary;
+    crowdRow.style.display = '';
+  } else {
+    crowdRow.style.display = 'none';
+  }
 
   if (proposal) {
     document.getElementById('archText').textContent =
