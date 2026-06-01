@@ -271,7 +271,7 @@ function frBarWidth(fr) {
 
 const CEX_ORDER = ['binance','bitget','bybit','kucoin','okx','hyperliquid'];
 
-function updateCouncil(proposal, audit, decision) {
+function updateCouncil(proposal, audit, decision, crowd) {
   if (!decision) return;
   const action = decision.action || 'hold';
   const color  = action === 'long' ? 'var(--green)' : action === 'short' ? 'var(--red)' : 'var(--muted)';
@@ -283,8 +283,8 @@ function updateCouncil(proposal, audit, decision) {
   document.getElementById('councilSize').textContent = decision.size_pct != null ? (decision.size_pct * 100).toFixed(0) + '%' : '0%';
   const crowdRow = document.getElementById('crowdRow');
   const crowdText = document.getElementById('crowdText');
-  if (data.crowd && data.crowd.hasCrowdRisk) {
-    crowdText.textContent = data.crowd.summary;
+  if (crowd && crowd.hasCrowdRisk) {
+    crowdText.textContent = crowd.summary;
     crowdRow.style.display = '';
   } else {
     crowdRow.style.display = 'none';
@@ -361,7 +361,7 @@ async function poll() {
     const riskHash = JSON.stringify(data.risk);
     const isNew = riskHash !== lastRiskHash;
 
-    if (data.decision) updateCouncil(data.proposal, data.audit, data.decision);
+    if (data.decision) updateCouncil(data.proposal, data.audit, data.decision, data.crowd);
     updatePosition(data.position || null);
 
     if (isNew && data.risk) {
