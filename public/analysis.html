@@ -63,14 +63,12 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 .formula-title { font-size: 10px; color: var(--label); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
 
 /* CEX Table */
-.cex-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.cex-table th { padding: 6px 10px; text-align: left; font-size: 10px; color: var(--label); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 400; border-bottom: 1px solid var(--border); }
-.cex-table th:not(:first-child) { text-align: right; }
-.cex-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); font-family: 'Space Mono', monospace; }
-.cex-table td:not(:first-child) { text-align: right; }
-.cex-table tr:last-child td { border-bottom: none; }
-.cex-name { font-size: 11px; color: var(--text); letter-spacing: 0.06em; }
-.dex-badge { font-size: 9px; background: var(--accent-dim); color: var(--accent); border-radius: 3px; padding: 1px 5px; margin-left: 5px; vertical-align: middle; }
+.cex-name { font-size: 10px; color: var(--text); letter-spacing: 0.06em; font-family: 'Space Mono', monospace; font-weight: 700; }
+.dex-badge { font-size: 8px; background: var(--accent-dim); color: var(--accent); border-radius: 3px; padding: 1px 4px; margin-left: 4px; }
+.bar-cell { position: relative; height: 20px; }
+.bar-axis { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.1); }
+.bar-fill { position: absolute; top: 4px; height: 12px; border-radius: 2px; transition: width 0.5s, left 0.5s; }
+.bar-val { position: absolute; font-size: 9px; font-family: 'Space Mono', monospace; top: 3px; white-space: nowrap; }
 .pos { color: var(--green); }
 .neg { color: var(--red); }
 .neu { color: var(--muted); }
@@ -167,20 +165,17 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
       <div id="formulaEq">score = deviation(50%) + oiChange(50%)</div>
     </div>
   </div>
-    <!-- CEX Table -->
+    <!-- CEX Bar Chart -->
   <div class="card">
     <div class="card-title">CEX · FR &amp; OI Delta · 5min snapshot</div>
-    <table class="cex-table" id="cexTable">
-      <thead>
-        <tr>
-          <th>Exchange</th>
-          <th>FR</th>
-          <th>FR Δ</th>
-          <th>OI Δ</th>
-        </tr>
-      </thead>
-      <tbody id="cexBody"></tbody>
-    </table>
+    <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:0;align-items:center;">
+      <!-- headers -->
+      <div></div>
+      <div style="text-align:center;font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;padding-bottom:8px;">FR</div>
+      <div style="text-align:center;font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;padding-bottom:8px;">FR Δ</div>
+      <div style="text-align:center;font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;padding-bottom:8px;">OI Δ</div>
+    </div>
+    <div id="cexBars"></div>
   </div>
 </div>
 
@@ -250,22 +245,43 @@ function update(state) {
   document.getElementById('formulaEq').innerHTML =
     `score = <span style="color:${dC}">${dev.toFixed(1)}</span>(50%) + <span style="color:${oC}">${oiChg.toFixed(1)}</span>(50%) = <span style="color:${sC};font-size:16px;font-weight:700">${score.toFixed(1)}</span>`;
 
-  // CEX Table
+  // CEX Bar Chart
   const sources = state.market?.sources || [];
   const oiChanges = risk.oiChanges || {};
   const frChanges = risk.frChanges || {};
-  const tbody = document.getElementById('cexBody');
-  tbody.innerHTML = CEX_ORDER.map(name => {
+
+  // max values for scaling
+  const maxFR = Math.max(...CEX_ORDER.map(n => { const s = sources.find(x => x.exchange===n); return s ? Math.abs(s.fr) : 0; }), 0.0001);
+  const maxFRD = Math.max(...CEX_ORDER.map(n => Math.abs(frChanges[n]||0)), 0.0001);
+  const maxOID = Math.max(...CEX_ORDER.map(n => Math.abs(oiChanges[n]||0)), 0.0001);
+
+  function renderBar(val, maxVal) {
+    if (val == null) return '<div class="bar-cell"><div class="bar-axis"></div></div>';
+    const pct = Math.min(48, Math.abs(val) / maxVal * 48);
+    const isPos = val >= 0;
+    const color = isPos ? 'var(--green)' : 'var(--red)';
+    const left = isPos ? '50%' : \`${50 - pct}%\`;
+    const valStr = (val >= 0 ? '+' : '') + (val * 100).toFixed(3) + '%';
+    const valLeft = isPos ? \`${50 + pct + 1}%\` : null;
+    const valRight = isPos ? null : \`${50 - pct - 1}%\`;
+    return \`<div class="bar-cell">
+      <div class="bar-axis"></div>
+      <div class="bar-fill" style="left:${left};width:${pct}%;background:${color};opacity:0.75"></div>
+      <div class="bar-val" style="color:${color};${valRight ? 'right:'+valRight+';text-align:right' : 'left:'+valLeft}">${valStr}</div>
+    </div>\`;
+  }
+
+  const container = document.getElementById('cexBars');
+  container.innerHTML = CEX_ORDER.map(name => {
     const src = sources.find(s => s.exchange === name);
     if (!src) return '';
     const isDex = name === 'hyperliquid';
-    const frCls = src.fr > 0 ? 'pos' : src.fr < 0 ? 'neg' : 'neu';
-    return `<tr>
-      <td><span class="cex-name">${name.toUpperCase()}</span>${isDex ? '<span class="dex-badge">DEX</span>' : ''}</td>
-      <td class="${frCls}">${fmtFR(src.fr)}</td>
-      <td class="${chgClass(frChanges[name])}">${fmtChg(frChanges[name])}</td>
-      <td class="${chgClass(oiChanges[name])}">${fmtChg(oiChanges[name])}</td>
-    </tr>`;
+    return \`<div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:0;align-items:center;padding:3px 0;border-bottom:1px solid var(--border);">
+      <div><span class="cex-name">${name.toUpperCase()}</span>${isDex ? '<span class="dex-badge">DEX</span>' : ''}</div>
+      \${renderBar(src.fr, maxFR)}
+      \${renderBar(frChanges[name]??null, maxFRD)}
+      \${renderBar(oiChanges[name]??null, maxOID)}
+    </div>\`;
   }).join('');
 }
 
