@@ -257,18 +257,23 @@ function update(state) {
 
 
   function renderBar(val, maxVal) {
-    if (val == null) return '<div class="bar-cell"><div class="bar-axis"></div></div>';
-    const pct = Math.min(48, Math.abs(val) / maxVal * 48);
-    const isPos = val >= 0;
+    const v = val != null ? val : 0;
+    const isPos = v >= 0;
     const color = isPos ? 'var(--green)' : 'var(--red)';
-    const left = isPos ? '50%' : (50 - pct) + '%';
-    const valStr = (val >= 0 ? '+' : '') + (val * 100).toFixed(3) + '%';
-    const valPos = isPos ? (50 + pct + 1) + '%' : null;
-    const valNeg = isPos ? null : (50 - pct - 1) + '%';
-    let h = '<div class="bar-cell">';
-    h += '<div class="bar-axis"></div>';
-    h += '<div class="bar-fill" style="left:' + left + ';width:' + pct + '%;background:' + color + ';opacity:0.75"></div>';
-    h += '<div class="bar-val" style="color:' + color + ';' + (valNeg ? 'right:' + valNeg + ';text-align:right' : 'left:' + valPos) + '">' + valStr + '</div>';
+    const markerPct = Math.min(47, Math.abs(v) / maxVal * 47);
+    const markerLeft = isPos ? (50 + markerPct) : (50 - markerPct);
+    const valStr = (v >= 0 ? '+' : '') + (v * 100).toFixed(3) + '%';
+    let h = '<div class="bar-cell" style="position:relative;height:24px;">';
+    // left bar (negative side, always shown, muted)
+    h += '<div style="position:absolute;right:50%;top:8px;width:40%;height:8px;background:var(--red);opacity:0.12;border-radius:2px 0 0 2px;"></div>';
+    // right bar (positive side, always shown, muted)
+    h += '<div style="position:absolute;left:50%;top:8px;width:40%;height:8px;background:var(--green);opacity:0.12;border-radius:0 2px 2px 0;"></div>';
+    // 0-axis line
+    h += '<div style="position:absolute;left:50%;top:3px;bottom:3px;width:1px;background:rgba(255,255,255,0.2);transform:translateX(-50%);"></div>';
+    // marker line
+    h += '<div style="position:absolute;left:' + markerLeft + '%;top:2px;bottom:2px;width:2px;background:' + color + ';border-radius:1px;opacity:0.95;transform:translateX(-50%);"></div>';
+    // value (right-aligned, fixed)
+    h += '<div style="position:absolute;right:6px;top:4px;font-size:9px;font-family:Space Mono,monospace;color:' + color + ';">' + valStr + '</div>';
     h += '</div>';
     return h;
   }
