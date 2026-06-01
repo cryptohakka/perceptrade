@@ -50,22 +50,6 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 .card-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; font-family: 'Space Mono', monospace; }
 
 /* RISK UNIFIED */
-.risk-unified {
-  background: var(--surface);
-  border: 1px solid var(--border2);
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 10px;
-  position: relative;
-}
-.risk-unified::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; height: 2px;
-  background: var(--accent-color, var(--accent));
-  transition: background 0.4s;
-}
-.risk-top { padding: 0.9rem 1.1rem 0.75rem; border-bottom: 1px solid var(--border); }
 .risk-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; font-family: 'Space Mono', monospace; }
 .risk-value { font-size: 24px; font-weight: 500; transition: color 0.4s; }
 .risk-meta { display: flex; gap: 1.2rem; margin-top: 8px; flex-wrap: wrap; }
@@ -76,33 +60,12 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 .cycle-bar { height: 100%; background: var(--accent); opacity: 0.4; transition: width 1s linear; }
 
 /* SCORE BARS */
-.score-section { padding: 0.7rem 1.1rem; border-top: 1px solid var(--border); }
-.score-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
-.score-row:last-child { margin-bottom: 0; }
 .score-lbl { width: 78px; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'Space Mono', monospace; }
 .score-bar-wrap { flex: 1; height: 6px; background: linear-gradient(to right, var(--green) 0%, var(--yellow) 50%, var(--red) 100%); border-radius: 3px; overflow: visible; position: relative; opacity: 0.75; }
 .score-bar-indicator { position: absolute; top: -3px; width: 2px; height: 12px; background: #fff; border-radius: 1px; transform: translateX(-50%); transition: left 0.6s; }
 .score-bar { height: 100%; border-radius: 3px; transition: width 0.6s, background 0.4s; }
 .score-val { width: 30px; text-align: right; font-size: 10px; color: var(--text); font-family: 'Space Mono', monospace; }
 
-/* CEX TABLE */
-.cex-table { padding: 0.7rem 1.1rem; }
-.cex-row {
-  display: flex; align-items: center;
-  padding: 5px 8px; border-radius: 4px;
-  border: 1px solid var(--border);
-  margin-bottom: 4px; background: var(--bg);
-  font-family: 'Space Mono', monospace;
-  transition: border-color 0.2s;
-}
-.cex-row:hover { border-color: var(--border2); }
-.cex-name { width: 90px; font-size: 9px; font-weight: 700; letter-spacing: 0.05em; color: var(--text); }
-.cex-bar-wrap { flex: 1; height: 3px; background: rgba(255,255,255,0.05); border-radius: 2px; margin: 0 8px; overflow: hidden; }
-.cex-bar { height: 100%; border-radius: 2px; background: var(--accent); opacity: 0.55; transition: width 0.5s; }
-.cex-fr { width: 72px; text-align: right; font-size: 9px; }
-.cex-fr.pos { color: var(--green); }
-.cex-fr.neg { color: var(--red); }
-.cex-fr.neu { color: var(--muted); }
 
 /* COUNCIL UNIFIED */
 .council-unified {
@@ -194,7 +157,7 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
     </svg>
     <h1>PERCEPTRADE</h1>
     <nav class="tab-nav">
-      <a href="/landing" class="tab-link">Home</a>
+      <a href="/" class="tab-link">Home</a>
       <a href="/app" class="tab-link active">Dashboard</a>
       <a href="/analysis" class="tab-link">Analysis</a>
     </nav>
@@ -206,60 +169,17 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 
   <div class="columns">
 
-    <!-- COL 1: Risk + CEX -->
+    <!-- COL 1: Position -->
     <div>
-      <div class="risk-unified" id="riskCard">
-        <div class="risk-top">
-          <div class="risk-label">Risk Assessment</div>
-          <div class="risk-value" id="riskLevel">—</div>
-          <div class="risk-meta">
-            <div class="meta-item">
-              <span class="meta-label">Score</span>
-              <span class="meta-val" id="riskScore">—</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">FR Bias</span>
-              <span class="meta-val" id="frBias">—</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">OI Conc</span>
-              <span class="meta-val" id="oiConc">—</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Avg FR</span>
-              <span class="meta-val" id="avgFR">—</span>
-            </div>
-          </div>
-          <div class="cycle-bar-wrap"><div class="cycle-bar" id="cycleBar" style="width:100%"></div></div>
-        </div>
-        <div class="score-section">
-          <div class="score-row">
-            <span class="score-lbl">Heat</span>
-            <div class="score-bar-wrap"><div class="score-bar-indicator" id="heatBar" style="left:0%"></div></div>
-            <span class="score-val" id="heatScore">0</span>
-          </div>
-          <div class="score-row">
-            <span class="score-lbl">Deviation</span>
-            <div class="score-bar-wrap"><div class="score-bar-indicator" id="devBar" style="left:0%"></div></div>
-            <span class="score-val" id="devScore">0</span>
-          </div>
-        </div>
-      </div>
-
       <div class="card">
-        <div class="card-title">Perception Layer · 5 CEX + 1 DEX</div>
-        <div class="cex-table" id="cexTable">
-          <div class="cex-row"><span class="cex-name">BINANCE</span><div class="cex-bar-wrap"><div class="cex-bar" style="width:0%"></div></div><span class="cex-fr neu">—</span></div>
-          <div class="cex-row"><span class="cex-name">BITGET</span><div class="cex-bar-wrap"><div class="cex-bar" style="width:0%"></div></div><span class="cex-fr neu">—</span></div>
-          <div class="cex-row"><span class="cex-name">BYBIT</span><div class="cex-bar-wrap"><div class="cex-bar" style="width:0%"></div></div><span class="cex-fr neu">—</span></div>
-          <div class="cex-row"><span class="cex-name">KUCOIN</span><div class="cex-bar-wrap"><div class="cex-bar" style="width:0%"></div></div><span class="cex-fr neu">—</span></div>
-          <div class="cex-row"><span class="cex-name">OKX</span><div class="cex-bar-wrap"><div class="cex-bar" style="width:0%"></div></div><span class="cex-fr neu">—</span></div>
-          <div class="cex-row"><span class="cex-name cex-dex">HYPERLIQUID <span style="font-size:8px;color:var(--cyan);border:1px solid rgba(126,200,227,0.3);padding:1px 4px;border-radius:2px;margin-left:2px;">DEX</span></span><div class="cex-bar-wrap"><div class="cex-bar" style="width:0%;background:var(--cyan)"></div></div><span class="cex-fr neu">—</span></div>
+        <div class="card-title">Open Position · BTCUSDT</div>
+        <div id="positionContent">
+          <div class="pos-empty">No open position</div>
         </div>
       </div>
     </div>
 
-    <!-- COL 2: Council + Position -->
+    <!-- COL 2: Council -->
     <div>
       <div class="council-unified" id="councilCard">
         <div class="council-top">
@@ -294,12 +214,6 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-title">Open Position · BTCUSDT</div>
-        <div id="positionContent">
-          <div class="pos-empty">No open position</div>
-        </div>
-      </div>
     </div>
 
     <!-- COL 3: Log -->
@@ -333,11 +247,6 @@ function addLog(tagClass, tag, msg) {
   while (body.children.length > 150) body.removeChild(body.lastChild);
 }
 
-// cycle bar
-setInterval(() => {
-  const pct = Math.max(0, 100 - ((Date.now() - cycleStart) / CYCLE_MS * 100));
-  document.getElementById('cycleBar').style.width = pct + '%';
-}, 1000);
 
 function fmtFR(fr) {
   if (fr == null) return '—';
@@ -357,41 +266,6 @@ function frBarWidth(fr) {
 }
 
 const CEX_ORDER = ['binance','bitget','bybit','kucoin','okx','hyperliquid'];
-
-function updateCEX(sources) {
-  const rows = document.querySelectorAll('#cexTable .cex-row');
-  CEX_ORDER.forEach((name, i) => {
-    const src = sources.find(s => s.exchange === name);
-    if (!src || !rows[i]) return;
-    rows[i].querySelector('.cex-bar').style.width = frBarWidth(src.fr) + '%';
-    const frEl = rows[i].querySelector('.cex-fr');
-    frEl.textContent = fmtFR(src.fr);
-    frEl.className = 'cex-fr ' + (src.fr > 0 ? 'pos' : src.fr < 0 ? 'neg' : 'neu');
-  });
-}
-
-function updateRisk(risk) {
-  const level = risk.riskLevel || 'risk_on';
-  const color = level === 'risk_on' ? 'var(--green)' : level === 'neutral' ? 'var(--yellow)' : 'var(--red)';
-  const el = document.getElementById('riskLevel');
-  el.textContent = level.replace('_', ' ').toUpperCase();
-  el.style.color = color;
-  document.getElementById('riskCard').style.setProperty('--accent-color', color.replace('var(--','').replace(')',''));
-  document.getElementById('riskScore').textContent = (risk.riskScore ?? 0).toFixed(1);
-  document.getElementById('frBias').textContent = risk.frBias ?? '—';
-  document.getElementById('oiConc').textContent = (risk.oiConcentration ?? 0).toFixed(2);
-  document.getElementById('avgFR').textContent = fmtFR(risk.avgFR);
-
-  const heat = risk.heatScore ?? 0;
-  const dev  = risk.deviationScore ?? 0;
-  document.getElementById('heatScore').textContent = heat.toFixed(0);
-  document.getElementById('devScore').textContent  = dev.toFixed(0);
-  const scoreColor = s => s < 30 ? 'var(--green)' : s < 60 ? 'var(--yellow)' : 'var(--red)';
-  document.getElementById('heatBar').style.left = Math.max(1, heat) + '%';
-  document.getElementById('heatBar').style.background = scoreColor(heat);
-  document.getElementById('devBar').style.background = scoreColor(dev);
-  document.getElementById('devBar').style.left = Math.max(1, dev) + '%';
-}
 
 function updateCouncil(proposal, audit, decision) {
   if (!decision) return;
@@ -475,8 +349,6 @@ async function poll() {
     const riskHash = JSON.stringify(data.risk);
     const isNew = riskHash !== lastRiskHash;
 
-    if (data.market?.sources) updateCEX(data.market.sources);
-    if (data.risk) updateRisk(data.risk);
     if (data.decision) updateCouncil(data.proposal, data.audit, data.decision);
     updatePosition(data.position || null);
 
