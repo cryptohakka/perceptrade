@@ -91,9 +91,10 @@ async function runCycle(server) {
   const timestamp = new Date().toISOString();
   console.log(`[${timestamp}] --- cycle start ---`);
   try {
-    const market = await collectMarketData(SYMBOL, prevSources);
+    const prev = prevSources;
+    const market = await collectMarketData(SYMBOL, prev);
     prevSources = market.sources;
-    const risk = assess(market, prevSources);
+    const risk = assess(market, prev);
     console.log(`[perception] ${market.sources.length} CEX sources, dir=${market.directionSignal.direction} strength=${market.directionSignal.strength}`);
     console.log(`[risk] ${risk.summary}`);
 

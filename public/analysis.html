@@ -100,17 +100,12 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
   <!-- Section 1: Direction Signal -->
   <div class="card">
     <div class="card-title">Direction Signal</div>
-    <div class="score-main">
-      <div>
-        <div class="score-num" id="dirVal" style="font-size:2.2rem">—</div>
-        <div class="score-level" id="dirStrength">—</div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+      <div class="score-num" id="dirVal" style="font-size:2.2rem;flex-shrink:0;">—</div>
+      <div style="flex:1;height:10px;background:rgba(255,255,255,0.06);border-radius:5px;overflow:hidden;">
+        <div id="dirBar" style="height:100%;width:0%;background:var(--green);border-radius:5px;transition:width 0.6s,background 0.4s;"></div>
       </div>
-      <div class="gauge-wrap">
-        <div class="gauge-bg">
-          <div class="gauge-indicator" id="dirInd" style="left:0%"></div>
-        </div>
-        <div class="gauge-labels"><span>WEAK</span><span>MODERATE</span><span>STRONG</span></div>
-      </div>
+      <div id="dirStrength" style="flex-shrink:0;font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;white-space:nowrap;">—</div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
       <div class="metric-card">
@@ -157,7 +152,7 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
         <div class="metric-label">Size Multiplier</div>
         <div class="metric-val" id="sizeMultVal">—</div>
         <div class="metric-weight">position size control</div>
-        <div class="metric-gauge"><div class="metric-indicator" id="sizeMultInd" style="left:0%"></div></div>
+        <div class="metric-gauge" style="background:linear-gradient(to right,var(--red) 0%,var(--yellow) 50%,var(--green) 100%);"><div class="metric-indicator" id="sizeMultInd" style="left:0%"></div></div>
       </div>
     </div>
     <div class="formula-block">
@@ -218,9 +213,11 @@ function update(state) {
   const dir = state.market?.directionSignal ?? { direction: "neutral", strength: 0 };
   const dirEl = document.getElementById('dirVal');
   dirEl.textContent = dir.direction.toUpperCase();
-  dirEl.style.color = dir.direction === 'long' ? '#00ff88' : dir.direction === 'short' ? '#ff4444' : '#888';
-  document.getElementById('dirStrength').textContent = 'strength ' + (dir.strength * 100).toFixed(0) + '%';
-  document.getElementById('dirInd').style.left = Math.max(1, dir.strength * 100) + '%';
+  const dirColor = dir.direction === 'long' ? 'var(--green)' : dir.direction === 'short' ? 'var(--red)' : 'var(--muted)';
+  dirEl.style.color = dirColor;
+  document.getElementById('dirBar').style.width = (dir.strength * 100).toFixed(0) + '%';
+  document.getElementById('dirBar').style.background = dirColor;
+  document.getElementById('dirStrength').textContent = (dir.strength * 100).toFixed(0) + '% confidence';
   document.getElementById('avgFRVal').textContent = ((dir.avgFR ?? 0) * 100).toFixed(4) + '%';
   document.getElementById('avgFRVal').style.color = (dir.avgFR ?? 0) > 0 ? '#00ff88' : '#ff4444';
   const oiMom = dir.oiMomentum ?? 0;
@@ -237,7 +234,7 @@ function update(state) {
   document.getElementById('oiChgVal').style.color = scoreColor(oiChg);
   document.getElementById('oiChgInd').style.left = Math.max(1, oiChg) + '%';
   document.getElementById('sizeMultVal').textContent = 'x' + sizeMult.toFixed(2);
-  document.getElementById('sizeMultVal').style.color = sizeMult >= 1 ? '#00ff88' : sizeMult >= 0.5 ? '#ffaa00' : '#ff4444';
+  document.getElementById('sizeMultVal').style.color = sizeMult >= 1 ? 'var(--green)' : sizeMult >= 0.5 ? 'var(--yellow)' : 'var(--red)';
   document.getElementById('sizeMultInd').style.left = Math.max(1, sizeMult * 100) + '%';
 
   // Formula
@@ -260,20 +257,23 @@ function update(state) {
     const v = val != null ? val : 0;
     const isPos = v >= 0;
     const color = isPos ? 'var(--green)' : 'var(--red)';
-    const markerPct = Math.min(47, Math.abs(v) / maxVal * 47);
+    const markerPct = Math.min(39, Math.abs(v) / maxVal * 39);
     const markerLeft = isPos ? (50 + markerPct) : (50 - markerPct);
     const valStr = (v >= 0 ? '+' : '') + (v * 100).toFixed(3) + '%';
-    let h = '<div class="bar-cell" style="position:relative;height:24px;">';
-    // left bar (negative side, always shown, muted)
-    h += '<div style="position:absolute;right:50%;top:8px;width:40%;height:8px;background:var(--red);opacity:0.12;border-radius:2px 0 0 2px;"></div>';
-    // right bar (positive side, always shown, muted)
-    h += '<div style="position:absolute;left:50%;top:8px;width:40%;height:8px;background:var(--green);opacity:0.12;border-radius:0 2px 2px 0;"></div>';
-    // 0-axis line
-    h += '<div style="position:absolute;left:50%;top:3px;bottom:3px;width:1px;background:rgba(255,255,255,0.2);transform:translateX(-50%);"></div>';
-    // marker line
-    h += '<div style="position:absolute;left:' + markerLeft + '%;top:2px;bottom:2px;width:2px;background:' + color + ';border-radius:1px;opacity:0.95;transform:translateX(-50%);"></div>';
-    // value (right-aligned, fixed)
-    h += '<div style="position:absolute;right:6px;top:4px;font-size:9px;font-family:Space Mono,monospace;color:' + color + ';">' + valStr + '</div>';
+    let h = '<div style="position:relative;height:24px;display:flex;align-items:center;">';
+    // bar area (80% width), value area (20%)
+    h += '<div style="position:relative;flex:1;height:24px;">';
+    // left bar: 10%~50%
+    h += '<div style="position:absolute;left:10%;width:40%;top:8px;height:8px;background:var(--red);opacity:0.35;border-radius:2px 0 0 2px;"></div>';
+    // right bar: 50%~90%
+    h += '<div style="position:absolute;left:50%;width:40%;top:8px;height:8px;background:var(--green);opacity:0.35;border-radius:0 2px 2px 0;"></div>';
+    // 0-axis
+    h += '<div style="position:absolute;left:50%;top:3px;bottom:3px;width:1px;background:rgba(255,255,255,0.25);transform:translateX(-50%);"></div>';
+    // marker
+    h += '<div style="position:absolute;left:' + markerLeft + '%;top:2px;bottom:2px;width:2px;background:' + color + ';border-radius:1px;transform:translateX(-50%);"></div>';
+    h += '</div>';
+    // value
+    h += '<div style="width:58px;text-align:left;font-size:9px;font-family:Space Mono,monospace;color:' + color + ';padding-left:5px;flex-shrink:0;">' + valStr + '</div>';
     h += '</div>';
     return h;
   }
