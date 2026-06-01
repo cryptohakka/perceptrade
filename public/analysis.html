@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PercepTrade — Risk</title>
+<title>PercepTrade — Analysis</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -90,7 +90,7 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
     <h1>PERCEPTRADE</h1>
     <nav class="tab-nav">
       <a href="/app" class="tab-link">Dashboard</a>
-      <a href="/risk" class="tab-link active">Risk</a>
+      <a href="/analysis" class="tab-link active">Analysis</a>
     </nav>
     <div class="header-right">
       <div class="status-dot" id="statusDot"></div>
@@ -98,7 +98,35 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
     </div>
   </div>
 
-  <!-- Risk Score -->
+  <!-- Section 1: Direction Signal -->
+  <div class="card">
+    <div class="card-title">Direction Signal</div>
+    <div class="score-main">
+      <div>
+        <div class="score-num" id="dirVal" style="font-size:2.2rem">—</div>
+        <div class="score-level" id="dirStrength">—</div>
+      </div>
+      <div class="gauge-wrap">
+        <div class="gauge-bg">
+          <div class="gauge-indicator" id="dirInd" style="left:0%"></div>
+        </div>
+        <div class="gauge-labels"><span>WEAK</span><span>MODERATE</span><span>STRONG</span></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+      <div class="metric-card">
+        <div class="metric-label">Avg FR</div>
+        <div class="metric-val" id="avgFRVal">—</div>
+        <div class="metric-weight">cross-CEX average</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">OI Momentum</div>
+        <div class="metric-val" id="oiMomVal">—</div>
+        <div class="metric-weight">5min OI change</div>
+      </div>
+    </div>
+  </div>
+  <!-- Section 2: Risk Assessment -->
   <div class="card">
     <div class="card-title">Risk Assessment · Score</div>
     <div class="score-main">
@@ -113,39 +141,34 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
         <div class="gauge-labels"><span>SAFE</span><span>NEUTRAL</span><span>HIGH</span></div>
       </div>
     </div>
-
-    <!-- 3 Metric Cards -->
     <div class="grid3">
-      <div class="metric-card">
-        <div class="metric-label">Heat Score</div>
-        <div class="metric-val" id="heatVal">—</div>
-        <div class="metric-weight">weight 40% · avgFR</div>
-        <div class="metric-gauge"><div class="metric-indicator" id="heatInd" style="left:0%"></div></div>
-      </div>
       <div class="metric-card">
         <div class="metric-label">Deviation Score</div>
         <div class="metric-val" id="devVal">—</div>
-        <div class="metric-weight">weight 30% · FR spread</div>
+        <div class="metric-weight">weight 50% · FR spread</div>
         <div class="metric-gauge"><div class="metric-indicator" id="devInd" style="left:0%"></div></div>
       </div>
       <div class="metric-card">
         <div class="metric-label">OI Change Score</div>
         <div class="metric-val" id="oiChgVal">—</div>
-        <div class="metric-weight">weight 30% · OI momentum</div>
+        <div class="metric-weight">weight 50% · OI volatility</div>
         <div class="metric-gauge"><div class="metric-indicator" id="oiChgInd" style="left:0%"></div></div>
       </div>
+      <div class="metric-card">
+        <div class="metric-label">Size Multiplier</div>
+        <div class="metric-val" id="sizeMultVal">—</div>
+        <div class="metric-weight">position size control</div>
+        <div class="metric-gauge"><div class="metric-indicator" id="sizeMultInd" style="left:0%"></div></div>
+      </div>
     </div>
-
-    <!-- Formula -->
     <div class="formula-block">
       <div class="formula-title">Score Calculation</div>
-      <div id="formulaEq">score = heat(40%) + deviation(30%) + oiChange(30%)</div>
+      <div id="formulaEq">score = deviation(50%) + oiChange(50%)</div>
     </div>
   </div>
-
-  <!-- CEX Table -->
+    <!-- CEX Table -->
   <div class="card">
-    <div class="card-title">CEX · FR &amp; OI Delta</div>
+    <div class="card-title">CEX · FR &amp; OI Delta · 5min snapshot</div>
     <table class="cex-table" id="cexTable">
       <thead>
         <tr>
@@ -195,24 +218,36 @@ function update(state) {
   document.getElementById('scoreLevel').textContent = (risk.riskLevel || '').replace('_', ' ').toUpperCase();
   document.getElementById('gaugeIndicator').style.left = Math.max(1, score) + '%';
 
-  // Metrics
-  const heat = risk.heatScore ?? 0;
+  // Direction Signal section
+  const dir = state.market?.directionSignal ?? { direction: "neutral", strength: 0 };
+  const dirEl = document.getElementById('dirVal');
+  dirEl.textContent = dir.direction.toUpperCase();
+  dirEl.style.color = dir.direction === 'long' ? '#00ff88' : dir.direction === 'short' ? '#ff4444' : '#888';
+  document.getElementById('dirStrength').textContent = 'strength ' + (dir.strength * 100).toFixed(0) + '%';
+  document.getElementById('dirInd').style.left = Math.max(1, dir.strength * 100) + '%';
+  document.getElementById('avgFRVal').textContent = ((dir.avgFR ?? 0) * 100).toFixed(4) + '%';
+  document.getElementById('avgFRVal').style.color = (dir.avgFR ?? 0) > 0 ? '#00ff88' : '#ff4444';
+  const oiMom = dir.oiMomentum ?? 0;
+  document.getElementById('oiMomVal').textContent = (oiMom >= 0 ? '+' : '') + (oiMom * 100).toFixed(3) + '%';
+  document.getElementById('oiMomVal').style.color = oiMom > 0 ? '#00ff88' : oiMom < 0 ? '#ff4444' : '#888';
+  // Risk section
   const dev  = risk.deviationScore ?? 0;
   const oiChg = risk.oiChangeScore ?? 0;
-  document.getElementById('heatVal').textContent = heat.toFixed(1);
-  document.getElementById('heatVal').style.color = scoreColor(heat);
-  document.getElementById('heatInd').style.left = Math.max(1, heat) + '%';
+  const sizeMult = risk.sizeMultiplier ?? 1;
   document.getElementById('devVal').textContent = dev.toFixed(1);
   document.getElementById('devVal').style.color = scoreColor(dev);
   document.getElementById('devInd').style.left = Math.max(1, dev) + '%';
   document.getElementById('oiChgVal').textContent = oiChg.toFixed(1);
   document.getElementById('oiChgVal').style.color = scoreColor(oiChg);
   document.getElementById('oiChgInd').style.left = Math.max(1, oiChg) + '%';
+  document.getElementById('sizeMultVal').textContent = 'x' + sizeMult.toFixed(2);
+  document.getElementById('sizeMultVal').style.color = sizeMult >= 1 ? '#00ff88' : sizeMult >= 0.5 ? '#ffaa00' : '#ff4444';
+  document.getElementById('sizeMultInd').style.left = Math.max(1, sizeMult * 100) + '%';
 
   // Formula
-  const hC = scoreColor(heat), dC = scoreColor(dev), oC = scoreColor(oiChg), sC = scoreColor(score);
+  const dC = scoreColor(dev), oC = scoreColor(oiChg), sC = scoreColor(score);
   document.getElementById('formulaEq').innerHTML =
-    `score = <span style="color:${hC}">${heat.toFixed(1)}</span>(40%) + <span style="color:${dC}">${dev.toFixed(1)}</span>(30%) + <span style="color:${oC}">${oiChg.toFixed(1)}</span>(30%) = <span style="color:${sC};font-size:16px;font-weight:700">${score.toFixed(1)}</span>`;
+    `score = <span style="color:${dC}">${dev.toFixed(1)}</span>(50%) + <span style="color:${oC}">${oiChg.toFixed(1)}</span>(50%) = <span style="color:${sC};font-size:16px;font-weight:700">${score.toFixed(1)}</span>`;
 
   // CEX Table
   const sources = state.market?.sources || [];

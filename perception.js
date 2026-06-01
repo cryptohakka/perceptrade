@@ -10,9 +10,7 @@ async function getBybitFR(symbol = 'BTCUSDT') {
 }
 
 async function getHyperliquidFR(symbol = 'BTC') {
-  const res = await axios.post('https://api.hyperliquid.xyz/info', {
-    type: 'metaAndAssetCtxs'
-  });
+  const res = await axios.post('https://api.hyperliquid.xyz/info', { type: 'metaAndAssetCtxs' });
   const meta = res.data[0].universe;
   const ctxs = res.data[1];
   const idx = meta.findIndex(m => m.name === symbol);
@@ -72,7 +70,72 @@ async function getKucoinFR(symbol = 'XBTUSDTM') {
   };
 }
 
-async function collectMarketData(symbol = 'BTCUSDT') {
+// directionSignal: FR絶対値 + OI momentum → direction + strength
+function calcDirectionSignal(sources, prevSources = []) {
+  const avgFR = sources.reduce((s, d) => s + d.fr, 0) / sources.length;
+
+  // OI momentum: 全CEX合計OIの前サイクル比
+  let oiMomentum = 0;
+  if (prevSources.length > 0) {
+    let totalCurrent = 0, totalPrev = 0;
+    for (const src of sources) {
+      const prev = prevSources.find(p => p.exchange === src.exchange);
+      totalCurrent += src.oi || 0;
+      totalPrev += prev?.oi || 0;
+    }
+    oiMomentum = totalPrev > 0 ? (totalCurrent - totalPrev) / totalPrev : 0;
+  }
+
+  // FR強度: 0.00005〜0.0003 → 0〜1
+  const frStrength = Math.min(1, Math.max(0, (Math.abs(avgFR) - 0.00005) / (0.0003 - 0.00005)));
+
+  // direction判定
+  let direction, strength;
+  if (avgFR > 0.00005) {
+    // ロング過熱域
+    if (oiMomentum > 0.002) {
+      direction = 'long';   // トレンド継続
+      strength = frStrength * 0.7 + Math.min(1, oiMomentum / 0.02) * 0.3;
+    } else if (oiMomentum < -0.002) {
+      direction = 'short';  // 天井圏反転
+      strength = frStrength * 0.6 + Math.min(1, Math.abs(oiMomentum) / 0.02) * 0.4;
+    } else {
+      direction = 'long';   // OI横ばい、FR方向に従う
+      strength = frStrength * 0.5;
+    }
+  } else if (avgFR < -0.00005) {
+    // ショート過熱域
+    if (oiMomentum < -0.002) {
+      direction = 'short';
+      strength = Math.min(1, Math.abs(avgFR) / 0.0003) * 0.7 + Math.min(1, Math.abs(oiMomentum) / 0.02) * 0.3;
+    } else if (oiMomentum > 0.002) {
+      direction = 'long';
+      strength = Math.min(1, Math.abs(avgFR) / 0.0003) * 0.6 + Math.min(1, oiMomentum / 0.02) * 0.4;
+    } else {
+      direction = 'short';
+      strength = Math.min(1, Math.abs(avgFR) / 0.0003) * 0.5;
+    }
+  } else {
+    // FR中立域 → OI momentumのみで判断
+    if (oiMomentum > 0.005) {
+      direction = 'long';
+      strength = Math.min(1, oiMomentum / 0.02) * 0.4;
+    } else if (oiMomentum < -0.005) {
+      direction = 'short';
+      strength = Math.min(1, Math.abs(oiMomentum) / 0.02) * 0.4;
+    } else {
+      direction = 'neutral';
+      strength = 0;
+    }
+  }
+
+  // strength下限: 0.3以上なら必ずシグナル出す（デモモード）
+  if (direction !== 'neutral' && strength < 0.3) strength = 0.3;
+
+  return { direction, strength: parseFloat(strength.toFixed(3)), avgFR, oiMomentum };
+}
+
+async function collectMarketData(symbol = 'BTCUSDT', prevSources = []) {
   const [bybit, hl, okx, bg, bn, kc] = await Promise.allSettled([
     getBybitFR(symbol),
     getHyperliquidFR('BTC'),
@@ -86,11 +149,10 @@ async function collectMarketData(symbol = 'BTCUSDT') {
     .map(r => r.value);
 
   const avgFR = sources.reduce((s, d) => s + d.fr, 0) / sources.length;
-  const bgFR = sources.find(d => d.exchange === 'bitget')?.fr ?? avgFR;
-  const frDeviation = Math.abs(bgFR - avgFR);
-  const riskScore = Math.min(100, Math.max(0, (frDeviation - 0.0001) / (0.001 - 0.0001) * 100));
+  const frDeviation = Math.sqrt(sources.reduce((s, d) => s + (d.fr - avgFR) ** 2, 0) / sources.length);
+  const directionSignal = calcDirectionSignal(sources, prevSources);
 
-  return { sources, avgFR, bgFR, frDeviation, riskScore };
+  return { sources, avgFR, frDeviation, directionSignal };
 }
 
 module.exports = { collectMarketData, getBybitFR, getHyperliquidFR, getOkxFR, getBitgetFR, getBinanceFR, getKucoinFR };
