@@ -255,20 +255,22 @@ function update(state) {
   const maxFRD = Math.max(...CEX_ORDER.map(n => Math.abs(frChanges[n]||0)), 0.0001);
   const maxOID = Math.max(...CEX_ORDER.map(n => Math.abs(oiChanges[n]||0)), 0.0001);
 
+
   function renderBar(val, maxVal) {
     if (val == null) return '<div class="bar-cell"><div class="bar-axis"></div></div>';
     const pct = Math.min(48, Math.abs(val) / maxVal * 48);
     const isPos = val >= 0;
     const color = isPos ? 'var(--green)' : 'var(--red)';
-    const left = isPos ? '50%' : \`${50 - pct}%\`;
+    const left = isPos ? '50%' : (50 - pct) + '%';
     const valStr = (val >= 0 ? '+' : '') + (val * 100).toFixed(3) + '%';
-    const valLeft = isPos ? \`${50 + pct + 1}%\` : null;
-    const valRight = isPos ? null : \`${50 - pct - 1}%\`;
-    return \`<div class="bar-cell">
-      <div class="bar-axis"></div>
-      <div class="bar-fill" style="left:${left};width:${pct}%;background:${color};opacity:0.75"></div>
-      <div class="bar-val" style="color:${color};${valRight ? 'right:'+valRight+';text-align:right' : 'left:'+valLeft}">${valStr}</div>
-    </div>\`;
+    const valPos = isPos ? (50 + pct + 1) + '%' : null;
+    const valNeg = isPos ? null : (50 - pct - 1) + '%';
+    let h = '<div class="bar-cell">';
+    h += '<div class="bar-axis"></div>';
+    h += '<div class="bar-fill" style="left:' + left + ';width:' + pct + '%;background:' + color + ';opacity:0.75"></div>';
+    h += '<div class="bar-val" style="color:' + color + ';' + (valNeg ? 'right:' + valNeg + ';text-align:right' : 'left:' + valPos) + '">' + valStr + '</div>';
+    h += '</div>';
+    return h;
   }
 
   const container = document.getElementById('cexBars');
@@ -276,12 +278,13 @@ function update(state) {
     const src = sources.find(s => s.exchange === name);
     if (!src) return '';
     const isDex = name === 'hyperliquid';
-    return \`<div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:0;align-items:center;padding:3px 0;border-bottom:1px solid var(--border);">
-      <div><span class="cex-name">${name.toUpperCase()}</span>${isDex ? '<span class="dex-badge">DEX</span>' : ''}</div>
-      \${renderBar(src.fr, maxFR)}
-      \${renderBar(frChanges[name]??null, maxFRD)}
-      \${renderBar(oiChanges[name]??null, maxOID)}
-    </div>\`;
+    let row = '<div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:0;align-items:center;padding:3px 0;border-bottom:1px solid var(--border);">';
+    row += '<div><span class="cex-name">' + name.toUpperCase() + '</span>' + (isDex ? '<span class="dex-badge">DEX</span>' : '') + '</div>';
+    row += renderBar(src.fr, maxFR);
+    row += renderBar(frChanges[name] != null ? frChanges[name] : null, maxFRD);
+    row += renderBar(oiChanges[name] != null ? oiChanges[name] : null, maxOID);
+    row += '</div>';
+    return row;
   }).join('');
 }
 
