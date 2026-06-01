@@ -13,6 +13,9 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'landing.html'));
 });
 
+app.get('/risk', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'risk.html'));
+});
 app.get('/app', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'app.html'));
 });

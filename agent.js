@@ -6,6 +6,7 @@ const bitget = require('./bitget');
 const MAX_SIZE = parseFloat(process.env.MAX_POSITION_SIZE_USDT || '100');
 const CYCLE_MS = parseInt(process.env.CYCLE_INTERVAL_MS || '60000');
 const SYMBOL = 'BTCUSDT';
+let prevSources = [];
 const server = require('./server');
 
 const ARCHITECT_PROMPT = (market, risk) => `
@@ -52,14 +53,21 @@ async function callLLM(prompt) {
     },
     body: JSON.stringify({
       model: process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash-lite',
-      max_tokens: 512,
+      max_tokens: 1024,
       messages: [{ role: 'user', content: prompt }],
       response_format: { type: 'json_object' }
     })
   });
   const data = await res.json();
   const text = data.choices[0].message.content.replace(/```json|```/g, '').trim();
-  return JSON.parse(text);
+  try {
+    return JSON.parse(text);
+  } catch(e) {
+    const m = text.match(/\{[\s\S]*\}/);
+    if (m) { try { return JSON.parse(m[0]); } catch(e2) {} }
+    console.error('[llm parse error]', text.slice(0, 100));
+    throw e;
+  }
 }
 
 async function getCurrentPosition(symbol) {
@@ -113,7 +121,8 @@ async function runCycle(srv) {
     const market = await collectMarketData(SYMBOL);
     console.log(`[perception] ${market.sources.length} CEX sources, riskScore=${market.riskScore.toFixed(1)}`);
 
-    const risk = assess(market);
+    const risk = assess(market, prevSources);
+    prevSources = market.sources.map(s => ({ exchange: s.exchange, oi: s.oi, fr: s.fr }));
     console.log(`[risk] ${risk.summary}`);
 
     const proposal = await callLLM(ARCHITECT_PROMPT(market, risk));
