@@ -34,14 +34,21 @@ async function getOkxFR(instId = 'BTC-USDT-SWAP') {
 }
 
 async function getBitgetFR(symbol = 'BTCUSDT') {
-  const [frRes, oiRes] = await Promise.all([
+  const [frRes, oiRes, lsRes] = await Promise.all([
     bitget.getFundingRate(symbol),
-    bitget.getOpenInterest(symbol)
+    bitget.getOpenInterest(symbol),
+    bitget.getLongShortRatio(symbol).catch(() => null)
   ]);
+  const lsData = lsRes?.data?.[0];
   return {
     exchange: 'bitget',
     fr: parseFloat(frRes.data[0].fundingRate),
-    oi: parseFloat(oiRes.data.openInterestList[0].size)
+    oi: parseFloat(oiRes.data.openInterestList[0].size),
+    longShortRatio: lsData ? {
+      longRatio: parseFloat(lsData.longPositionRatio),
+      shortRatio: parseFloat(lsData.shortPositionRatio),
+      ratio: parseFloat(lsData.longShortPositionRatio)
+    } : null
   };
 }
 
@@ -170,7 +177,11 @@ async function collectMarketData(symbol = 'BTCUSDT', prevSources = []) {
   const directionSignal = calcDirectionSignal(sources, prevSources);
   const consensus = calcConsensus(sources);
 
-  return { sources, avgFR, frDeviation, directionSignal, consensus };
+  // Bitget Long/Short Ratio (Bitget-specific signal)
+  const bgSource = sources.find(s => s.exchange === 'bitget');
+  const longShortRatio = bgSource?.longShortRatio || null;
+
+  return { sources, avgFR, frDeviation, directionSignal, consensus, longShortRatio };
 }
 
 module.exports = { collectMarketData, getBybitFR, getHyperliquidFR, getOkxFR, getBitgetFR, getBinanceFR, getKucoinFR };

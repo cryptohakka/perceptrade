@@ -12,6 +12,7 @@ const ARCHITECT_PROMPT = (market, risk) => `
 You are the Architect. Propose a trading action.
 
 Direction Signal: ${JSON.stringify(market.directionSignal)}
+Bitget Long/Short Ratio: ${market.longShortRatio ? `L${(market.longShortRatio.longRatio*100).toFixed(1)}% / S${(market.longShortRatio.shortRatio*100).toFixed(1)}% (ratio: ${market.longShortRatio.ratio})` : 'N/A'}
 CEX Consensus: ${market.consensus.score}% ${market.consensus.label} (${market.consensus.long}L/${market.consensus.short}S/${market.consensus.neutral}N of ${market.consensus.total})
 riskLevel: ${risk.riskLevel} | sizeMultiplier: ${risk.sizeMultiplier}
 

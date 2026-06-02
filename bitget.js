@@ -81,7 +81,6 @@ async function getAccountAssets() {
 }
 
 // setTPSL added
-module.exports = { getFundingRate, getOpenInterest, getTicker, getPositions, placeOrder, closePosition, getAccountAssets, setTPSL };
 
 async function setTPSL(symbol, side, tpPrice, slPrice) {
   return post('/api/v2/mix/order/place-pos-tpsl', {
@@ -97,4 +96,14 @@ async function setTPSL(symbol, side, tpPrice, slPrice) {
     stopLossTriggerType: 'mark_price'
   });
 }
-module.exports = { getFundingRate, getOpenInterest, getTicker, getPositions, placeOrder, closePosition, getAccountAssets, setTPSL };
+module.exports = { getFundingRate, getFundingRateDetail, getOpenInterest, getTicker, getPositions, placeOrder, closePosition, getAccountAssets, setTPSL, getLongShortRatio };
+
+// Bitget-specific: Long/Short Position Ratio
+async function getLongShortRatio(symbol, period = '5m') {
+  return get('/api/v2/mix/market/position-long-short', { symbol, period, productType: 'USDT-FUTURES' });
+}
+
+// Bitget-specific: Funding Rate with limits
+async function getFundingRateDetail(symbol) {
+  return get('/api/v2/mix/market/current-fund-rate', { symbol, productType: 'USDT-FUTURES' });
+}
