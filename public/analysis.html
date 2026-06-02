@@ -160,6 +160,17 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
       <div id="formulaEq">score = deviation(50%) + oiChange(50%)</div>
     </div>
     <!-- Crowd Risk -->
+    <div id="lsRatioSection" style="margin-top:14px;padding:12px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg);">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:0.08em;margin-bottom:8px;">BITGET L/S RATIO <span style="color:var(--accent);font-size:9px;margin-left:6px;">BITGET EXCLUSIVE</span></div>
+      <div style="display:flex;align-items:center;gap:12px;font-family:'Space Mono',monospace;font-size:12px;">
+        <span style="color:var(--green);">L <span id="lsLong">—</span>%</span>
+        <div id="lsBar" style="flex:1;height:6px;border-radius:3px;background:var(--border);overflow:hidden;">
+          <div id="lsBarFill" style="height:100%;width:50%;background:linear-gradient(90deg,var(--green),var(--red));border-radius:3px;transition:width 0.5s;"></div>
+        </div>
+        <span style="color:var(--red);">S <span id="lsShort">—</span>%</span>
+      </div>
+      <div style="margin-top:6px;font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">Ratio: <span id="lsRatioVal">—</span></div>
+    </div>
     <div id="crowdRiskSection" style="margin-top:14px;padding:12px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg);transition:all 0.3s;">
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;">Crowd Risk Detection</div>
       <div id="crowdRiskContent" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">None detected</div>
@@ -318,6 +329,13 @@ async function poll() {
         crowdSection.style.background = 'var(--bg)';
         crowdContent.innerHTML = '<span style="color:var(--muted)">None detected</span>';
       }
+    }
+    if (data && data.market && data.market.longShortRatio) {
+      const ls = data.market.longShortRatio;
+      document.getElementById('lsLong').textContent = (ls.longRatio * 100).toFixed(1);
+      document.getElementById('lsShort').textContent = (ls.shortRatio * 100).toFixed(1);
+      document.getElementById('lsRatioVal').textContent = parseFloat(ls.ratio).toFixed(3);
+      document.getElementById('lsBarFill').style.width = (ls.longRatio * 100).toFixed(1) + '%';
     }
     if (data && data.market && data.market.consensus) {
       const c = data.market.consensus;
