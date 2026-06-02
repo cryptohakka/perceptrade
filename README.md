@@ -28,6 +28,7 @@ Signal Computation
   directionSignal  →  long / short + confidence %
   riskSignal       →  sizeMultiplier (×0.25 / ×0.50 / ×1.00)
   crowdRisk        →  anomalous exchange detection + size suppression
+  riskAttribution  →  per-component score breakdown (CEX Spread / OI Momentum / Total Risk)
        │
        ▼
 Triple-A Agent Council (OpenRouter / gemini-2.5-flash-lite)
@@ -57,6 +58,7 @@ The core differentiator. Each cycle, PercepTrade checks whether any single excha
 - `sizeMultiplier` is hard-capped at `×0.25` regardless of direction confidence
 - The Risk Assessment UI highlights the offending venue in red
 - A `[blocked]` entry appears in the Execution Log showing original vs. final size
+- The event is persisted to `crowd_events.json` with timestamp, exchange, FR deviation, and size cap applied
 
 **Why it matters:** Crowd piling into one venue — visible as FR/OI divergence — is a leading indicator of forced liquidation cascades. Reducing size before the crowd unwinds is the alpha.
 
@@ -107,6 +109,17 @@ The Long/Short Ratio is displayed as a live gauge in the Analysis UI with a **BI
 | `×0.50` | Moderate cross-CEX divergence |
 | `×0.25` | High deviation, rapid OI shift, or Crowd Risk triggered |
 
+### Risk Attribution
+Each cycle, the risk score is decomposed into three components visible in the Dashboard:
+
+| Component | Description |
+|-----------|-------------|
+| **CEX Spread** | Degree of FR divergence across the 6 venues |
+| **OI Momentum** | Rate and direction of Open Interest change |
+| **Total Risk** | Weighted composite → drives sizeMultiplier |
+
+This breakdown makes the risk decision transparent and auditable — not a black box.
+
 ---
 
 ## Triple-A Framework
@@ -138,8 +151,8 @@ Sequential debate — no agent shares system prompts with others:
 | Page | Path | Description |
 |------|------|-------------|
 | Landing | `/` | Project overview |
-| Dashboard | `/app` | Live position (with TP/SL), Triple-A council log, execution log with `[blocked]` entries |
-| Analysis | `/analysis` | Per-CEX FR/OI charts, direction confidence, Crowd Risk status, Bitget L/S Ratio gauge |
+| Dashboard | `/app` | Live position (with TP/SL), Triple-A council log, execution log with `[blocked]` entries, **Risk Attribution** (CEX Spread / OI Momentum / Total Risk / Size Multiplier breakdown) |
+| Analysis | `/analysis` | Per-CEX FR/OI charts, direction confidence, Crowd Risk status, Bitget L/S Ratio gauge, **Cross-CEX Crowd Map** (FR/OI deviation heatmap across 6 venues), **Crowd Risk Event History** |
 
 ---
 
@@ -172,12 +185,13 @@ MAX_POSITION_SIZE_USDT=100
 
 ```
 perceptrade/
-├── main.js          # entry point
-├── agent.js         # Triple-A council + execution logic
-├── perception.js    # FR/OI/L-S collection (6 sources)
-├── risk.js          # directionSignal + riskSignal + crowdRisk (Median/MAD)
-├── bitget.js        # Bitget API wrapper (order + market data)
-├── server.js        # Express UI server
+├── main.js             # entry point
+├── agent.js            # Triple-A council + execution logic
+├── perception.js       # FR/OI/L-S collection (6 sources)
+├── risk.js             # directionSignal + riskSignal + crowdRisk (Median/MAD)
+├── bitget.js           # Bitget API wrapper (order + market data)
+├── server.js           # Express UI server
+├── crowd_events.json   # Crowd Risk event log (auto-generated)
 └── public/
     ├── landing.html
     ├── app.html
