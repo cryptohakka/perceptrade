@@ -325,7 +325,7 @@ function updateCouncil(proposal, audit, decision, crowd, risk) {
     const arbAction = (decision.action || 'hold').toUpperCase();
     const arbText = decision.action === 'hold'
       ? `HOLD\n${conf}% confidence < 50% execution threshold.`
-      : `${arbAction} @ ${sizePct}%\n${conf}% confidence × ×${mult} risk multiplier = ${sizePct}%`;
+      : `${arbAction} @ ${sizePct}%\n${conf}% confidence × ${mult}x risk multiplier = ${sizePct}% size`;
     document.getElementById('arbText').textContent = arbText;
   }
 
