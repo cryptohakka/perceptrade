@@ -49,15 +49,31 @@ Bitget Futures Execution
 The core differentiator. Each cycle, PercepTrade checks whether any single exchange is behaving anomalously relative to the 6-source aggregate.
 
 **Trigger conditions (OR logic):**
-- FR of one venue deviates >2σ from the cross-CEX mean
-- OI change at one venue is >3× the average OI change rate
+- FR of one venue deviates >3.5× MAD from the cross-CEX median (robust to outlier distortion on N=6)
+- OI change at one venue is abnormally concentrated relative to peers
 
 **When triggered:**
-- The anomalous exchange and deviation magnitude are surfaced to the Auditor agent
+- The anomalous exchange and deviation magnitude are surfaced to the Auditor agent as a natural language warning
 - `sizeMultiplier` is hard-capped at `×0.25` regardless of direction confidence
 - The Risk Assessment UI highlights the offending venue in red
+- A `[blocked]` entry appears in the Execution Log showing original vs. final size
 
 **Why it matters:** Crowd piling into one venue — visible as FR/OI divergence — is a leading indicator of forced liquidation cascades. Reducing size before the crowd unwinds is the alpha.
+
+**Example (real cycle output):**
+```
+Binance FR = 0.031%
+Cross-CEX Median = 0.009%
+Deviation = 3.4× MAD → statistically anomalous
+
+→ [blocked] Binance crowd concentration detected
+→ Auditor receives: "Binance FR is 0.0310% vs cross-CEX median 0.0090%
+   (3.4× MAD — statistically anomalous crowd concentration)"
+→ Size capped: ×1.00 → ×0.25
+→ [risk-mgmt] crowd risk prevented full exposure · original 72% → final 18%
+```
+
+> PercepTrade doesn't just trade. It knows when *not* to trade at full size.
 
 ---
 
@@ -98,7 +114,7 @@ The Long/Short Ratio is displayed as a live gauge in the Analysis UI with a **BI
 Sequential debate — no agent shares system prompts with others:
 
 - **Architect** — evaluates direction + risk signals + Bitget L/S ratio, proposes `long / short / hold`
-- **Auditor** — challenges proposal, explicitly flags Crowd Risk anomalies, can reduce confidence
+- **Auditor** — receives natural language Crowd Risk warning (exchange name, FR value, MAD deviation), challenges proposal, can reduce confidence
 - **Arbiter** — final decision: `action` + `size_pct = proposal.confidence × sizeMultiplier`
 
 ---
@@ -122,7 +138,7 @@ Sequential debate — no agent shares system prompts with others:
 | Page | Path | Description |
 |------|------|-------------|
 | Landing | `/` | Project overview |
-| Dashboard | `/app` | Live position (with TP/SL), Triple-A council log, execution log |
+| Dashboard | `/app` | Live position (with TP/SL), Triple-A council log, execution log with `[blocked]` entries |
 | Analysis | `/analysis` | Per-CEX FR/OI charts, direction confidence, Crowd Risk status, Bitget L/S Ratio gauge |
 
 ---
@@ -159,7 +175,7 @@ perceptrade/
 ├── main.js          # entry point
 ├── agent.js         # Triple-A council + execution logic
 ├── perception.js    # FR/OI/L-S collection (6 sources)
-├── risk.js          # directionSignal + riskSignal + crowdRisk
+├── risk.js          # directionSignal + riskSignal + crowdRisk (Median/MAD)
 ├── bitget.js        # Bitget API wrapper (order + market data)
 ├── server.js        # Express UI server
 └── public/
