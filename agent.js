@@ -12,12 +12,15 @@ const ARCHITECT_PROMPT = (market, risk) => `
 You are the Architect. Propose a trading action.
 
 Direction Signal: ${JSON.stringify(market.directionSignal)}
+CEX Consensus: ${market.consensus.score}% ${market.consensus.label} (${market.consensus.long}L/${market.consensus.short}S/${market.consensus.neutral}N of ${market.consensus.total})
 riskLevel: ${risk.riskLevel} | sizeMultiplier: ${risk.sizeMultiplier}
 
 Rules:
 - direction="long" → long, direction="short" → short
 - direction="neutral" AND strength=0 → hold
 - strength >= 0.3 always triggers action
+- consensus < 50%: reduce confidence by 0.2
+- consensus >= 85%: boost confidence by 0.1
 
 Respond in JSON. reasoning must be ONE sentence, max 10 words, no hedging, no meta-commentary.
 { "action": "long"|"short"|"hold", "confidence": 0-1, "reasoning": "..." }

@@ -70,6 +70,23 @@ async function getKucoinFR(symbol = 'XBTUSDTM') {
   };
 }
 
+// consensusScore: 各CEXのFR方向一致度
+function calcConsensus(sources) {
+  if (!sources || sources.length === 0) return { score: 0, long: 0, short: 0, neutral: 0, alignment: [] };
+  const alignment = sources.map(s => ({
+    exchange: s.exchange,
+    direction: s.fr > 0.00005 ? 'long' : s.fr < -0.00005 ? 'short' : 'neutral',
+    fr: s.fr
+  }));
+  const long = alignment.filter(a => a.direction === 'long').length;
+  const short = alignment.filter(a => a.direction === 'short').length;
+  const neutral = alignment.filter(a => a.direction === 'neutral').length;
+  const majority = Math.max(long, short);
+  const score = parseFloat((majority / sources.length * 100).toFixed(1));
+  const label = score >= 85 ? 'STRONG AGREEMENT' : score >= 67 ? 'MAJORITY' : score >= 50 ? 'MIXED' : 'SPLIT';
+  return { score, long, short, neutral, total: sources.length, label, alignment };
+}
+
 // directionSignal: FR絶対値 + OI momentum → direction + strength
 function calcDirectionSignal(sources, prevSources = []) {
   const avgFR = sources.reduce((s, d) => s + d.fr, 0) / sources.length;
@@ -151,8 +168,9 @@ async function collectMarketData(symbol = 'BTCUSDT', prevSources = []) {
   const avgFR = sources.reduce((s, d) => s + d.fr, 0) / sources.length;
   const frDeviation = Math.sqrt(sources.reduce((s, d) => s + (d.fr - avgFR) ** 2, 0) / sources.length);
   const directionSignal = calcDirectionSignal(sources, prevSources);
+  const consensus = calcConsensus(sources);
 
-  return { sources, avgFR, frDeviation, directionSignal };
+  return { sources, avgFR, frDeviation, directionSignal, consensus };
 }
 
 module.exports = { collectMarketData, getBybitFR, getHyperliquidFR, getOkxFR, getBitgetFR, getBinanceFR, getKucoinFR };

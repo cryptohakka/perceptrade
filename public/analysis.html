@@ -99,7 +99,7 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 
   <!-- Section 1: Direction Signal -->
   <div class="card">
-    <div class="card-title">Direction Signal</div>
+      <div class="card-title">Direction Signal</div>
     <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
       <div class="score-num" id="dirVal" style="font-size:2.2rem;flex-shrink:0;">—</div>
       <div style="flex:1;height:10px;background:rgba(255,255,255,0.06);border-radius:5px;overflow:hidden;">
@@ -158,6 +158,11 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
     <div class="formula-block">
       <div class="formula-title">Score Calculation</div>
       <div id="formulaEq">score = deviation(50%) + oiChange(50%)</div>
+    </div>
+    <!-- Crowd Risk -->
+    <div id="crowdRiskSection" style="margin-top:14px;padding:12px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg);transition:all 0.3s;">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;">Crowd Risk Detection</div>
+      <div id="crowdRiskContent" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">None detected</div>
     </div>
   </div>
     <!-- CEX Bar Chart -->
@@ -298,6 +303,42 @@ async function poll() {
     const res = await fetch('/api/state');
     const data = await res.json();
     if (data && data.risk) update(data);
+    // Crowd Risk
+    const crowdSection = document.getElementById('crowdRiskSection');
+    const crowdContent = document.getElementById('crowdRiskContent');
+    if (crowdSection && crowdContent && data.crowd) {
+      if (data.crowd.hasCrowdRisk) {
+        crowdSection.style.borderColor = 'rgba(192,80,80,0.4)';
+        crowdSection.style.background = 'rgba(192,80,80,0.05)';
+        crowdContent.innerHTML = `<div style="color:var(--red);font-weight:700;margin-bottom:6px;">⚠ CROWD RISK DETECTED</div>
+          <div style="color:var(--muted2);margin-bottom:8px;">${data.crowd.summary.replace(/\|/g,'<br>')}</div>
+          <div style="color:var(--yellow);">→ Size multiplier reduced to ×${data.risk ? data.risk.sizeMultiplier : '—'}</div>`;
+      } else {
+        crowdSection.style.borderColor = 'var(--border)';
+        crowdSection.style.background = 'var(--bg)';
+        crowdContent.innerHTML = '<span style="color:var(--muted)">None detected</span>';
+      }
+    }
+    if (data && data.market && data.market.consensus) {
+      const c = data.market.consensus;
+      document.getElementById('consensusScore').textContent = c.score + '%';
+      document.getElementById('consensusLabel').textContent = c.label;
+      document.getElementById('consensusLong').textContent = c.long;
+      document.getElementById('consensusShort').textContent = c.short;
+      document.getElementById('consensusNeutral').textContent = c.neutral;
+      const alignEl = document.getElementById('consensusAlignment');
+      if (alignEl && c.alignment) {
+        alignEl.innerHTML = c.alignment.map(a => {
+          const col = a.direction === 'long' ? 'var(--green)' : a.direction === 'short' ? 'var(--red)' : 'var(--muted)';
+          const arrow = a.direction === 'long' ? '▲' : a.direction === 'short' ? '▼' : '—';
+          return `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
+            <span style="color:var(--muted);width:90px;">${a.exchange.toUpperCase()}</span>
+            <span style="color:${col};">${arrow} ${a.direction.toUpperCase()}</span>
+            <span style="color:var(--muted);text-align:right;">${(a.fr*100).toFixed(4)}%</span>
+          </div>`;
+        }).join('');
+      }
+    }
   } catch(e) {}
 }
 poll();
