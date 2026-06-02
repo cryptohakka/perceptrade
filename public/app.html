@@ -328,7 +328,7 @@ function updateCouncil(proposal, audit, decision, crowd, risk) {
     const mult = risk ? risk.sizeMultiplier : 1;
     const multEl = document.getElementById('councilMult');
     if (multEl) {
-      multEl.textContent = '×' + mult;
+      multEl.textContent = '×' + parseFloat(mult).toFixed(2);
       multEl.style.color = mult < 1 ? 'var(--yellow)' : 'var(--muted2)';
     }
     const arbAction = (decision.action || 'hold').toUpperCase();
