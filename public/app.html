@@ -173,7 +173,6 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
     <div>
       <div class="card">
         <div class="card-title">Open Position · BTCUSDT</div>
-        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px;">BALANCE · <span id="accountBalance" style="color:var(--accent)">—</span> USDT</div>
         <div id="positionContent">
           <div class="pos-empty">No open position</div>
         </div>
@@ -389,7 +388,7 @@ async function poll() {
     if (data.decision) updateCouncil(data.proposal, data.audit, data.decision, data.crowd, data.risk);
     updatePosition(data.openPosition || null);
     if (data.accountBalance !== undefined) {
-      document.getElementById('accountBalance').textContent = parseFloat(data.accountBalance).toFixed(2);
+      document.getElementById('balanceContent').textContent = parseFloat(data.accountBalance).toFixed(2) + ' USDT';
     }
 
     if (isNew && data.risk) {
