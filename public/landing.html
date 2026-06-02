@@ -700,7 +700,7 @@
     </div>
     <div class="ticker-item">
       <span class="ticker-label">Cycle</span>
-      <span class="ticker-val">60 sec</span>
+      <span class="ticker-val">5 min</span>
     </div>
     <div class="ticker-item">
       <span class="ticker-label">Exchange</span>
@@ -719,8 +719,8 @@
       <div class="stat-label">CEX Data Sources<br>Binance · Bitget · Bybit · KuCoin · OKX + Hyperliquid</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num">2</div>
-      <div class="stat-label">Risk Dimensions<br>Heat Score · Deviation Score</div>
+      <div class="stat-num">3</div>
+      <div class="stat-label">Risk Dimensions<br>Heat · Deviation · OI Change</div>
     </div>
     <div class="stat-item">
       <div class="stat-num">3</div>
@@ -755,7 +755,7 @@
     <div class="feature-card">
       <div class="feature-icon">⚡</div>
       <div class="feature-title">Adversarial AI Council</div>
-      <div class="feature-desc">Architect proposes. Auditor challenges risk assumptions and FR bias conflicts. Arbiter resolves with confidence threshold gating. Minimum 0.65 confidence to execute.</div>
+      <div class="feature-desc">Architect proposes. Auditor challenges risk assumptions and FR bias conflicts. Arbiter resolves with confidence threshold gating. Minimum 0.3 confidence to execute.</div>
       <span class="feature-tag">Triple-A Framework</span>
     </div>
 
@@ -787,7 +787,7 @@
 <!-- HOW IT WORKS -->
 <section>
   <div class="section-label">// the perception loop</div>
-  <h2 class="section-title">Every 60 seconds,<br>the council reads the market</h2>
+  <h2 class="section-title">Every 5 minutes,<br>the council reads the market</h2>
   <p class="section-sub">FR signals in. Adversarial debate. Risk-calibrated execution. The system never sleeps.</p>
 
   <div class="arch-row">
@@ -896,7 +896,7 @@
         <div class="step-num">04</div>
         <div class="step-body">
           <h4>Risk-calibrated execution</h4>
-          <p>Order size determined by riskScore. Direction reversal triggers close before re-entry. Bitget USDT-margined perpetuals, isolated margin, market execution.</p>
+          <p>Order size = confidence × sizeMultiplier × base. TP at +1.5%, SL at -1.0% set via mark price. Direction reversal triggers close before re-entry. Bitget USDT-margined perpetuals, isolated margin.</p>
         </div>
       </div>
     </div>
