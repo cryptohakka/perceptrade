@@ -384,7 +384,7 @@ async function poll() {
     const isNew = riskHash !== lastRiskHash;
 
     if (data.decision) updateCouncil(data.proposal, data.audit, data.decision, data.crowd, data.risk);
-    updatePosition(data.position || null);
+    updatePosition(data.openPosition || null);
 
     if (isNew && data.risk) {
       lastRiskHash = riskHash;

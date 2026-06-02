@@ -92,13 +92,7 @@ async function syncOpenPosition() {
     const positions = await bitget.getPositions();
     const pos = positions?.data?.find(p => p.symbol === 'BTCUSDT' && parseFloat(p.total) > 0);
     if (pos) {
-      openPosition = {
-        side: pos.holdSide,
-        size: pos.total,
-        entryPrice: parseFloat(pos.openPriceAvg),
-        tpPrice: pos.takeProfit,
-        slPrice: pos.stopLoss
-      };
+      openPosition = pos;  // keep raw Bitget structure for UI
       console.log(`[sync] restored position: ${pos.holdSide} ${pos.total} BTC @ ${pos.openPriceAvg}`);
     }
   } catch(e) {
@@ -137,14 +131,14 @@ async function runCycle(server) {
     if (decision.action === 'long' || decision.action === 'short') {
       if (decision.confidence >= 0.3 && decision.size_pct > 0 && price > 0) {
         // 既存ポジションと逆方向 → まず閉じる
-        if (openPosition && openPosition.side !== decision.action) {
-          const closeSide = openPosition.side === 'long' ? 'sell' : 'buy';
-          await bitget.closePosition(SYMBOL, closeSide, openPosition.size);
-          console.log(`[execute] closed ${openPosition.side} before reversal`);
+        if (openPosition && (openPosition.holdSide || openPosition.side) !== decision.action) {
+          const closeSide = (openPosition.holdSide || openPosition.side) === 'long' ? 'sell' : 'buy';
+          await bitget.closePosition(SYMBOL, closeSide, openPosition.total || openPosition.size);
+          console.log(`[execute] closed ${openPosition.holdSide || openPosition.side} before reversal`);
           openPosition = null;
         }
         // 既に同方向ポジションあり → スキップ
-        if (openPosition && openPosition.side === decision.action) {
+        if (openPosition && (openPosition.holdSide || openPosition.side) === decision.action) {
           console.log(`[execute] already ${decision.action}, hold`);
         } else {
           const leverage = parseInt(process.env.LEVERAGE || '3');
@@ -170,17 +164,25 @@ async function runCycle(server) {
             await bitget.setTPSL(SYMBOL, decision.action, tpPrice, slPrice);
             console.log(`[execute] TP=${tpPrice} SL=${slPrice}`);
 
-            openPosition = { side: decision.action, size: sizeContracts, entryPrice: price, tpPrice, slPrice };
+            openPosition = {
+              holdSide: decision.action,
+              total: sizeContracts,
+              openPriceAvg: price.toString(),
+              marginSize: (sizeUsdt / leverage).toFixed(4),
+              unrealizedPL: '0',
+              takeProfit: tpPrice,
+              stopLoss: slPrice
+            };
           } else {
             console.error(`[execute] order failed: ${JSON.stringify(order)}`);
           }
         }
       }
     } else if (decision.action === 'close' && openPosition) {
-      const closeSide = openPosition.side === 'long' ? 'sell' : 'buy';
-      const order = await bitget.closePosition(SYMBOL, closeSide, openPosition.size);
-      console.log(`[execute] close ${openPosition.side} @ ~${price}`);
-      if (order?.code === '00000') openPosition = null;
+      const closeSide = (openPosition.holdSide || openPosition.side) === 'long' ? 'sell' : 'buy';
+      const order = await bitget.closePosition(SYMBOL, closeSide, openPosition.total || openPosition.size);
+      console.log(`[execute] close ${openPosition.holdSide || openPosition.side} @ ~${price}`);
+      if (order?.code === '00000') { openPosition = null; }
     } else {
       console.log(`[execute] hold`);
     }
@@ -196,7 +198,7 @@ async function runCycle(server) {
     }
 
     // server用にstate更新
-    if (server.updateState) server.updateState({ market, risk, crowd, proposal, audit, decision, timestamp });
+    if (server.updateState) server.updateState({ market, risk, crowd, proposal, audit, decision, timestamp, openPosition });
 
   } catch (err) {
     console.error(`[error] ${err.message}`);
