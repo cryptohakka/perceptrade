@@ -87,6 +87,27 @@ async function callLLM(prompt) {
 
 let openPosition = null;
 
+async function syncOpenPosition() {
+  try {
+    const positions = await bitget.getPositions();
+    const pos = positions?.data?.find(p => p.symbol === 'BTCUSDT' && parseFloat(p.total) > 0);
+    if (pos) {
+      openPosition = {
+        side: pos.holdSide,
+        size: pos.total,
+        entryPrice: parseFloat(pos.openPriceAvg),
+        tpPrice: pos.takeProfit,
+        slPrice: pos.stopLoss
+      };
+      console.log(`[sync] restored position: ${pos.holdSide} ${pos.total} BTC @ ${pos.openPriceAvg}`);
+    }
+  } catch(e) {
+    console.error('[sync] failed:', e.message);
+  }
+}
+
+syncOpenPosition();
+
 async function runCycle(server) {
   const timestamp = new Date().toISOString();
   console.log(`[${timestamp}] --- cycle start ---`);
