@@ -326,6 +326,11 @@ function updateCouncil(proposal, audit, decision, crowd, risk) {
     const sizePct = ((decision.size_pct||0)*100).toFixed(0);
     const conf = ((decision.confidence||0)*100).toFixed(0);
     const mult = risk ? risk.sizeMultiplier : 1;
+    const multEl = document.getElementById('councilMult');
+    if (multEl) {
+      multEl.textContent = '×' + mult;
+      multEl.style.color = mult < 1 ? 'var(--yellow)' : 'var(--muted2)';
+    }
     const arbAction = (decision.action || 'hold').toUpperCase();
     const arbText = decision.action === 'hold'
       ? `HOLD\n${conf}% confidence < 50% execution threshold.`
