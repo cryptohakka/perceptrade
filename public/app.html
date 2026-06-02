@@ -87,15 +87,15 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 .council-meta { display: flex; gap: 1rem; margin-top: 6px; }
 
 .council-body { padding: 0.75rem 1.1rem; }
-.council-row { display: flex; gap: 8px; margin-bottom: 7px; align-items: flex-start; }
+.council-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: flex-start; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 6px; padding: 8px 10px; }
 .council-row:last-child { margin-bottom: 0; }
 .council-deliberation .council-row { opacity: 0.72; }
 .council-badge { font-size: 9px; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; font-weight: 700; margin-top: 1px; white-space: nowrap; font-family: 'Space Mono', monospace; letter-spacing: 0.04em; }
 .badge-arch { background: rgba(168,223,240,0.12); color: var(--accent); }
 .badge-aud  { background: rgba(240,201,74,0.12); color: var(--yellow); }
-.council-text { font-size: 11px; color: var(--muted); line-height: 1.5; }
+.council-text { font-size: 11px; color: var(--muted); line-height: 1.5; white-space: pre-line; }
 
-.arbiter-row {
+.arbiter-row { border-width: 1px !important; border-color: rgba(255,255,255,0.15) !important; background: rgba(255,255,255,0.05) !important;
   background: rgba(74,210,149,0.05);
   border: 1px solid rgba(74,210,149,0.16);
   border-radius: 6px;
@@ -104,7 +104,7 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
   transition: background 0.4s, border-color 0.4s;
 }
 .arbiter-label { font-size: 9px; color: var(--green); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 4px; font-weight: 700; font-family: 'Space Mono', monospace; }
-.arbiter-text { font-size: 11px; color: var(--text); line-height: 1.5; }
+.arbiter-text { font-size: 11px; color: var(--text); line-height: 1.5; white-space: pre-line; }
 
 /* POSITION */
 .pos-empty { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; padding: 4px 0; }
@@ -198,16 +198,16 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
         </div>
         <div class="council-body">
           <div class="council-deliberation">
-            <div class="council-row">
-              <span class="council-badge badge-arch">ARCHITECT</span>
+            <div class="council-row" style="flex-direction:column;gap:4px">
+              <span class="arbiter-label" style="color:var(--muted)">▸ Architect</span>
               <span class="council-text" id="archText">Waiting for data...</span>
             </div>
-            <div class="council-row">
-              <span class="council-badge badge-aud">AUDITOR</span>
+            <div class="council-row" style="flex-direction:column;gap:4px">
+              <span class="arbiter-label" style="color:var(--yellow)">▸ Auditor</span>
               <span class="council-text" id="audText">Waiting for data...</span>
             </div>
-            <div class="council-row" id="crowdRow" style="display:none">
-              <span class="council-badge" style="background:rgba(255,80,80,0.15);color:#ff5050">CROWD</span>
+            <div class="council-row" id="crowdRow" style="display:none;flex-direction:column;gap:4px">
+              <span class="arbiter-label" style="color:#ff5050">▸ Crowd Risk</span>
               <span class="council-text" id="crowdText" style="color:#ff5050"></span>
             </div>
           </div>
@@ -271,7 +271,7 @@ function frBarWidth(fr) {
 
 const CEX_ORDER = ['binance','bitget','bybit','kucoin','okx','hyperliquid'];
 
-function updateCouncil(proposal, audit, decision, crowd) {
+function updateCouncil(proposal, audit, decision, crowd, risk) {
   if (!decision) return;
   const action = decision.action || 'hold';
   const color  = action === 'long' ? 'var(--green)' : action === 'short' ? 'var(--red)' : 'var(--muted)';
@@ -291,16 +291,38 @@ function updateCouncil(proposal, audit, decision, crowd) {
   }
 
   if (proposal) {
+    const archAction = (proposal.action || 'hold');
+    const archConf = ((proposal.confidence||0)*100).toFixed(0);
+    const archLine = archAction === 'long'  ? 'Positive funding momentum detected.'
+                   : archAction === 'short' ? 'Negative funding momentum detected.'
+                   : 'Signal strength below execution threshold.';
     document.getElementById('archText').textContent =
-      `${(proposal.action||'').toUpperCase()} (${((proposal.confidence||0)*100).toFixed(0)}%) — ${proposal.reasoning || ''}`;
+      `${archAction.toUpperCase()} (${archConf}%)\n${archLine}`;
   }
   if (audit) {
-    document.getElementById('audText').textContent =
-      `${audit.approved ? '✓ Approved' : '✗ Rejected'} (${((audit.confidence||0)*100).toFixed(0)}%) — ${audit.feedback || ''}`;
+    const audEl = document.getElementById('audText');
+    const audStatus = audit.approved ? 'Approved.' : 'Rejected.';
+    const audLines = [];
+    if (crowd && crowd.hasCrowdRisk) {
+      audLines.push(crowd.summary.split('|')[0].trim());
+    }
+    if (risk) {
+      if (risk.deviationScore > 50) audLines.push(`CEX spread divergence elevated (${risk.deviationScore.toFixed(0)}).`);
+      else if (risk.deviationScore > 30) audLines.push(`CEX spread divergence moderate (${risk.deviationScore.toFixed(0)}).`);
+      if (risk.sizeMultiplier < 1) audLines.push(`Size reduction applied: ×${risk.sizeMultiplier}.`);
+      if (audLines.length === 0) audLines.push('Risk within acceptable limits.');
+    }
+    audEl.textContent = `${audStatus}\n${audLines.join('\n')}`;
   }
   if (decision) {
-    document.getElementById('arbText').textContent =
-      `${(decision.action||'').toUpperCase()} @ ${((decision.size_pct||0)*100).toFixed(0)}% — ${decision.reasoning || ''}`;
+    const sizePct = ((decision.size_pct||0)*100).toFixed(0);
+    const conf = ((decision.confidence||0)*100).toFixed(0);
+    const mult = risk ? risk.sizeMultiplier : 1;
+    const arbAction = (decision.action || 'hold').toUpperCase();
+    const arbText = decision.action === 'hold'
+      ? `HOLD\n${conf}% confidence < 50% execution threshold.`
+      : `${arbAction} @ ${sizePct}%\n${conf}% confidence × ×${mult} risk multiplier = ${sizePct}%`;
+    document.getElementById('arbText').textContent = arbText;
   }
 
   // arbiter box color follows action
@@ -361,7 +383,7 @@ async function poll() {
     const riskHash = JSON.stringify(data.risk);
     const isNew = riskHash !== lastRiskHash;
 
-    if (data.decision) updateCouncil(data.proposal, data.audit, data.decision, data.crowd);
+    if (data.decision) updateCouncil(data.proposal, data.audit, data.decision, data.crowd, data.risk);
     updatePosition(data.position || null);
 
     if (isNew && data.risk) {

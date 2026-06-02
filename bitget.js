@@ -80,4 +80,21 @@ async function getAccountAssets() {
   return get('/api/v2/mix/account/accounts', { productType: 'USDT-FUTURES' });
 }
 
-module.exports = { getFundingRate, getOpenInterest, getTicker, getPositions, placeOrder, closePosition, getAccountAssets };
+// setTPSL added
+module.exports = { getFundingRate, getOpenInterest, getTicker, getPositions, placeOrder, closePosition, getAccountAssets, setTPSL };
+
+async function setTPSL(symbol, side, tpPrice, slPrice) {
+  return post('/api/v2/mix/order/place-pos-tpsl', {
+    symbol,
+    productType: 'USDT-FUTURES',
+    marginCoin: 'USDT',
+    holdSide: side,
+    stopSurplusTriggerPrice: tpPrice,
+    stopSurplusExecutePrice: tpPrice,
+    stopSurplusTriggerType: 'mark_price',
+    stopLossTriggerPrice: slPrice,
+    stopLossExecutePrice: slPrice,
+    stopLossTriggerType: 'mark_price'
+  });
+}
+module.exports = { getFundingRate, getOpenInterest, getTicker, getPositions, placeOrder, closePosition, getAccountAssets, setTPSL };
