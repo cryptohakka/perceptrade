@@ -173,6 +173,7 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
     <div>
       <div class="card">
         <div class="card-title">Open Position · BTCUSDT</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:8px;">BALANCE · <span id="accountBalance" style="color:var(--accent)">—</span> USDT</div>
         <div id="positionContent">
           <div class="pos-empty">No open position</div>
         </div>
@@ -356,6 +357,8 @@ function updatePosition(pos) {
     <div class="pos-row"><span class="pos-label">Entry</span><span class="pos-val">$${parseFloat(pos.openPriceAvg||0).toLocaleString()}</span></div>
     <div class="pos-row"><span class="pos-label">Unrealized PnL</span><span class="pos-val ${upl>=0?'profit':'loss'}">${upl>=0?'+':''}${upl.toFixed(2)} USDT</span></div>
     <div class="pos-row"><span class="pos-label">Margin</span><span class="pos-val">${parseFloat(pos.marginSize||0).toFixed(2)} USDT</span></div>
+    ${pos.takeProfit ? `<div class="pos-row"><span class="pos-label">Take Profit</span><span class="pos-val profit">$${parseFloat(pos.takeProfit).toLocaleString()}</span></div>` : ''}
+    ${pos.stopLoss ? `<div class="pos-row"><span class="pos-label">Stop Loss</span><span class="pos-val loss">$${parseFloat(pos.stopLoss).toLocaleString()}</span></div>` : ''}
   `;
 }
 
@@ -385,6 +388,9 @@ async function poll() {
 
     if (data.decision) updateCouncil(data.proposal, data.audit, data.decision, data.crowd, data.risk);
     updatePosition(data.openPosition || null);
+    if (data.accountBalance !== undefined) {
+      document.getElementById('accountBalance').textContent = parseFloat(data.accountBalance).toFixed(2);
+    }
 
     if (isNew && data.risk) {
       lastRiskHash = riskHash;

@@ -125,7 +125,11 @@ async function runCycle(server) {
     console.log(`[arbiter] action=${decision.action} confidence=${decision.confidence} size_pct=${decision.size_pct}`);
 
     // 執行
-    const ticker = await bitget.getTicker(SYMBOL);
+    const [ticker, assetsRes] = await Promise.all([
+      bitget.getTicker(SYMBOL),
+      bitget.getAccountAssets()
+    ]);
+    const accountBalance = assetsRes?.data?.[0]?.available || '0';
     const price = parseFloat(ticker?.data?.[0]?.lastPr || 0);
 
     if (decision.action === 'long' || decision.action === 'short') {
@@ -198,7 +202,7 @@ async function runCycle(server) {
     }
 
     // server用にstate更新
-    if (server.updateState) server.updateState({ market, risk, crowd, proposal, audit, decision, timestamp, openPosition });
+    if (server.updateState) server.updateState({ market, risk, crowd, proposal, audit, decision, timestamp, openPosition, accountBalance });
 
   } catch (err) {
     console.error(`[error] ${err.message}`);
