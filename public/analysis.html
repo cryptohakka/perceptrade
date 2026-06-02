@@ -176,7 +176,21 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
       <div id="crowdRiskContent" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">None detected</div>
     </div>
   </div>
-    <!-- CEX Bar Chart -->
+      <div class="card" style="margin-top:0;">
+      <div class="card-title">Crowd Risk Event History</div>
+      <div id="crowdHistoryContent">
+        <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">Loading...</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:0;">
+      <div class="card-title">Cross-CEX Crowd Map <span style="font-size:9px;color:var(--label);margin-left:8px;">FR deviation · OI deviation from median</span></div>
+      <div id="crowdMapContent">
+        <div style="font-family:Space Mono,monospace;font-size:11px;color:var(--muted);">Loading...</div>
+      </div>
+    </div>
+
+  <!-- CEX Bar Chart -->
   <div class="card">
     <div class="card-title">CEX · FR &amp; OI Delta · 5min snapshot</div>
     <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:0;align-items:center;">
@@ -313,7 +327,7 @@ async function poll() {
   try {
     const res = await fetch('/api/state');
     const data = await res.json();
-    if (data && data.risk) update(data);
+    if (data && data.risk) { update(data); renderCrowdMap(data); }
     // Crowd Risk
     const crowdSection = document.getElementById('crowdRiskSection');
     const crowdContent = document.getElementById('crowdRiskContent');
@@ -337,30 +351,145 @@ async function poll() {
       document.getElementById('lsRatioVal').textContent = parseFloat(ls.ratio).toFixed(3);
       document.getElementById('lsBarFill').style.width = (ls.longRatio * 100).toFixed(1) + '%';
     }
-    if (data && data.market && data.market.consensus) {
-      const c = data.market.consensus;
-      document.getElementById('consensusScore').textContent = c.score + '%';
-      document.getElementById('consensusLabel').textContent = c.label;
-      document.getElementById('consensusLong').textContent = c.long;
-      document.getElementById('consensusShort').textContent = c.short;
-      document.getElementById('consensusNeutral').textContent = c.neutral;
-      const alignEl = document.getElementById('consensusAlignment');
-      if (alignEl && c.alignment) {
-        alignEl.innerHTML = c.alignment.map(a => {
-          const col = a.direction === 'long' ? 'var(--green)' : a.direction === 'short' ? 'var(--red)' : 'var(--muted)';
-          const arrow = a.direction === 'long' ? '▲' : a.direction === 'short' ? '▼' : '—';
-          return `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);">
-            <span style="color:var(--muted);width:90px;">${a.exchange.toUpperCase()}</span>
-            <span style="color:${col};">${arrow} ${a.direction.toUpperCase()}</span>
-            <span style="color:var(--muted);text-align:right;">${(a.fr*100).toFixed(4)}%</span>
-          </div>`;
-        }).join('');
-      }
-    }
-  } catch(e) {}
+    // consensus elements removed (not in current HTML)
+    document.getElementById('statusText').textContent = 'live';
+  } catch(e) {
+    document.getElementById('statusText').textContent = 'error';
+  }
 }
+
+
+function median(arr) {
+  const s = [...arr].sort((a,b)=>a-b);
+  const m = Math.floor(s.length/2);
+  return s.length%2 ? s[m] : (s[m-1]+s[m])/2;
+}
+function heatColor(dev, maxDev) {
+  if (maxDev === 0) return 'rgba(255,255,255,0.04)';
+  const ratio = Math.min(1, Math.abs(dev) / maxDev);
+  const isPos = dev >= 0;
+  const r = isPos ? Math.round(74 + (240-74)*ratio) : Math.round(74*(1-ratio));
+  const g = isPos ? Math.round(210*(1-ratio*0.7)) : Math.round(74*(1-ratio));
+  const b = isPos ? Math.round(149*(1-ratio*0.8)) : Math.round(90 + (240-90)*ratio);
+  return `rgba(${r},${g},${b},${0.12 + ratio*0.5})`;
+}
+function renderCrowdMap(state) {
+  const el = document.getElementById('crowdMapContent');
+  if (!el) return;
+  const sources = state.market?.sources || [];
+  const oiChanges = state.risk?.oiChanges || {};
+  const frChanges = state.risk?.frChanges || {};
+  const CEX = ['binance','bitget','bybit','kucoin','okx','hyperliquid'];
+
+  const frs  = CEX.map(n => sources.find(s=>s.exchange===n)?.fr).filter(v=>v!=null);
+  const oics = CEX.map(n => oiChanges[n]).filter(v=>v!=null && isFinite(v));
+  const frcs = CEX.map(n => frChanges[n]).filter(v=>v!=null && isFinite(v));
+  const medFR  = frs.length  ? median(frs)  : 0;
+  const medOIC = oics.length ? median(oics) : 0;
+  const medFRC = frcs.length ? median(frcs) : 0;
+
+  const frDevs  = CEX.map(n => { const s=sources.find(x=>x.exchange===n); return s?.fr!=null ? s.fr-medFR : null; });
+  const oiDevs  = CEX.map(n => { const v=oiChanges[n]; return (v!=null&&isFinite(v)) ? v-medOIC : null; });
+  const frCDevs = CEX.map(n => { const v=frChanges[n]; return (v!=null&&isFinite(v)) ? v-medFRC : null; });
+
+  const maxFRD  = Math.max(...frDevs.filter(v=>v!=null).map(Math.abs),  0.00001);
+  const maxOID  = Math.max(...oiDevs.filter(v=>v!=null).map(Math.abs),  0.001);
+  const maxFRCD = Math.max(...frCDevs.filter(v=>v!=null).map(Math.abs), 0.1);
+
+  const COL = 'font-family:Space Mono,monospace;font-size:9px;padding:4px 8px;text-align:center;letter-spacing:0.04em;';
+  const LCOL = 'font-family:Space Mono,monospace;font-size:10px;padding:5px 8px;color:var(--text);font-weight:700;letter-spacing:0.06em;';
+
+  let t = '<table style="width:100%;border-collapse:separate;border-spacing:2px;">';
+  t += '<thead><tr>';
+  t += '<th style="'+COL+'text-align:left;color:var(--label);">CEX</th>';
+  t += '<th style="'+COL+'color:var(--label);">FR</th>';
+  t += '<th style="'+COL+'color:var(--label);">FR vs Median</th>';
+  t += '<th style="'+COL+'color:var(--label);">FR Δ vs Median</th>';
+  t += '<th style="'+COL+'color:var(--label);">OI Δ vs Median</th>';
+  t += '</tr></thead><tbody>';
+
+  CEX.forEach((name, i) => {
+    const src = sources.find(s=>s.exchange===name);
+    const fr    = src?.fr;
+    const frDev = frDevs[i];
+    const frCD  = frCDevs[i];
+    const oiD   = oiDevs[i];
+    const isDex = name === 'hyperliquid';
+
+    function cell(val, dev, maxD, fmt) {
+      if (val==null||dev==null) return '<td style="'+COL+'color:var(--label);">—</td>';
+      const bg = heatColor(dev, maxD);
+      const col = dev > 0 ? 'var(--green)' : dev < 0 ? 'var(--red)' : 'var(--muted)';
+      const devStr = (dev>=0?'+':'')+fmt(dev);
+      return `<td style="${COL}background:${bg};border-radius:4px;color:${col};">${fmt(val)}<br><span style="font-size:8px;opacity:0.7">${devStr}</span></td>`;
+    }
+
+    const fmtFR  = v => (v>=0?'+':'')+(v*100).toFixed(4)+'%';
+    const fmtOI  = v => (v>=0?'+':'')+(v*100).toFixed(2)+'%';
+    const fmtFRC = v => (v>=0?'+':'')+(v*100).toFixed(1)+'%';
+
+    t += '<tr>';
+    t += `<td style="${LCOL}">${name.toUpperCase()}${isDex?'<span style="font-size:8px;color:var(--accent);margin-left:4px;">DEX</span>':''}</td>`;
+    t += cell(fr,    frDev,  maxFRD,  fmtFR);
+    t += cell(frDev, frDev,  maxFRD,  fmtFR);
+    t += cell(frChanges[name]??null, frCD, maxFRCD, fmtFRC);
+    t += cell(oiChanges[name]??null, oiD,  maxOID,  fmtOI);
+    t += '</tr>';
+  });
+
+  t += '</tbody></table>';
+  t += '<div style="margin-top:8px;font-size:9px;color:var(--label);font-family:Space Mono,monospace;">Color intensity = deviation from cross-CEX median. Green=above median, Red=below.</div>';
+  el.innerHTML = t;
+}
+async function loadCrowdHistory() {
+  try {
+    const res = await fetch('/api/crowd-events');
+    const events = await res.json();
+    const el = document.getElementById('crowdHistoryContent');
+    if (!el) return;
+    if (!events || events.length === 0) {
+      el.innerHTML = '<div style="font-family:Space Mono,monospace;font-size:11px;color:var(--muted);">No crowd risk events recorded yet.</div>';
+      return;
+    }
+    let h = '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-family:Space Mono,monospace;font-size:10px;">';
+    h += '<thead><tr style="color:var(--label);text-transform:uppercase;letter-spacing:0.06em;">';
+    h += '<th style="text-align:left;padding:4px 6px;border-bottom:1px solid var(--border);">Time</th>';
+    h += '<th style="text-align:left;padding:4px 6px;border-bottom:1px solid var(--border);">Alert</th>';
+    h += '<th style="text-align:center;padding:4px 6px;border-bottom:1px solid var(--border);">Risk</th>';
+    h += '<th style="text-align:center;padding:4px 6px;border-bottom:1px solid var(--border);">Mult</th>';
+    h += '<th style="text-align:center;padding:4px 6px;border-bottom:1px solid var(--border);">Action</th>';
+    h += '<th style="text-align:right;padding:4px 6px;border-bottom:1px solid var(--border);">Size</th>';
+    h += '</tr></thead><tbody>';
+    for (const ev of events) {
+      const t = new Date(ev.timestamp);
+      const ts = t.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit'}) + ' ' + t.toTimeString().slice(0,5);
+      const riskColor = ev.riskLevel==='risk_off'?'var(--red)':ev.riskLevel==='neutral'?'var(--yellow)':'var(--green)';
+      const actColor  = ev.action==='long'?'var(--green)':ev.action==='short'?'var(--red)':'var(--muted)';
+      const multColor = ev.sizeMultiplier>=1?'var(--green)':ev.sizeMultiplier>=0.5?'var(--yellow)':'var(--red)';
+      const summary = ev.alerts && ev.alerts.length > 0
+        ? ev.alerts.map(a => a.exchange.toUpperCase() + ' ' + (a.type==='fr_outlier'?'FR outlier':a.type==='oi_concentration'?'OI spike':'FR spike')).join(', ')
+        : ev.summary || '—';
+      h += '<tr style="border-bottom:1px solid rgba(255,255,255,0.04);">';
+      h += '<td style="padding:5px 6px;color:var(--label);white-space:nowrap;">' + ts + '</td>';
+      h += '<td style="padding:5px 6px;color:var(--red);">' + summary + '</td>';
+      h += '<td style="padding:5px 6px;text-align:center;color:' + riskColor + ';">' + (ev.riskLevel||'').replace('_',' ').toUpperCase() + '</td>';
+      h += '<td style="padding:5px 6px;text-align:center;color:' + multColor + ';">x' + parseFloat(ev.sizeMultiplier||1).toFixed(2) + '</td>';
+      h += '<td style="padding:5px 6px;text-align:center;color:' + actColor + ';">' + (ev.action||'hold').toUpperCase() + '</td>';
+      h += '<td style="padding:5px 6px;text-align:right;color:var(--text);">' + ((ev.size_pct||0)*100).toFixed(0) + '%</td>';
+      h += '</tr>';
+    }
+    h += '</tbody></table></div>';
+    el.innerHTML = h;
+  } catch(e) {
+    const el = document.getElementById('crowdHistoryContent');
+    if (el) el.innerHTML = '<div style="color:var(--muted);font-size:11px;">Failed to load.</div>';
+  }
+}
+
 poll();
+loadCrowdHistory();
 setInterval(poll, 5000);
+setInterval(loadCrowdHistory, 30000);
 </script>
 </body>
 </html>
