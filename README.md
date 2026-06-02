@@ -17,27 +17,28 @@ PercepTrade aggregates 6 CEX/DEX sources, detects these cross-venue anomalies in
 ---
 
 ## Architecture
+
+```
 Perception Layer (6 sources)
-Bybit / OKX / Binance / KuCoin / Hyperliquid DEX
-
-Bitget (FR / OI / Long-Short Ratio — Bitget exclusive)
-│
-▼
+  Bybit / OKX / Binance / KuCoin / Hyperliquid DEX
+  + Bitget (FR / OI / Long-Short Ratio — Bitget exclusive)
+       │
+       ▼
 Signal Computation
-directionSignal  →  long / short + confidence %
-riskSignal       →  sizeMultiplier (×0.25 / ×0.50 / ×1.00)
-crowdRisk        →  anomalous exchange detection + size suppression
-│
-▼
+  directionSignal  →  long / short + confidence %
+  riskSignal       →  sizeMultiplier (×0.25 / ×0.50 / ×1.00)
+  crowdRisk        →  anomalous exchange detection + size suppression
+       │
+       ▼
 Triple-A Agent Council (OpenRouter / gemini-2.5-flash-lite)
-Architect  →  proposes action with L/S ratio context
-Auditor    →  stress-tests proposal, flags crowd risk
-Arbiter    →  final decision + position size
-│
-▼
+  Architect  →  proposes action with L/S ratio context
+  Auditor    →  stress-tests proposal, flags crowd risk
+  Arbiter    →  final decision + position size
+       │
+       ▼
 Bitget Futures Execution
-Market order + TP/SL (place-pos-tpsl)
-
+  Market order + TP/SL (place-pos-tpsl)
+```
 
 **Cycle:** 5 minutes | **Bot/Agent split:** ~60% rule-based / ~40% LLM
 
@@ -62,7 +63,7 @@ The core differentiator. Each cycle, PercepTrade checks whether any single excha
 
 ## Bitget-Exclusive Signals
 
-Beyond execution, percepTrade uses Bitget-specific market data unavailable on other exchanges:
+Beyond execution, PercepTrade uses Bitget-specific market data unavailable on other exchanges:
 
 | Signal | Endpoint | Usage |
 |--------|----------|-------|
@@ -137,18 +138,23 @@ node main.js
 ```
 
 ### Required `.env`
+
+```
 OPENROUTER_API_KEY=
 BITGET_API_KEY=
 BITGET_SECRET_KEY=
 BITGET_PASSPHRASE=
 CYCLE_INTERVAL_MS=300000
 MAX_POSITION_SIZE_USDT=100
+```
 
 > FR/OI perception uses public endpoints across all 6 sources. API keys are only required for Bitget execution.
 
 ---
 
 ## File Structure
+
+```
 perceptrade/
 ├── main.js          # entry point
 ├── agent.js         # Triple-A council + execution logic
@@ -157,9 +163,10 @@ perceptrade/
 ├── bitget.js        # Bitget API wrapper (order + market data)
 ├── server.js        # Express UI server
 └── public/
-├── landing.html
-├── app.html
-└── analysis.html
+    ├── landing.html
+    ├── app.html
+    └── analysis.html
+```
 
 ---
 
