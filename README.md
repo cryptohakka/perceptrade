@@ -130,6 +130,8 @@ Sequential debate — no agent shares system prompts with others:
 - **Auditor** — receives natural language Crowd Risk warning (exchange name, FR value, MAD deviation), challenges proposal, can reduce confidence
 - **Arbiter** — final decision: `action` + `size_pct = proposal.confidence × sizeMultiplier`
 
+**Fallback behavior:** If OpenRouter is unavailable or rate-limited, each agent falls back to a safe default — Architect and Arbiter default to `hold`, Auditor defaults to conservative reject. The system never trades on an incomplete council decision.
+
 ---
 
 ## Stack
@@ -179,6 +181,8 @@ MAX_POSITION_SIZE_USDT=100
 
 > FR/OI perception uses public endpoints across all 6 sources. API keys are only required for Bitget execution.
 
+> **Rate limits:** If running multiple instances simultaneously, some exchanges (particularly Binance and Hyperliquid) may rate-limit repeated requests from the same IP. In high-traffic deployments, routing perception requests through a proxy or using a dedicated IP per instance is recommended.
+
 ---
 
 ## File Structure
@@ -192,6 +196,8 @@ perceptrade/
 ├── bitget.js           # Bitget API wrapper (order + market data)
 ├── server.js           # Express UI server
 ├── crowd_events.json   # Crowd Risk event log (auto-generated)
+├── crowd_outcomes.json # Post-event price outcome tracking 1h/3h/6h/12h (auto-generated)
+├── snapshots.json      # Per-cycle FR/OI/risk snapshots for backtesting (auto-generated)
 └── public/
     ├── landing.html
     ├── app.html
