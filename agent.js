@@ -1,32 +1,177 @@
 require('dotenv').config();
+const fs = require('fs');
+const CROWD_EVENTS_FILE = process.env.CROWD_EVENTS_FILE || '/home/agent/perceptrade/crowd_events.json';
+const SNAPSHOTS_FILE = process.env.SNAPSHOTS_FILE || '/home/agent/perceptrade/snapshots.json';
+const OUTCOMES_FILE = process.env.OUTCOMES_FILE || '/home/agent/perceptrade/crowd_outcomes.json';
+
+// ── Crowd Risk Event保存 ──────────────────────────────────────────
+function saveCrowdEvent(crowd, risk, decision, market, price) {
+  try {
+    let events = [];
+    if (fs.existsSync(CROWD_EVENTS_FILE)) {
+      events = JSON.parse(fs.readFileSync(CROWD_EVENTS_FILE, 'utf8'));
+    }
+    const originalSizePct = decision?.confidence || 0;
+    const finalSizePct = decision?.size_pct || 0;
+    events.unshift({
+      timestamp: new Date().toISOString(),
+      alerts: crowd.alerts,
+      summary: crowd.summary,
+      riskLevel: risk.riskLevel,
+      sizeMultiplier: risk.sizeMultiplier,
+      action: decision?.action || 'hold',
+      original_size_pct: originalSizePct,
+      size_pct: finalSizePct,
+      reduction_pct: parseFloat((originalSizePct - finalSizePct).toFixed(3)),
+      avgFR: market?.avgFR || null,
+      btcPrice: price || null
+    });
+    if (events.length > 100) events = events.slice(0, 100);
+    fs.writeFileSync(CROWD_EVENTS_FILE, JSON.stringify(events, null, 2));
+  } catch(e) {
+    console.error('[crowd_event] save failed:', e.message);
+  }
+}
+
+// ── 毎サイクル スナップショット保存 ──────────────────────────────
+function saveSnapshot(market, risk, crowd, decision, price) {
+  try {
+    let snaps = [];
+    if (fs.existsSync(SNAPSHOTS_FILE)) {
+      snaps = JSON.parse(fs.readFileSync(SNAPSHOTS_FILE, 'utf8'));
+    }
+    snaps.unshift({
+      timestamp: new Date().toISOString(),
+      btcPrice: price || null,
+      sources: (market.sources || []).map(s => ({
+        exchange: s.exchange,
+        fr: s.fr,
+        oi: s.oi
+      })),
+      avgFR: market.avgFR || null,
+      frZ: market.directionSignal?.frZ ?? null,
+      directionSignal: market.directionSignal,
+      riskLevel: risk.riskLevel,
+      sizeMultiplier: risk.sizeMultiplier,
+      deviationScore: risk.deviationScore,
+      oiChangeScore: risk.oiChangeScore,
+      hasCrowdRisk: crowd.hasCrowdRisk,
+      crowdAlerts: crowd.alerts || [],
+      action: decision?.action || 'hold',
+      size_pct: decision?.size_pct || 0,
+      confidence: decision?.confidence || 0
+    });
+    fs.writeFileSync(SNAPSHOTS_FILE, JSON.stringify(snaps));
+  } catch(e) {
+    console.error('[snapshot] save failed:', e.message);
+  }
+}
+
+// ── FR履歴をsnapshotsからロード ──────────────────────────────────
+function loadFRHistory(n = 288) {
+  try {
+    if (!fs.existsSync(SNAPSHOTS_FILE)) return [];
+    const snaps = JSON.parse(fs.readFileSync(SNAPSHOTS_FILE, 'utf8'));
+    return snaps.slice(0, n).map(s => s.avgFR).filter(v => typeof v === 'number');
+  } catch { return []; }
+}
+
+// ── 再起動時のprevSources復元（OI momentumの連続性確保）──────────
+// 直前スナップショットのsourcesを復元。ただし10分(2サイクル)超に古い
+// 場合は比較対象として不適切なので空で返す（異常時の安全装置）。
+function loadPrevSources(maxAgeMs = 10 * 60 * 1000) {
+  try {
+    if (!fs.existsSync(SNAPSHOTS_FILE)) return [];
+    const snaps = JSON.parse(fs.readFileSync(SNAPSHOTS_FILE, 'utf8'));
+    const latest = snaps[0];
+    if (!latest || !latest.sources || !latest.timestamp) return [];
+    const age = Date.now() - new Date(latest.timestamp).getTime();
+    if (age > maxAgeMs) {
+      console.log(`[sync] last snapshot ${Math.round(age/60000)}min old (>10min) — OI momentum starts fresh`);
+      return [];
+    }
+    console.log(`[sync] restored prevSources from snapshot ${Math.round(age/1000)}s ago (OI continuity preserved)`);
+    return latest.sources;
+  } catch { return []; }
+}
+
+// ── Crowd Risk アウトカム追跡 ──────────────────────────────────────
+const OUTCOME_INTERVALS_MS = [
+  { label: '1h',  ms: 1  * 60 * 60 * 1000 },
+  { label: '3h',  ms: 3  * 60 * 60 * 1000 },
+  { label: '6h',  ms: 6  * 60 * 60 * 1000 },
+  { label: '12h', ms: 12 * 60 * 60 * 1000 }
+];
+
+function scheduleCrowdOutcome(eventTimestamp, entryPrice, alertSummary) {
+  OUTCOME_INTERVALS_MS.forEach(({ label, ms }) => {
+    setTimeout(async () => {
+      try {
+        const ticker = await bitget.getTicker('BTCUSDT');
+        const exitPrice = parseFloat(ticker?.data?.[0]?.lastPr || 0);
+        if (!exitPrice) return;
+        const changePct = ((exitPrice - entryPrice) / entryPrice * 100).toFixed(3);
+        let outcomes = [];
+        if (fs.existsSync(OUTCOMES_FILE)) {
+          outcomes = JSON.parse(fs.readFileSync(OUTCOMES_FILE, 'utf8'));
+        }
+        const existing = outcomes.find(o => o.eventTimestamp === eventTimestamp);
+        if (existing) {
+          existing.priceChanges[label] = { exitPrice, changePct: parseFloat(changePct) };
+        } else {
+          outcomes.unshift({
+            eventTimestamp,
+            entryPrice,
+            alertSummary,
+            priceChanges: { [label]: { exitPrice, changePct: parseFloat(changePct) } }
+          });
+        }
+        if (outcomes.length > 200) outcomes = outcomes.slice(0, 200);
+        fs.writeFileSync(OUTCOMES_FILE, JSON.stringify(outcomes, null, 2));
+        console.log(`[outcome] ${label} after crowd risk: BTC ${changePct > 0 ? '+' : ''}${changePct}% (${entryPrice} → ${exitPrice})`);
+      } catch(e) {
+        console.error(`[outcome] ${label} fetch failed:`, e.message);
+      }
+    }, ms);
+  });
+}
+
 const { collectMarketData } = require('./perception');
 const { assess, calcSizeMultiplier, detectCrowdRisk } = require('./risk');
 const bitget = require('./bitget');
 const MAX_SIZE = parseFloat(process.env.MAX_POSITION_SIZE_USDT || '100');
 const CYCLE_MS = parseInt(process.env.CYCLE_INTERVAL_MS || '300000');
 const SYMBOL = 'BTCUSDT';
-let prevSources = [];
+let prevSources = loadPrevSources();
 const server = require('./server');
 
+// ── ARCHITECT: 逆張り戦略前提 ────────────────────────────────────
 const ARCHITECT_PROMPT = (market, risk) => `
-You are the Architect. Propose a trading action.
+You are the Architect in a CONTRARIAN funding-rate strategy.
+The deterministic signal already encodes direction. Confirm or veto — never invent direction.
 
 Direction Signal: ${JSON.stringify(market.directionSignal)}
-Bitget Long/Short Ratio: ${market.longShortRatio ? `L${(market.longShortRatio.longRatio*100).toFixed(1)}% / S${(market.longShortRatio.shortRatio*100).toFixed(1)}% (ratio: ${market.longShortRatio.ratio})` : 'N/A'}
-CEX Consensus: ${market.consensus.score}% ${market.consensus.label} (${market.consensus.long}L/${market.consensus.short}S/${market.consensus.neutral}N of ${market.consensus.total})
+  - frZ: funding z-score vs 24h baseline. frZ > 0 = crowd over-long. frZ < 0 = crowd over-short.
+  - Strategy FADES extremes: over-long crowd -> short, over-short crowd -> long.
+  - oiMomentum strongly positive = crowd still piling in (dangerous to fade).
+  - frRegime: "extreme" (|frZ|>=2) means unstable liquidity — strength is already scaled down ×0.7 as caution. Respect the reduced strength.
+  - baselineReady=false means insufficient history -> must hold.
+Bitget L/S Ratio: ${market.longShortRatio ? `L${(market.longShortRatio.longRatio*100).toFixed(1)}% / S${(market.longShortRatio.shortRatio*100).toFixed(1)}%` : 'N/A'}
+CEX Consensus: ${market.consensus.score}% ${market.consensus.label}
 riskLevel: ${risk.riskLevel} | sizeMultiplier: ${risk.sizeMultiplier}
 
 Rules:
-- direction="long" → long, direction="short" → short
-- direction="neutral" AND strength=0 → hold
-- strength >= 0.3 always triggers action
-- consensus < 50%: reduce confidence by 0.2
-- consensus >= 85%: boost confidence by 0.1
+- If baselineReady=false OR direction="neutral" OR strength < 0.4: action="hold".
+- Otherwise action = directionSignal.direction exactly. Do NOT flip or override it.
+- confidence = directionSignal.strength.
+- Adjust confidence: +0.1 if Bitget L/S ratio confirms crowd is lopsided in the direction being faded. -0.15 if oiMomentum > 0.003 (crowd still building).
+- Cap confidence at 0.9.
 
-Respond in JSON. reasoning must be ONE sentence, max 10 words, no hedging, no meta-commentary.
+Respond in JSON. reasoning must be ONE sentence, max 10 words, no hedging.
 { "action": "long"|"short"|"hold", "confidence": 0-1, "reasoning": "..." }
 `;
 
+// ── AUDITOR ───────────────────────────────────────────────────────
 const AUDITOR_PROMPT = (proposal, risk, crowd) => `
 You are the Auditor. Review this proposal focusing on position sizing risk.
 
@@ -39,18 +184,27 @@ Risk Assessment:
 - oiConcentration: ${risk.oiConcentration.toFixed(2)}
 
 Crowd Risk Detection:
-${crowd.hasCrowdRisk ? '⚠ ' + crowd.summary : 'none'}
+${crowd.hasCrowdRisk
+  ? `⚠ CROWD RISK ACTIVE — ${crowd.alerts.map(a =>
+      a.type === 'fr_outlier'
+        ? `${a.exchange} FR is ${(a.value*100).toFixed(4)}% vs cross-CEX median ${(a.avg*100).toFixed(4)}% (${a.deviationX}× MAD — statistically anomalous crowd concentration)`
+        : a.type === 'oi_concentration'
+        ? `${a.exchange} OI change is ${(a.change*100).toFixed(2)}% vs avg — abnormal capital flow into single venue`
+        : a.msg
+    ).join('; ')}`
+  : 'none'}
 
 Rules:
-- If riskLevel="risk_off": recommend size reduction, but do NOT reject direction
-- If oiConcentration > 0.7: flag liquidity concentration risk
-- If crowd.hasCrowdRisk: flag the anomalous exchange and recommend reducing size
-- Focus on WHETHER to reduce size, not whether to change direction
+- If riskLevel="risk_off": recommend size reduction, but do NOT reject direction.
+- If oiConcentration > 0.7: flag liquidity concentration risk.
+- If crowd.hasCrowdRisk: flag the anomalous exchange and recommend reducing size.
+- Focus on WHETHER to reduce size, not whether to change direction.
 
-Respond: { approved: true|false, confidence: 0-1, feedback: "..." }
+Respond: { "approved": true|false, "confidence": 0-1, "feedback": "..." }
 JSON only.
 `;
 
+// ── ARBITER ───────────────────────────────────────────────────────
 const ARBITER_PROMPT = (proposal, audit, risk) => `
 You are the Arbiter. Make the final decision.
 
@@ -59,34 +213,43 @@ Audit: ${JSON.stringify(audit)}
 sizeMultiplier: ${risk.sizeMultiplier}
 
 Rules:
-- Respect proposal direction unless audit.approved=false AND riskLevel="risk_off"
-- Minimum confidence to act: 0.3
+- Respect proposal direction unless audit.approved=false AND riskLevel="risk_off".
+- Minimum confidence to act: 0.4
 - size_pct = proposal.confidence * sizeMultiplier (show the math)
 
-reasoning must follow this EXACT format (no other text):
-"[ACTION] @ [size_pct*100]%\n[proposal.confidence*100]% confidence × ×[sizeMultiplier] risk multiplier = [size_pct*100]%"
-Example: "LONG @ 35%\n70% confidence × ×0.5 risk multiplier = 35%"
+reasoning must follow this EXACT format:
+"[ACTION] @ [size_pct*100]%\n[proposal.confidence*100]% confidence × ${risk.sizeMultiplier} risk multiplier = [size_pct*100]%"
 
 { "action": "long"|"short"|"close"|"hold", "confidence": 0-1, "size_pct": 0-1, "reasoning": "..." }
 `;
 
-async function callLLM(prompt) {
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`
-    },
-    body: JSON.stringify({
-      model: process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash-lite',
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' }
-    })
-  });
-  const data = await res.json();
-  const text = data.choices?.[0]?.message?.content || '{}';
-  try { return JSON.parse(text); } catch { return {}; }
+// ── LLM呼び出し（フォールバック付き）──────────────────────────────
+async function callLLM(prompt, fallback = {}) {
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash-lite',
+        max_tokens: 1024,
+        messages: [{ role: 'user', content: prompt }],
+        response_format: { type: 'json_object' }
+      })
+    });
+    const data = await res.json();
+    if (data.error) {
+      console.warn(`[llm] API error: ${data.error.message} → fallback`);
+      return fallback;
+    }
+    const text = data.choices?.[0]?.message?.content || '{}';
+    try { return JSON.parse(text); } catch { return fallback; }
+  } catch(e) {
+    console.warn(`[llm] fetch failed: ${e.message} → fallback`);
+    return fallback;
+  }
 }
 
 let openPosition = null;
@@ -96,7 +259,7 @@ async function syncOpenPosition() {
     const positions = await bitget.getPositions();
     const pos = positions?.data?.find(p => p.symbol === 'BTCUSDT' && parseFloat(p.total) > 0);
     if (pos) {
-      openPosition = pos;  // keep raw Bitget structure for UI
+      openPosition = pos;
       console.log(`[sync] restored position: ${pos.holdSide} ${pos.total} BTC @ ${pos.openPriceAvg}`);
     }
   } catch(e) {
@@ -111,24 +274,30 @@ async function runCycle(server) {
   console.log(`[${timestamp}] --- cycle start ---`);
   try {
     const prev = prevSources;
-    const market = await collectMarketData(SYMBOL, prev);
+    const frHistory = loadFRHistory();
+    const market = await collectMarketData(SYMBOL, prev, frHistory);
     prevSources = market.sources;
     const risk = assess(market, prev);
-    console.log(`[perception] ${market.sources.length} CEX sources, dir=${market.directionSignal.direction} strength=${market.directionSignal.strength}`);
+    console.log(`[perception] ${market.sources.length} CEX sources, dir=${market.directionSignal.direction} frZ=${market.directionSignal.frZ} strength=${market.directionSignal.strength} baseline=${market.directionSignal.baselineReady}`);
     console.log(`[risk] ${risk.summary}`);
     const crowd = detectCrowdRisk(market.sources, risk.frChanges, risk.oiChanges);
     if (crowd.hasCrowdRisk) console.log(`[crowd] ${crowd.summary}`);
 
-    const proposal = await callLLM(ARCHITECT_PROMPT(market, risk));
+    const proposal = await callLLM(ARCHITECT_PROMPT(market, risk), {
+      action: 'hold', confidence: 0, reasoning: 'LLM unavailable — safe hold'
+    });
     console.log(`[architect] action=${proposal.action} confidence=${proposal.confidence}`);
 
-    const audit = await callLLM(AUDITOR_PROMPT(proposal, risk, crowd));
+    const audit = await callLLM(AUDITOR_PROMPT(proposal, risk, crowd), {
+      approved: false, confidence: 0, feedback: 'LLM unavailable — conservative reject'
+    });
     console.log(`[auditor] approved=${audit.approved} confidence=${audit.confidence}`);
 
-    const decision = await callLLM(ARBITER_PROMPT(proposal, audit, risk));
+    const decision = await callLLM(ARBITER_PROMPT(proposal, audit, risk), {
+      action: 'hold', confidence: 0, size_pct: 0, reasoning: 'LLM unavailable — safe hold'
+    });
     console.log(`[arbiter] action=${decision.action} confidence=${decision.confidence} size_pct=${decision.size_pct}`);
 
-    // 執行
     const [ticker, assetsRes] = await Promise.all([
       bitget.getTicker(SYMBOL),
       bitget.getAccountAssets()
@@ -136,20 +305,28 @@ async function runCycle(server) {
     const accountBalance = assetsRes?.data?.[0]?.available || '0';
     const price = parseFloat(ticker?.data?.[0]?.lastPr || 0);
 
+    if (crowd.hasCrowdRisk) {
+      saveCrowdEvent(crowd, risk, decision, market, price);
+      if (price > 0) {
+        scheduleCrowdOutcome(timestamp, price, crowd.summary);
+        console.log(`[outcome] tracking scheduled: 1h/3h/6h/12h from ${price}`);
+      }
+    }
+
+    saveSnapshot(market, risk, crowd, decision, price);
+
     if (decision.action === 'long' || decision.action === 'short') {
-      if (decision.confidence >= 0.3 && decision.size_pct > 0 && price > 0) {
-        // 既存ポジションと逆方向 → まず閉じる
+      if (decision.confidence >= 0.4 && decision.size_pct > 0 && price > 0) {
         if (openPosition && (openPosition.holdSide || openPosition.side) !== decision.action) {
           const closeSide = (openPosition.holdSide || openPosition.side) === 'long' ? 'sell' : 'buy';
           await bitget.closePosition(SYMBOL, closeSide, openPosition.total || openPosition.size);
           console.log(`[execute] closed ${openPosition.holdSide || openPosition.side} before reversal`);
           openPosition = null;
         }
-        // 既に同方向ポジションあり → スキップ
         if (openPosition && (openPosition.holdSide || openPosition.side) === decision.action) {
           console.log(`[execute] already ${decision.action}, hold`);
         } else {
-          const leverage = parseInt(process.env.LEVERAGE || '3');
+          const leverage = parseInt(process.env.LEVERAGE || '2');
           const sizeUsdt = MAX_SIZE * decision.size_pct;
           const sizeContracts = (sizeUsdt * leverage / price).toFixed(4);
           const orderSide = decision.action === 'long' ? 'buy' : 'sell';
@@ -159,9 +336,8 @@ async function runCycle(server) {
           console.log(`[execute] order=${JSON.stringify(order?.data)}`);
 
           if (order?.code === '00000') {
-            // TP/SL設定
-            const TP_PCT = parseFloat(process.env.TP_PCT || '0.015');  // 1.5%
-            const SL_PCT = parseFloat(process.env.SL_PCT || '0.010');  // 1.0%
+            const TP_PCT = parseFloat(process.env.TP_PCT || '0.015');
+            const SL_PCT = parseFloat(process.env.SL_PCT || '0.012');
             const tpPrice = decision.action === 'long'
               ? (price * (1 + TP_PCT)).toFixed(1)
               : (price * (1 - TP_PCT)).toFixed(1);
@@ -195,7 +371,6 @@ async function runCycle(server) {
       console.log(`[execute] hold`);
     }
 
-    // ポジション同期（外部決済検知）
     if (openPosition) {
       const positions = await bitget.getPositions();
       const pos = positions?.data?.find(p => p.symbol === SYMBOL && parseFloat(p.total) > 0);
@@ -205,7 +380,6 @@ async function runCycle(server) {
       }
     }
 
-    // server用にstate更新
     if (server.updateState) server.updateState({ market, risk, crowd, proposal, audit, decision, timestamp, openPosition, accountBalance });
 
   } catch (err) {
@@ -213,6 +387,4 @@ async function runCycle(server) {
   }
 }
 
-
-module.exports = { runCycle };
 module.exports = { runCycle };

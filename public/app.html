@@ -27,7 +27,6 @@
 html, body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
 .wrap { padding: 1.25rem 1rem; max-width: 1400px; margin: 0 auto; }
 
-/* HEADER */
 .header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
 .header h1 { font-size: 17px; font-weight: 500; color: var(--accent); letter-spacing: 0.08em; font-family: 'Space Mono', monospace; }
 .tab-nav { display: flex; gap: 4px; margin-left: 16px; }
@@ -41,7 +40,6 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 .status-text { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
 
-/* COLUMNS */
 .columns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; align-items: start; }
 @media (max-width: 900px) { .columns { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 600px) { .columns { grid-template-columns: 1fr; } }
@@ -49,25 +47,13 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 10px; }
 .card-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; font-family: 'Space Mono', monospace; }
 
-/* RISK UNIFIED */
 .risk-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; font-family: 'Space Mono', monospace; }
 .risk-value { font-size: 24px; font-weight: 500; transition: color 0.4s; }
 .risk-meta { display: flex; gap: 1.2rem; margin-top: 8px; flex-wrap: wrap; }
 .meta-item { display: flex; flex-direction: column; gap: 2px; }
 .meta-label { font-size: 9px; color: var(--label); font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; }
 .meta-val { font-size: 12px; font-weight: 500; color: var(--text); }
-.cycle-bar-wrap { width: 100%; height: 2px; background: rgba(255,255,255,0.05); margin-top: 8px; border-radius: 1px; overflow: hidden; }
-.cycle-bar { height: 100%; background: var(--accent); opacity: 0.4; transition: width 1s linear; }
 
-/* SCORE BARS */
-.score-lbl { width: 78px; font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'Space Mono', monospace; }
-.score-bar-wrap { flex: 1; height: 6px; background: linear-gradient(to right, var(--green) 0%, var(--yellow) 50%, var(--red) 100%); border-radius: 3px; overflow: visible; position: relative; opacity: 0.75; }
-.score-bar-indicator { position: absolute; top: -3px; width: 2px; height: 12px; background: #fff; border-radius: 1px; transform: translateX(-50%); transition: left 0.6s; }
-.score-bar { height: 100%; border-radius: 3px; transition: width 0.6s, background 0.4s; }
-.score-val { width: 30px; text-align: right; font-size: 10px; color: var(--text); font-family: 'Space Mono', monospace; }
-
-
-/* COUNCIL UNIFIED */
 .council-unified {
   background: var(--surface);
   border: 1px solid var(--border2);
@@ -90,12 +76,9 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 .council-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: flex-start; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 6px; padding: 8px 10px; }
 .council-row:last-child { margin-bottom: 0; }
 .council-deliberation .council-row { opacity: 0.72; }
-.council-badge { font-size: 9px; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; font-weight: 700; margin-top: 1px; white-space: nowrap; font-family: 'Space Mono', monospace; letter-spacing: 0.04em; }
-.badge-arch { background: rgba(168,223,240,0.12); color: var(--accent); }
-.badge-aud  { background: rgba(240,201,74,0.12); color: var(--yellow); }
 .council-text { font-size: 11px; color: var(--muted); line-height: 1.5; white-space: pre-line; }
 
-.arbiter-row { border-width: 1px !important; border-color: rgba(255,255,255,0.15) !important; background: rgba(255,255,255,0.05) !important;
+.arbiter-row {
   background: rgba(74,210,149,0.05);
   border: 1px solid rgba(74,210,149,0.16);
   border-radius: 6px;
@@ -106,7 +89,6 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 .arbiter-label { font-size: 9px; color: var(--green); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 4px; font-weight: 700; font-family: 'Space Mono', monospace; }
 .arbiter-text { font-size: 11px; color: var(--text); line-height: 1.5; white-space: pre-line; }
 
-/* POSITION */
 .pos-empty { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; padding: 4px 0; }
 .pos-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--border); }
 .pos-row:last-child { border-bottom: none; }
@@ -117,7 +99,6 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 .pos-val.profit { color: var(--green); }
 .pos-val.loss { color: var(--red); }
 
-/* LOG */
 .log-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; position: sticky; top: 1rem; }
 .log-header { padding: 0.75rem 1.1rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
 .log-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; font-family: 'Space Mono', monospace; display: flex; align-items: center; gap: 6px; }
@@ -134,12 +115,14 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 .tag-arbiter    { color: var(--green); }
 .tag-execute    { color: var(--green); }
 .tag-action     { color: #ff6b6b; }
+.tag-blocked    { color: #ff5050; font-weight: 700; }
 .tag-error      { color: var(--red); }
 .log-val { color: var(--text); }
 
-/* BUTTON */
 .btn { padding: 5px 12px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; border: 1px solid var(--border2); background: transparent; color: var(--muted); transition: all 0.15s; outline: none; font-family: 'Space Mono', monospace; letter-spacing: 0.04em; }
 .btn:hover { color: var(--accent); border-color: var(--border2); background: var(--accent-dim); }
+
+
 </style>
 </head>
 <body>
@@ -225,7 +208,6 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
           </div>
         </div>
       </div>
-
     </div>
 
     <!-- COL 3: Log -->
@@ -243,8 +225,6 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 </div>
 
 <script>
-const CYCLE_MS = 60000;
-let cycleStart = Date.now();
 let lastRiskHash = '';
 
 function clearLog() { document.getElementById('logBody').innerHTML = ''; }
@@ -254,30 +234,15 @@ function addLog(tagClass, tag, msg) {
   const ts = new Date().toTimeString().slice(0, 8);
   const div = document.createElement('div');
   div.className = 'log-line';
-  div.innerHTML = `<span class="log-ts">${ts}</span><span class="log-tag ${tagClass}">[${tag}]</span><span class="log-val">${msg}</span>`;
+  div.innerHTML = `<span class="log-ts">${ts}</span><span class="log-tag ${tagClass}">[${tag}]</span><span class="log-val"> ${msg}</span>`;
   body.insertBefore(div, body.firstChild);
   while (body.children.length > 150) body.removeChild(body.lastChild);
 }
-
 
 function fmtFR(fr) {
   if (fr == null) return '—';
   return (fr >= 0 ? '+' : '') + (fr * 100).toFixed(4) + '%';
 }
-
-function fmtOI(oi) {
-  if (!oi) return '';
-  if (oi > 1e9) return (oi / 1e9).toFixed(1) + 'B';
-  if (oi > 1e6) return (oi / 1e6).toFixed(1) + 'M';
-  if (oi > 1e3) return (oi / 1e3).toFixed(0) + 'K';
-  return oi.toFixed(0);
-}
-
-function frBarWidth(fr) {
-  return Math.min(100, Math.abs(fr) / 0.001 * 100);
-}
-
-const CEX_ORDER = ['binance','bitget','bybit','kucoin','okx','hyperliquid'];
 
 function updateCouncil(proposal, audit, decision, crowd, risk) {
   if (!decision) return;
@@ -289,31 +254,38 @@ function updateCouncil(proposal, audit, decision, crowd, risk) {
 
   document.getElementById('councilConf').textContent = decision.confidence != null ? (decision.confidence * 100).toFixed(0) + '%' : '—';
   document.getElementById('councilSize').textContent = decision.size_pct != null ? (decision.size_pct * 100).toFixed(0) + '%' : '0%';
+
   const crowdRow = document.getElementById('crowdRow');
   const crowdText = document.getElementById('crowdText');
-  if (crowd && crowd.hasCrowdRisk) {
+  if (crowd?.hasCrowdRisk) {
     crowdText.textContent = crowd.summary;
     crowdRow.style.display = '';
   } else {
     crowdRow.style.display = 'none';
   }
 
+  const ds = risk?._market?.directionSignal || {};
+  const frZ = decision._frZ ?? null;
+
   if (proposal) {
-    const archAction = (proposal.action || 'hold');
-    const archConf = ((proposal.confidence||0)*100).toFixed(0);
-    const archLine = archAction === 'long'  ? 'Positive funding momentum detected.'
-                   : archAction === 'short' ? 'Negative funding momentum detected.'
-                   : 'Signal strength below execution threshold.';
-    document.getElementById('archText').textContent =
-      `${archAction.toUpperCase()} (${archConf}%)\n${archLine}`;
+    const archAction = proposal.action || 'hold';
+    const archConf = ((proposal.confidence || 0) * 100).toFixed(0);
+    let archLine = '';
+    if (archAction === 'hold') {
+      archLine = 'FR z-score below threshold — no contrarian signal.';
+    } else if (archAction === 'short') {
+      archLine = 'Crowd over-long detected — fading with short.';
+    } else if (archAction === 'long') {
+      archLine = 'Crowd over-short detected — fading with long.';
+    }
+    document.getElementById('archText').textContent = `${archAction.toUpperCase()} (${archConf}%)\n${archLine}`;
   }
+
   if (audit) {
     const audEl = document.getElementById('audText');
     const audStatus = audit.approved ? 'Approved.' : 'Rejected.';
     const audLines = [];
-    if (crowd && crowd.hasCrowdRisk) {
-      audLines.push(crowd.summary.split('|')[0].trim());
-    }
+    if (crowd?.hasCrowdRisk) audLines.push(crowd.summary.split('|')[0].trim());
     if (risk) {
       if (risk.deviationScore > 50) audLines.push(`CEX spread divergence elevated (${risk.deviationScore.toFixed(0)}).`);
       else if (risk.deviationScore > 30) audLines.push(`CEX spread divergence moderate (${risk.deviationScore.toFixed(0)}).`);
@@ -322,23 +294,23 @@ function updateCouncil(proposal, audit, decision, crowd, risk) {
     }
     audEl.textContent = `${audStatus}\n${audLines.join('\n')}`;
   }
+
   if (decision) {
-    const sizePct = ((decision.size_pct||0)*100).toFixed(0);
-    const conf = ((decision.confidence||0)*100).toFixed(0);
-    const mult = risk ? risk.sizeMultiplier : 1;
-    const multEl = document.getElementById('councilMult');
+    const sizePct = ((decision.size_pct || 0) * 100).toFixed(0);
+    const conf    = ((decision.confidence || 0) * 100).toFixed(0);
+    const mult    = risk ? risk.sizeMultiplier : 1;
+    const multEl  = document.getElementById('councilMult');
     if (multEl) {
       multEl.textContent = '×' + parseFloat(mult).toFixed(2);
-      multEl.style.color = mult < 1 ? 'var(--yellow)' : 'var(--muted2)';
+      multEl.style.color = mult < 1 ? 'var(--yellow)' : 'var(--muted)';
     }
     const arbAction = (decision.action || 'hold').toUpperCase();
     const arbText = decision.action === 'hold'
-      ? `HOLD\n${conf}% confidence < 30% execution threshold.`
-      : `${arbAction} @ ${sizePct}%\n${conf}% confidence × ×${parseFloat(mult).toFixed(2)} risk multiplier = ${sizePct}% size\nExecution threshold: 30%`;
+      ? `HOLD\n${conf}% confidence < 40% execution threshold.`
+      : `${arbAction} @ ${sizePct}%\n${conf}% confidence × ×${parseFloat(mult).toFixed(2)} risk multiplier = ${sizePct}% size\nExecution threshold: 40%`;
     document.getElementById('arbText').textContent = arbText;
   }
 
-  // arbiter box color follows action
   const arb = document.getElementById('arbiterRow');
   if (action === 'long') {
     arb.style.background = 'rgba(74,210,149,0.05)';
@@ -370,7 +342,7 @@ function updatePosition(pos) {
     <div class="pos-row"><span class="pos-label">Unrealized PnL</span><span class="pos-val ${upl>=0?'profit':'loss'}">${upl>=0?'+':''}${upl.toFixed(2)} USDT</span></div>
     <div class="pos-row"><span class="pos-label">Margin</span><span class="pos-val">${parseFloat(pos.marginSize||0).toFixed(2)} USDT</span></div>
     ${pos.takeProfit ? `<div class="pos-row"><span class="pos-label">Take Profit</span><span class="pos-val profit">$${parseFloat(pos.takeProfit).toLocaleString()}</span></div>` : ''}
-    ${pos.stopLoss ? `<div class="pos-row"><span class="pos-label">Stop Loss</span><span class="pos-val loss">$${parseFloat(pos.stopLoss).toLocaleString()}</span></div>` : ''}
+    ${pos.stopLoss   ? `<div class="pos-row"><span class="pos-label">Stop Loss</span><span class="pos-val loss">$${parseFloat(pos.stopLoss).toLocaleString()}</span></div>` : ''}
   `;
 }
 
@@ -395,7 +367,7 @@ async function poll() {
     document.getElementById('statusDot').className = 'status-dot live';
     document.getElementById('statusText').textContent = 'live';
 
-    const riskHash = JSON.stringify(data.risk);
+    const riskHash = JSON.stringify(data.risk) + JSON.stringify(data.market?.directionSignal);
     const isNew = riskHash !== lastRiskHash;
 
     if (data.decision) updateCouncil(data.proposal, data.audit, data.decision, data.crowd, data.risk);
@@ -406,11 +378,18 @@ async function poll() {
 
     if (isNew && data.risk) {
       lastRiskHash = riskHash;
-      cycleStart = Date.now();
-      if (data.market) addLog('tag-perception', 'perception', `${data.market.sources?.length} CEX · avgFR ${fmtFR(data.market.avgFR)}`);
-      if (data.risk)     addLog('tag-risk',       'risk',       data.risk.summary || '');
-      if (data.proposal) addLog('tag-architect',  'architect',  `${data.proposal.action} conf=${((data.proposal.confidence||0)*100).toFixed(0)}%`);
-      if (data.audit)    addLog('tag-auditor',    'auditor',    `${data.audit.approved?'approved':'rejected'} conf=${((data.audit.confidence||0)*100).toFixed(0)}%`);
+      const ds = data.market?.directionSignal || {};
+      const frZStr = ds.frZ != null ? ` frZ=${ds.frZ >= 0 ? '+' : ''}${ds.frZ}` : '';
+      const baseStr = ds.baselineReady === false ? ' [building]' : '';
+      if (data.market) addLog('tag-perception', 'perception', `${data.market.sources?.length} CEX · avgFR ${(data.market.avgFR >= 0 ? '+' : '') + (data.market.avgFR * 100).toFixed(4)}%${frZStr} dir=${ds.direction}${baseStr}`);
+      if (data.risk)   addLog('tag-risk', 'risk', data.risk.summary || '');
+      if (data.crowd?.hasCrowdRisk) {
+        const ex  = data.crowd.alerts?.[0]?.exchange || '?';
+        const msg = data.crowd.alerts?.[0]?.msg || data.crowd.summary;
+        addLog('tag-blocked', 'blocked', `${ex} crowd concentration · ${msg}`);
+      }
+      if (data.proposal) addLog('tag-architect', 'architect', `${data.proposal.action} conf=${((data.proposal.confidence||0)*100).toFixed(0)}%`);
+      if (data.audit)    addLog('tag-auditor',   'auditor',   `${data.audit.approved?'approved':'rejected'} conf=${((data.audit.confidence||0)*100).toFixed(0)}%`);
       if (data.decision) {
         const isAction = data.decision.action !== 'hold';
         addLog(isAction ? 'tag-action' : 'tag-execute', 'arbiter',

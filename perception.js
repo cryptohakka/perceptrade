@@ -94,72 +94,73 @@ function calcConsensus(sources) {
   return { score, long, short, neutral, total: sources.length, label, alignment };
 }
 
-// directionSignal: FR絶対値 + OI momentum → direction + strength
-function calcDirectionSignal(sources, prevSources = []) {
+// directionSignal: Funding z-score逆張り + OI枯渇ゲート
+const Z_THRESHOLD = parseFloat(process.env.FR_Z_THRESHOLD || '1.5');
+
+function calcDirectionSignal(sources, prevSources = [], frHistory = []) {
   const avgFR = sources.reduce((s, d) => s + d.fr, 0) / sources.length;
 
-  // OI momentum: 全CEX合計OIの前サイクル比
+  // OI momentum: 全CEX合計OIのlog変化率（スケール歪みを抑制）
   let oiMomentum = 0;
   if (prevSources.length > 0) {
-    let totalCurrent = 0, totalPrev = 0;
+    let tc = 0, tp = 0;
     for (const src of sources) {
       const prev = prevSources.find(p => p.exchange === src.exchange);
-      totalCurrent += src.oi || 0;
-      totalPrev += prev?.oi || 0;
+      tc += src.oi || 0;
+      tp += prev?.oi || 0;
     }
-    oiMomentum = totalPrev > 0 ? (totalCurrent - totalPrev) / totalPrev : 0;
+    oiMomentum = (tp > 0 && tc > 0) ? Math.log(tc / tp) : 0;
   }
 
-  // FR強度: 0.00005〜0.0003 → 0〜1
-  const frStrength = Math.min(1, Math.max(0, (Math.abs(avgFR) - 0.00005) / (0.0003 - 0.00005)));
-
-  // direction判定
-  let direction, strength;
-  if (avgFR > 0.00005) {
-    // ロング過熱域
-    if (oiMomentum > 0.002) {
-      direction = 'long';   // トレンド継続
-      strength = frStrength * 0.7 + Math.min(1, oiMomentum / 0.02) * 0.3;
-    } else if (oiMomentum < -0.002) {
-      direction = 'short';  // 天井圏反転
-      strength = frStrength * 0.6 + Math.min(1, Math.abs(oiMomentum) / 0.02) * 0.4;
-    } else {
-      direction = 'long';   // OI横ばい、FR方向に従う
-      strength = frStrength * 0.5;
-    }
-  } else if (avgFR < -0.00005) {
-    // ショート過熱域
-    if (oiMomentum < -0.002) {
-      direction = 'short';
-      strength = Math.min(1, Math.abs(avgFR) / 0.0003) * 0.7 + Math.min(1, Math.abs(oiMomentum) / 0.02) * 0.3;
-    } else if (oiMomentum > 0.002) {
-      direction = 'long';
-      strength = Math.min(1, Math.abs(avgFR) / 0.0003) * 0.6 + Math.min(1, oiMomentum / 0.02) * 0.4;
-    } else {
-      direction = 'short';
-      strength = Math.min(1, Math.abs(avgFR) / 0.0003) * 0.5;
-    }
-  } else {
-    // FR中立域 → OI momentumのみで判断
-    if (oiMomentum > 0.005) {
-      direction = 'long';
-      strength = Math.min(1, oiMomentum / 0.02) * 0.4;
-    } else if (oiMomentum < -0.005) {
-      direction = 'short';
-      strength = Math.min(1, Math.abs(oiMomentum) / 0.02) * 0.4;
-    } else {
-      direction = 'neutral';
-      strength = 0;
-    }
+  // Funding z-score (24h baseline = 288サイクル @ 5min)
+  let frZ = 0, baselineReady = false;
+  if (frHistory.length >= 20) {
+    baselineReady = true;
+    const mean = frHistory.reduce((a, b) => a + b, 0) / frHistory.length;
+    const sd = Math.sqrt(frHistory.reduce((a, b) => a + (mean - b) ** 2, 0) / frHistory.length);
+    frZ = sd > 0 ? (avgFR - mean) / sd : 0;
   }
 
-  // strength下限: 0.3以上なら必ずシグナル出す（デモモード）
-  if (direction !== 'neutral' && strength < 0.3) strength = 0.3;
+  let direction = 'neutral', strength = 0;
 
-  return { direction, strength: parseFloat(strength.toFixed(3)), avgFR, oiMomentum };
+  // FR Regime label (statistical bands, independent of trigger)
+  const absZ = Math.abs(frZ);
+  let frRegime = 'neutral';        // |frZ| < 1.0  noise
+  if (absZ >= 2.0) frRegime = 'extreme';   // ≥2σ  tail / unstable
+  else if (absZ >= 1.0) frRegime = 'elevated'; // 1-2σ  monitoring
+
+  // Extreme regime → caution: scale size down (unstable liquidity, not conviction)
+  const EXTREME_FACTOR = 0.7;
+  const extremeFactor = frRegime === 'extreme' ? EXTREME_FACTOR : 1.0;
+
+  if (!baselineReady) {
+    console.log(`[perception] FR baseline building (${frHistory.length}/20 samples) — hold`);
+    return { direction, strength, avgFR, oiMomentum, frZ, baselineReady, frRegime, extremeFactor };
+  }
+
+  const OI_BUILD = 0.003;  // OI激増中 → 逆張り見送り
+  const OI_FADE  = -0.001; // OI枯渇 → 逆張りボーナス
+
+  if (frZ >= Z_THRESHOLD && oiMomentum <= OI_BUILD) {
+    // 群衆が過剰ロング → fade short
+    direction = 'short';
+    const zPart = Math.min(1, (frZ - Z_THRESHOLD) / 1.5);
+    const oiBonus = oiMomentum <= OI_FADE ? 0.3 : 0;
+    strength = (0.4 + zPart * 0.3 + oiBonus) * extremeFactor;
+  } else if (frZ <= -Z_THRESHOLD && oiMomentum <= OI_BUILD) {
+    // 群衆が過剰ショート → fade long
+    direction = 'long';
+    const zPart = Math.min(1, (Math.abs(frZ) - Z_THRESHOLD) / 1.5);
+    const oiBonus = oiMomentum <= OI_FADE ? 0.3 : 0;
+    strength = (0.4 + zPart * 0.3 + oiBonus) * extremeFactor;
+  }
+  // それ以外 → neutral（大半のケース）
+
+  strength = parseFloat(Math.min(1, strength).toFixed(3));
+  return { direction, strength, avgFR, oiMomentum, frZ: parseFloat(frZ.toFixed(2)), baselineReady, frRegime, extremeFactor };
 }
 
-async function collectMarketData(symbol = 'BTCUSDT', prevSources = []) {
+async function collectMarketData(symbol = 'BTCUSDT', prevSources = [], frHistory = []) {
   const [bybit, hl, okx, bg, bn, kc] = await Promise.allSettled([
     getBybitFR(symbol),
     getHyperliquidFR('BTC'),
@@ -174,10 +175,9 @@ async function collectMarketData(symbol = 'BTCUSDT', prevSources = []) {
 
   const avgFR = sources.reduce((s, d) => s + d.fr, 0) / sources.length;
   const frDeviation = Math.sqrt(sources.reduce((s, d) => s + (d.fr - avgFR) ** 2, 0) / sources.length);
-  const directionSignal = calcDirectionSignal(sources, prevSources);
+  const directionSignal = calcDirectionSignal(sources, prevSources, frHistory);
   const consensus = calcConsensus(sources);
 
-  // Bitget Long/Short Ratio (Bitget-specific signal)
   const bgSource = sources.find(s => s.exchange === 'bitget');
   const longShortRatio = bgSource?.longShortRatio || null;
 

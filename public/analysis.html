@@ -8,20 +8,11 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #09090f;
-  --surface: #0d0d16;
-  --surface2: #12121c;
-  --border: rgba(168,223,240,0.09);
-  --border2: rgba(168,223,240,0.20);
-  --accent: #a8dff0;
-  --accent-dim: rgba(168,223,240,0.10);
-  --cyan: #7ec8e3;
-  --yellow: #f0c94a;
-  --red: #f05a5a;
-  --green: #4ad295;
-  --text: #cce4ee;
-  --muted: #8aaab8;
-  --label: #6a8a9a;
+  --bg: #09090f; --surface: #0d0d16; --surface2: #12121c;
+  --border: rgba(168,223,240,0.09); --border2: rgba(168,223,240,0.20);
+  --accent: #a8dff0; --accent-dim: rgba(168,223,240,0.10);
+  --cyan: #7ec8e3; --yellow: #f0c94a; --red: #f05a5a;
+  --green: #4ad295; --text: #cce4ee; --muted: #8aaab8; --label: #6a8a9a;
 }
 html, body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
 .wrap { padding: 1.25rem 1rem; max-width: 960px; margin: 0 auto; }
@@ -40,41 +31,25 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 .card-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; font-family: 'Space Mono', monospace; }
 .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
 @media (max-width: 600px) { .grid3 { grid-template-columns: 1fr; } }
-
-/* Score Panel */
-.score-main { display: flex; align-items: center; gap: 24px; margin-bottom: 20px; }
-.score-num { font-size: 48px; font-weight: 700; font-family: 'Space Mono', monospace; line-height: 1; transition: color 0.4s; }
-.score-level { font-size: 13px; color: var(--muted); margin-top: 6px; letter-spacing: 0.08em; text-transform: uppercase; }
+.metric-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+.metric-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.metric-val { font-size: 28px; font-weight: 700; font-family: 'Space Mono', monospace; line-height: 1; }
+.metric-sub { font-size: 10px; color: var(--label); margin-top: 4px; }
+.metric-gauge { margin-top: 10px; height: 5px; background: linear-gradient(to right, var(--green) 0%, var(--yellow) 50%, var(--red) 100%); border-radius: 3px; opacity: 0.75; position: relative; }
+.metric-indicator { position: absolute; top: -3px; width: 2px; height: 11px; background: #fff; border-radius: 1px; transform: translateX(-50%); transition: left 0.6s; }
 .gauge-wrap { flex: 1; }
 .gauge-bg { height: 10px; background: linear-gradient(to right, var(--green) 0%, var(--yellow) 50%, var(--red) 100%); border-radius: 5px; opacity: 0.75; position: relative; }
 .gauge-indicator { position: absolute; top: -4px; width: 3px; height: 18px; background: #fff; border-radius: 2px; transform: translateX(-50%); transition: left 0.6s; }
 .gauge-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--label); margin-top: 4px; font-family: 'Space Mono', monospace; }
-
-/* Metric Cards */
-.metric-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
-.metric-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
-.metric-val { font-size: 28px; font-weight: 700; font-family: 'Space Mono', monospace; line-height: 1; }
-.metric-weight { font-size: 10px; color: var(--label); margin-top: 4px; }
-.metric-gauge { margin-top: 10px; height: 5px; background: linear-gradient(to right, var(--green) 0%, var(--yellow) 50%, var(--red) 100%); border-radius: 3px; opacity: 0.75; position: relative; }
-.metric-indicator { position: absolute; top: -3px; width: 2px; height: 11px; background: #fff; border-radius: 1px; transform: translateX(-50%); transition: left 0.6s; }
-
-/* Formula */
-.formula-block { background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--muted); line-height: 2; }
-.formula-title { font-size: 10px; color: var(--label); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
-
-/* CEX Table */
+.frz-wrap { position: relative; flex: 1; height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: visible; }
+.frz-center { position: absolute; left: 50%; top: -2px; width: 1px; height: 12px; background: rgba(255,255,255,0.25); }
+.frz-thr-pos { position: absolute; left: calc(50% + 25%); top: -2px; width: 1px; height: 12px; background: rgba(240,201,74,0.6); }
+.frz-thr-neg { position: absolute; left: calc(50% - 25%); top: -2px; width: 1px; height: 12px; background: rgba(240,201,74,0.6); }
+.frz-fill { position: absolute; top: 0; height: 8px; border-radius: 4px; transition: all 0.6s; }
+.btn-toggle { background: none; border: 1px solid var(--border2); color: var(--muted); font-family: 'Space Mono', monospace; font-size: 10px; padding: 4px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px; transition: all 0.15s; }
+.btn-toggle:hover { color: var(--accent); border-color: var(--accent); }
 .cex-name { font-size: 10px; color: var(--text); letter-spacing: 0.06em; font-family: 'Space Mono', monospace; font-weight: 700; }
 .dex-badge { font-size: 8px; background: var(--accent-dim); color: var(--accent); border-radius: 3px; padding: 1px 4px; margin-left: 4px; }
-.bar-cell { position: relative; height: 20px; }
-.bar-axis { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(255,255,255,0.1); }
-.bar-fill { position: absolute; top: 4px; height: 12px; border-radius: 2px; transition: width 0.5s, left 0.5s; }
-.bar-val { position: absolute; font-size: 9px; font-family: 'Space Mono', monospace; top: 3px; white-space: nowrap; }
-.pos { color: var(--green); }
-.neg { color: var(--red); }
-.neu { color: var(--muted); }
-.chg-pos { color: var(--green); }
-.chg-neg { color: var(--red); }
-.chg-neu { color: var(--muted); }
 </style>
 </head>
 <body>
@@ -97,104 +72,143 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
     </div>
   </div>
 
-  <!-- Section 1: Direction Signal -->
+  <!-- 1. Direction Signal -->
   <div class="card">
-      <div class="card-title">Direction Signal</div>
-    <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
-      <div class="score-num" id="dirVal" style="font-size:2.2rem;flex-shrink:0;">—</div>
-      <div style="flex:1;height:10px;background:rgba(255,255,255,0.06);border-radius:5px;overflow:hidden;">
-        <div id="dirBar" style="height:100%;width:0%;background:var(--green);border-radius:5px;transition:width 0.6s,background 0.4s;"></div>
+    <div class="card-title">Direction Signal</div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+      <div class="frz-wrap">
+        <div class="frz-center"></div>
+        <div class="frz-thr-pos"></div>
+        <div class="frz-thr-neg"></div>
+        <div class="frz-fill" id="frzFill"></div>
       </div>
-      <div id="dirStrength" style="flex-shrink:0;font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;white-space:nowrap;">—</div>
+      <div id="frzVal" style="font-size:26px;font-weight:700;font-family:'Space Mono',monospace;flex-shrink:0;min-width:64px;text-align:right;">—</div>
+      <div id="frzBadge" style="font-size:9px;padding:3px 10px;border-radius:4px;font-family:'Space Mono',monospace;font-weight:700;flex-shrink:0;">—</div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
-      <div class="metric-card">
-        <div class="metric-label">Avg FR</div>
-        <div class="metric-val" id="avgFRVal">—</div>
-        <div class="metric-weight">cross-CEX average</div>
+
+    <!-- plain language -->
+    <div style="padding:10px 12px;background:var(--surface2);border-radius:6px;border:1px solid var(--border);margin-bottom:14px;">
+      <div style="font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">What is FR Z-Score?</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.7;">
+        Measures how far current funding rates deviate from the 24h norm — i.e., how extreme crowd positioning is.<br>
+        <span style="color:var(--red);">≥ +1.5</span> = crowd over-long → agent fades with <b style="color:var(--red);">SHORT</b> &nbsp;·&nbsp;
+        <span style="color:var(--green);">≤ −1.5</span> = crowd over-short → agent fades with <b style="color:var(--green);">LONG</b> &nbsp;·&nbsp;
+        <span style="color:var(--label);">±1.5 zone</span> = <b>HOLD</b>
       </div>
-      <div class="metric-card">
-        <div class="metric-label">OI Momentum</div>
-        <div class="metric-val" id="oiMomVal">—</div>
-        <div class="metric-weight">5min OI change</div>
+      <div id="frzSignalLine" style="margin-top:8px;font-size:11px;font-family:'Space Mono',monospace;color:var(--label);"></div>
+    </div>
+
+    <!-- Signal Source -->
+    <div style="font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Signal Source <span style="color:var(--label);opacity:0.6;">· determines direction</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:start;">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px 12px;">
+        <div style="font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;margin-bottom:4px;">FR Z-Score</div>
+        <div id="drvFRZ" style="font-size:18px;font-weight:700;font-family:'Space Mono',monospace;">—</div>
+        <div style="font-size:9px;color:var(--label);margin-top:3px;">funding vs 24h norm</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px 12px;">
+        <div style="font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;margin-bottom:4px;">FR Regime</div>
+        <div id="drvRegime" style="font-size:18px;font-weight:700;font-family:'Space Mono',monospace;">—</div>
+        <div id="drvRegimeNote" style="font-size:9px;color:var(--label);margin-top:3px;">crowd positioning band</div>
       </div>
     </div>
+
+    <!-- OI Filter -->
+    <div style="font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;margin:14px 0 8px;">OI Filter <span style="color:var(--label);opacity:0.6;">· allows or blocks the trade</span></div>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px 12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;margin-bottom:4px;">OI Momentum (log)</div>
+          <div id="drvOI" style="font-size:18px;font-weight:700;font-family:'Space Mono',monospace;">—</div>
+        </div>
+        <div id="drvOIStatus" style="text-align:right;font-family:'Space Mono',monospace;"></div>
+      </div>
+      <div id="drvOINote" style="font-size:10px;color:var(--label);margin-top:8px;line-height:1.5;"></div>
+    </div>
+
+    <div id="drvBias" style="margin-top:12px;padding:8px 12px;border-radius:6px;font-family:'Space Mono',monospace;font-size:11px;background:rgba(255,255,255,0.03);border:1px solid var(--border);"></div>
   </div>
-  <!-- Section 2: Risk Assessment -->
+
+  <!-- 2. Risk Attribution -->
   <div class="card">
-    <div class="card-title">Risk Assessment · Score</div>
-    <div class="score-main">
+    <div class="card-title">Risk Attribution</div>
+    <div style="display:flex;align-items:center;gap:24px;margin-bottom:16px;">
       <div>
-        <div class="score-num" id="scoreNum">—</div>
-        <div class="score-level" id="scoreLevel">—</div>
+        <div style="font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;margin-bottom:4px;">Total Risk Score</div>
+        <div style="font-size:48px;font-weight:700;font-family:'Space Mono',monospace;line-height:1;transition:color 0.4s;" id="scoreNum">—</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:5px;letter-spacing:0.08em;text-transform:uppercase;" id="scoreLevel">—</div>
       </div>
       <div class="gauge-wrap">
-        <div class="gauge-bg" id="gaugeWrap">
-          <div class="gauge-indicator" id="gaugeIndicator" style="left:0%"></div>
-        </div>
+        <div class="gauge-bg"><div class="gauge-indicator" id="gaugeIndicator" style="left:0%"></div></div>
         <div class="gauge-labels"><span>SAFE</span><span>NEUTRAL</span><span>HIGH</span></div>
       </div>
     </div>
     <div class="grid3">
       <div class="metric-card">
-        <div class="metric-label">Deviation Score</div>
+        <div class="metric-label">Spread Risk</div>
         <div class="metric-val" id="devVal">—</div>
-        <div class="metric-weight">weight 50% · FR spread</div>
+        <div class="metric-sub">FR divergence across CEX</div>
         <div class="metric-gauge"><div class="metric-indicator" id="devInd" style="left:0%"></div></div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">OI Change Score</div>
+        <div class="metric-label">OI Volatility</div>
         <div class="metric-val" id="oiChgVal">—</div>
-        <div class="metric-weight">weight 50% · OI volatility</div>
+        <div class="metric-sub">open interest change rate</div>
         <div class="metric-gauge"><div class="metric-indicator" id="oiChgInd" style="left:0%"></div></div>
       </div>
       <div class="metric-card">
         <div class="metric-label">Size Multiplier</div>
         <div class="metric-val" id="sizeMultVal">—</div>
-        <div class="metric-weight">position size control</div>
+        <div class="metric-sub">position size control</div>
         <div class="metric-gauge" style="background:linear-gradient(to right,var(--red) 0%,var(--yellow) 50%,var(--green) 100%);"><div class="metric-indicator" id="sizeMultInd" style="left:0%"></div></div>
       </div>
     </div>
-    <div class="formula-block">
-      <div class="formula-title">Score Calculation</div>
-      <div id="formulaEq">score = deviation(50%) + oiChange(50%)</div>
-    </div>
-    <!-- Crowd Risk -->
-    <div id="lsRatioSection" style="margin-top:14px;padding:12px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg);">
-      <div style="font-size:10px;color:var(--muted);letter-spacing:0.08em;margin-bottom:8px;">BITGET L/S RATIO <span style="color:var(--accent);font-size:9px;margin-left:6px;">BITGET EXCLUSIVE</span></div>
+    <!-- L/S Ratio -->
+    <div style="margin-top:4px;padding:12px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg);">
+      <div style="font-size:10px;color:var(--muted);letter-spacing:0.08em;margin-bottom:8px;font-family:'Space Mono',monospace;">BITGET L/S RATIO <span style="color:var(--accent);font-size:9px;margin-left:6px;">BITGET EXCLUSIVE</span></div>
       <div style="display:flex;align-items:center;gap:12px;font-family:'Space Mono',monospace;font-size:12px;">
         <span style="color:var(--green);">L <span id="lsLong">—</span>%</span>
-        <div id="lsBar" style="flex:1;height:6px;border-radius:3px;background:var(--border);overflow:hidden;">
+        <div style="flex:1;height:6px;border-radius:3px;background:var(--border);overflow:hidden;">
           <div id="lsBarFill" style="height:100%;width:50%;background:linear-gradient(90deg,var(--green),var(--red));border-radius:3px;transition:width 0.5s;"></div>
         </div>
         <span style="color:var(--red);">S <span id="lsShort">—</span>%</span>
       </div>
       <div style="margin-top:6px;font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">Ratio: <span id="lsRatioVal">—</span></div>
     </div>
-    <div id="crowdRiskSection" style="margin-top:14px;padding:12px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg);transition:all 0.3s;">
-      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;">Crowd Risk Detection</div>
-      <div id="crowdRiskContent" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">None detected</div>
+  </div>
+
+  <!-- 3. Crowd Risk -->
+  <div class="card">
+    <div class="card-title">Crowd Risk</div>
+
+    <!-- Current Status -->
+    <div id="crowdStatusSection" style="padding:12px 14px;border-radius:6px;border:1px solid var(--border);background:var(--bg);margin-bottom:12px;transition:all 0.3s;">
+      <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;color:var(--label);text-transform:uppercase;margin-bottom:8px;">Current Status</div>
+      <div id="crowdStatusContent" style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">Loading...</div>
+    </div>
+
+    <!-- Event History -->
+    <div style="font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">Protection Log</div>
+    <div id="crowdHistoryContent">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">Loading...</div>
+    </div>
+    <div id="crowdShowMoreWrap" style="display:none;">
+      <button class="btn-toggle" onclick="toggleCrowdHistory()">Show more</button>
     </div>
   </div>
-      <div class="card" style="margin-top:0;">
-      <div class="card-title">Crowd Risk Event History</div>
-      <div id="crowdHistoryContent">
-        <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--muted);">Loading...</div>
-      </div>
-    </div>
 
-    <div class="card" style="margin-top:0;">
-      <div class="card-title">Cross-CEX Crowd Map <span style="font-size:9px;color:var(--label);margin-left:8px;">FR deviation · OI deviation from median</span></div>
-      <div id="crowdMapContent">
-        <div style="font-family:Space Mono,monospace;font-size:11px;color:var(--muted);">Loading...</div>
-      </div>
+  <!-- 4. Cross-CEX Crowd Map -->
+  <div class="card">
+    <div class="card-title">Cross-CEX Crowd Map <span style="font-size:9px;color:var(--label);margin-left:8px;">FR & OI divergence + crowd score</span></div>
+    <div id="crowdMapContent">
+      <div style="font-family:Space Mono,monospace;font-size:11px;color:var(--muted);">Loading...</div>
     </div>
+  </div>
 
-  <!-- CEX Bar Chart -->
+  <!-- 5. CEX Snapshot -->
   <div class="card">
     <div class="card-title">CEX · FR &amp; OI Delta · 5min snapshot</div>
     <div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:0;align-items:center;">
-      <!-- headers -->
       <div></div>
       <div style="text-align:center;font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;padding-bottom:8px;">FR</div>
       <div style="text-align:center;font-size:9px;color:var(--label);font-family:'Space Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;padding-bottom:8px;">FR Δ</div>
@@ -206,32 +220,72 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 
 <script>
 const CEX_ORDER = ['binance','bitget','bybit','kucoin','okx','hyperliquid'];
-function fmtFR(v) {
-  if (v == null) return '—';
-  return (v >= 0 ? '+' : '') + (v * 100).toFixed(4) + '%';
-}
-function fmtChg(v) {
-  if (v == null) return '—';
-  const pct = v * 100;
-  return (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
-}
-function chgClass(v) {
-  if (v == null) return 'chg-neu';
-  return v > 0.001 ? 'chg-pos' : v < -0.001 ? 'chg-neg' : 'chg-neu';
-}
-function scoreColor(s) {
-  return s < 30 ? 'var(--green)' : s < 60 ? 'var(--yellow)' : 'var(--red)';
+const HISTORY_PREVIEW = 10;
+let allCrowdEvents = [];
+let crowdExpanded = false;
+let lastCrowdEvent = null;
+
+function scoreColor(s) { return s < 30 ? 'var(--green)' : s < 60 ? 'var(--yellow)' : 'var(--red)'; }
+
+function updateFRZ(dir) {
+  const frZ = dir?.frZ ?? null;
+  if (frZ === null) return;
+  const clamped = Math.max(-3, Math.min(3, frZ));
+  const halfPct = Math.abs(clamped) / 3 * 50;
+  const above = Math.abs(clamped) >= 1.5;
+  const isShort = clamped > 0;
+  const color = above ? (isShort ? 'var(--red)' : 'var(--green)') : 'rgba(255,255,255,0.15)';
+  const fill = document.getElementById('frzFill');
+  if (clamped >= 0) { fill.style.left = '50%'; fill.style.right = ''; fill.style.width = halfPct + '%'; }
+  else              { fill.style.right = '50%'; fill.style.left = ''; fill.style.width = halfPct + '%'; }
+  fill.style.background = color;
+  const valEl = document.getElementById('frzVal');
+  valEl.textContent = (frZ >= 0 ? '+' : '') + frZ.toFixed(2);
+  valEl.style.color = above ? color : 'var(--muted)';
+  const badge = document.getElementById('frzBadge');
+  const sig   = document.getElementById('frzSignalLine');
+  if (above) {
+    const act = isShort ? 'SHORT' : 'LONG';
+    badge.textContent = '▸ ' + act + ' SIGNAL';
+    badge.style.background = isShort ? 'rgba(240,90,90,0.15)' : 'rgba(74,210,149,0.12)';
+    badge.style.color = color;
+    sig.innerHTML = `<span style="color:${color};font-weight:700;">${act} signal active</span> — z=${frZ.toFixed(2)} exceeds threshold ±1.5`;
+  } else {
+    badge.textContent = 'HOLD ZONE';
+    badge.style.background = 'rgba(255,255,255,0.05)';
+    badge.style.color = 'var(--muted)';
+    sig.innerHTML = `z=${frZ.toFixed(2)} — within ±1.5 hold zone. No contrarian signal.`;
+  }
+  // drivers
+  document.getElementById('drvFRZ').textContent = (frZ >= 0 ? '+' : '') + frZ.toFixed(2);
+  document.getElementById('drvFRZ').style.color = above ? color : 'var(--muted)';
+  // bias summary
+  const oiMom = dir?.oiMomentum ?? 0;
+  const oiBlocking = oiMom > 0.003;
+  let biasHtml = '';
+  if (!dir?.baselineReady) {
+    biasHtml = '<span style="color:var(--label);">Building baseline — hold until 20 samples collected.</span>';
+  } else if (above && !oiBlocking) {
+    const act = isShort ? 'SHORT' : 'LONG';
+    const actColor = isShort ? 'var(--red)' : 'var(--green)';
+    const extremeNote = (dir?.frRegime === 'extreme')
+      ? ` · <span style="color:var(--red);">extreme regime → size ×0.7</span>`
+      : '';
+    biasHtml = `FR Z-Score ${frZ.toFixed(2)} exceeds ±1.5 · OI allows trade → <span style="color:${actColor};font-weight:700;">${act} bias active</span>${extremeNote}`;
+  } else if (above && oiBlocking) {
+    biasHtml = `<span style="color:var(--yellow);">FR signals (z=${frZ.toFixed(2)}) but OI is still building — trade blocked. HOLD.</span>`;
+  } else {
+    biasHtml = `FR z-score ${frZ.toFixed(2)} within normal range — no edge detected. HOLD.`;
+  }
+  document.getElementById('drvBias').innerHTML = '→ ' + biasHtml;
 }
 
 function update(state) {
   const risk = state.risk;
   if (!risk) return;
-
-  // Status
   document.getElementById('statusDot').className = 'status-dot live';
   document.getElementById('statusText').textContent = 'live';
 
-  // Score
   const score = risk.riskScore ?? 0;
   const scoreEl = document.getElementById('scoreNum');
   scoreEl.textContent = score.toFixed(1);
@@ -239,22 +293,48 @@ function update(state) {
   document.getElementById('scoreLevel').textContent = (risk.riskLevel || '').replace('_', ' ').toUpperCase();
   document.getElementById('gaugeIndicator').style.left = Math.max(1, score) + '%';
 
-  // Direction Signal section
-  const dir = state.market?.directionSignal ?? { direction: "neutral", strength: 0 };
-  const dirEl = document.getElementById('dirVal');
-  dirEl.textContent = dir.direction.toUpperCase();
-  const dirColor = dir.direction === 'long' ? 'var(--green)' : dir.direction === 'short' ? 'var(--red)' : 'var(--muted)';
-  dirEl.style.color = dirColor;
-  document.getElementById('dirBar').style.width = (dir.strength * 100).toFixed(0) + '%';
-  document.getElementById('dirBar').style.background = dirColor;
-  document.getElementById('dirStrength').textContent = (dir.strength * 100).toFixed(0) + '% confidence';
-  document.getElementById('avgFRVal').textContent = ((dir.avgFR ?? 0) * 100).toFixed(4) + '%';
-  document.getElementById('avgFRVal').style.color = (dir.avgFR ?? 0) > 0 ? '#00ff88' : '#ff4444';
+  const dir = state.market?.directionSignal ?? {};
+  updateFRZ(dir);
+
   const oiMom = dir.oiMomentum ?? 0;
-  document.getElementById('oiMomVal').textContent = (oiMom >= 0 ? '+' : '') + (oiMom * 100).toFixed(3) + '%';
-  document.getElementById('oiMomVal').style.color = oiMom > 0 ? '#00ff88' : oiMom < 0 ? '#ff4444' : '#888';
-  // Risk section
-  const dev  = risk.deviationScore ?? 0;
+  const OI_THRESHOLD = 0.003;
+  const oiBlocking = oiMom > OI_THRESHOLD;
+  const oiBps = (oiMom * 10000).toFixed(1);
+  const thrBps = (OI_THRESHOLD * 10000).toFixed(0);
+  document.getElementById('drvOI').textContent = (oiMom >= 0 ? '+' : '') + oiBps + ' bps';
+  document.getElementById('drvOI').style.color = oiBlocking ? 'var(--red)' : 'var(--text)';
+
+  const oiStatus = document.getElementById('drvOIStatus');
+  const oiNote = document.getElementById('drvOINote');
+  if (oiBlocking) {
+    oiStatus.innerHTML = '<span style="font-size:11px;color:var(--red);font-weight:700;">TRADE BLOCKED</span>';
+    oiNote.innerHTML = `Above +${thrBps} bps threshold — crowd is still piling in. Fading an accelerating move is dangerous, so no trade even if FR signals.`;
+    oiNote.style.color = 'var(--red)';
+  } else {
+    oiStatus.innerHTML = '<span style="font-size:11px;color:var(--green);font-weight:700;">TRADE ALLOWED</span>';
+    oiNote.innerHTML = `Below +${thrBps} bps threshold — crowd is flat or unwinding. If FR signals, the trade goes through.`;
+    oiNote.style.color = 'var(--label)';
+  }
+
+  // FR Regime
+  const regime = dir.frRegime || 'neutral';
+  const regimeEl = document.getElementById('drvRegime');
+  const regimeNote = document.getElementById('drvRegimeNote');
+  if (regime === 'extreme') {
+    regimeEl.textContent = 'EXTREME';
+    regimeEl.style.color = 'var(--red)';
+    regimeNote.innerHTML = '<span style="color:var(--red);">≥2σ · unstable — size ×0.7</span>';
+  } else if (regime === 'elevated') {
+    regimeEl.textContent = 'ELEVATED';
+    regimeEl.style.color = 'var(--yellow)';
+    regimeNote.textContent = '1–2σ · monitoring';
+  } else {
+    regimeEl.textContent = 'NEUTRAL';
+    regimeEl.style.color = 'var(--muted)';
+    regimeNote.innerHTML = '&lt;1σ · noise range';
+  }
+
+  const dev = risk.deviationScore ?? 0;
   const oiChg = risk.oiChangeScore ?? 0;
   const sizeMult = risk.sizeMultiplier ?? 1;
   document.getElementById('devVal').textContent = dev.toFixed(1);
@@ -267,97 +347,143 @@ function update(state) {
   document.getElementById('sizeMultVal').style.color = sizeMult >= 1 ? 'var(--green)' : sizeMult >= 0.5 ? 'var(--yellow)' : 'var(--red)';
   document.getElementById('sizeMultInd').style.left = Math.max(1, sizeMult * 100) + '%';
 
-  // Formula
-  const dC = scoreColor(dev), oC = scoreColor(oiChg), sC = scoreColor(score);
-  document.getElementById('formulaEq').innerHTML =
-    `score = <span style="color:${dC}">${dev.toFixed(1)}</span>(50%) + <span style="color:${oC}">${oiChg.toFixed(1)}</span>(50%) = <span style="color:${sC};font-size:16px;font-weight:700">${score.toFixed(1)}</span>`;
+  // L/S Ratio
+  if (state.market?.longShortRatio) {
+    const ls = state.market.longShortRatio;
+    document.getElementById('lsLong').textContent = (ls.longRatio * 100).toFixed(1);
+    document.getElementById('lsShort').textContent = (ls.shortRatio * 100).toFixed(1);
+    document.getElementById('lsRatioVal').textContent = parseFloat(ls.ratio).toFixed(3);
+    document.getElementById('lsBarFill').style.width = (ls.longRatio * 100).toFixed(1) + '%';
+  }
 
-  // CEX Bar Chart
+  // Crowd Current Status
+  updateCrowdStatus(state.crowd);
+
+  // CEX bars
   const sources = state.market?.sources || [];
   const oiChanges = risk.oiChanges || {};
   const frChanges = risk.frChanges || {};
-
-  // max values for scaling
-  const maxFR = Math.max(...CEX_ORDER.map(n => { const s = sources.find(x => x.exchange===n); return s ? Math.abs(s.fr) : 0; }), 0.0001);
+  const maxFR  = Math.max(...CEX_ORDER.map(n => { const s = sources.find(x => x.exchange===n); return s ? Math.abs(s.fr) : 0; }), 0.0001);
   const maxFRD = Math.max(...CEX_ORDER.map(n => Math.abs(frChanges[n]||0)), 0.0001);
   const maxOID = Math.max(...CEX_ORDER.map(n => Math.abs(oiChanges[n]||0)), 0.0001);
-
-
   function renderBar(val, maxVal) {
     const v = val != null ? val : 0;
-    const isPos = v >= 0;
-    const color = isPos ? 'var(--green)' : 'var(--red)';
-    const markerPct = Math.min(39, Math.abs(v) / maxVal * 39);
-    const markerLeft = isPos ? (50 + markerPct) : (50 - markerPct);
-    const valStr = (v >= 0 ? '+' : '') + (v * 100).toFixed(3) + '%';
-    let h = '<div style="position:relative;height:24px;display:flex;align-items:center;">';
-    // bar area (80% width), value area (20%)
-    h += '<div style="position:relative;flex:1;height:24px;">';
-    // left bar: 10%~50%
-    h += '<div style="position:absolute;left:10%;width:40%;top:8px;height:8px;background:var(--red);opacity:0.35;border-radius:2px 0 0 2px;"></div>';
-    // right bar: 50%~90%
-    h += '<div style="position:absolute;left:50%;width:40%;top:8px;height:8px;background:var(--green);opacity:0.35;border-radius:0 2px 2px 0;"></div>';
-    // 0-axis
-    h += '<div style="position:absolute;left:50%;top:3px;bottom:3px;width:1px;background:rgba(255,255,255,0.25);transform:translateX(-50%);"></div>';
-    // marker
-    h += '<div style="position:absolute;left:' + markerLeft + '%;top:2px;bottom:2px;width:2px;background:' + color + ';border-radius:1px;transform:translateX(-50%);"></div>';
-    h += '</div>';
-    // value
-    h += '<div style="width:58px;text-align:left;font-size:9px;font-family:Space Mono,monospace;color:' + color + ';padding-left:5px;flex-shrink:0;">' + valStr + '</div>';
-    h += '</div>';
-    return h;
+    const color = v >= 0 ? 'var(--green)' : 'var(--red)';
+    const mp = Math.min(39, Math.abs(v) / maxVal * 39);
+    const ml = v >= 0 ? 50 + mp : 50 - mp;
+    const vs = (v >= 0 ? '+' : '') + (v * 100).toFixed(3) + '%';
+    return `<div style="position:relative;height:24px;display:flex;align-items:center;">
+      <div style="position:relative;flex:1;height:24px;">
+        <div style="position:absolute;left:10%;width:40%;top:8px;height:8px;background:var(--red);opacity:0.35;border-radius:2px 0 0 2px;"></div>
+        <div style="position:absolute;left:50%;width:40%;top:8px;height:8px;background:var(--green);opacity:0.35;border-radius:0 2px 2px 0;"></div>
+        <div style="position:absolute;left:50%;top:3px;bottom:3px;width:1px;background:rgba(255,255,255,0.25);transform:translateX(-50%);"></div>
+        <div style="position:absolute;left:${ml}%;top:2px;bottom:2px;width:2px;background:${color};border-radius:1px;transform:translateX(-50%);"></div>
+      </div>
+      <div style="width:58px;text-align:left;font-size:9px;font-family:Space Mono,monospace;color:${color};padding-left:5px;flex-shrink:0;">${vs}</div>
+    </div>`;
   }
-
-  const container = document.getElementById('cexBars');
-  container.innerHTML = CEX_ORDER.map(name => {
+  document.getElementById('cexBars').innerHTML = CEX_ORDER.map(name => {
     const src = sources.find(s => s.exchange === name);
     if (!src) return '';
     const isDex = name === 'hyperliquid';
-    let row = '<div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:0;align-items:center;padding:3px 0;border-bottom:1px solid var(--border);">';
-    row += '<div><span class="cex-name">' + name.toUpperCase() + '</span>' + (isDex ? '<span class="dex-badge">DEX</span>' : '') + '</div>';
-    row += renderBar(src.fr, maxFR);
-    row += renderBar(frChanges[name] != null ? frChanges[name] : null, maxFRD);
-    row += renderBar(oiChanges[name] != null ? oiChanges[name] : null, maxOID);
-    row += '</div>';
-    return row;
+    return `<div style="display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:0;align-items:center;padding:3px 0;border-bottom:1px solid var(--border);">
+      <div><span class="cex-name">${name.toUpperCase()}</span>${isDex?'<span class="dex-badge">DEX</span>':''}</div>
+      ${renderBar(src.fr,maxFR)}${renderBar(frChanges[name]??null,maxFRD)}${renderBar(oiChanges[name]??null,maxOID)}
+    </div>`;
   }).join('');
 }
 
-async function poll() {
-  try {
-    const res = await fetch('/api/state');
-    const data = await res.json();
-    if (data && data.risk) { update(data); renderCrowdMap(data); }
-    // Crowd Risk
-    const crowdSection = document.getElementById('crowdRiskSection');
-    const crowdContent = document.getElementById('crowdRiskContent');
-    if (crowdSection && crowdContent && data.crowd) {
-      if (data.crowd.hasCrowdRisk) {
-        crowdSection.style.borderColor = 'rgba(192,80,80,0.4)';
-        crowdSection.style.background = 'rgba(192,80,80,0.05)';
-        crowdContent.innerHTML = `<div style="color:var(--red);font-weight:700;margin-bottom:6px;">⚠ CROWD RISK DETECTED</div>
-          <div style="color:var(--muted2);margin-bottom:8px;">${data.crowd.summary.replace(/\|/g,'<br>')}</div>
-          <div style="color:var(--yellow);">→ Size multiplier reduced to ×${data.risk ? data.risk.sizeMultiplier : '—'}</div>`;
-      } else {
-        crowdSection.style.borderColor = 'var(--border)';
-        crowdSection.style.background = 'var(--bg)';
-        crowdContent.innerHTML = '<span style="color:var(--muted)">None detected</span>';
-      }
-    }
-    if (data && data.market && data.market.longShortRatio) {
-      const ls = data.market.longShortRatio;
-      document.getElementById('lsLong').textContent = (ls.longRatio * 100).toFixed(1);
-      document.getElementById('lsShort').textContent = (ls.shortRatio * 100).toFixed(1);
-      document.getElementById('lsRatioVal').textContent = parseFloat(ls.ratio).toFixed(3);
-      document.getElementById('lsBarFill').style.width = (ls.longRatio * 100).toFixed(1) + '%';
-    }
-    // consensus elements removed (not in current HTML)
-    document.getElementById('statusText').textContent = 'live';
-  } catch(e) {
-    document.getElementById('statusText').textContent = 'error';
+function updateCrowdStatus(crowd) {
+  const sec = document.getElementById('crowdStatusSection');
+  const con = document.getElementById('crowdStatusContent');
+  if (!sec || !con) return;
+
+  const lastEv = allCrowdEvents[0];
+  const lastTimeStr = lastEv ? (() => {
+    const diff = Math.floor((Date.now() - new Date(lastEv.timestamp)) / 60000);
+    return diff < 60 ? `${diff} min ago` : `${Math.floor(diff/60)}h ago`;
+  })() : null;
+  const lastSummary = lastEv?.summary || lastEv?.alerts?.[0]?.exchange?.toUpperCase() + ' FR spike' || '—';
+
+  if (crowd?.hasCrowdRisk) {
+    sec.style.borderColor = 'rgba(192,80,80,0.4)';
+    sec.style.background = 'rgba(192,80,80,0.05)';
+    con.innerHTML = `<div style="color:var(--red);font-weight:700;margin-bottom:6px;font-family:'Space Mono',monospace;">⚠ ACTIVE — ${crowd.summary.split('|')[0].trim()}</div>
+      <div style="color:var(--muted);font-size:10px;">Position size capped by Crowd Risk engine.</div>`;
+  } else {
+    sec.style.borderColor = 'var(--border)';
+    sec.style.background = 'var(--bg)';
+    con.innerHTML = `<div style="color:var(--green);font-family:'Space Mono',monospace;margin-bottom:6px;">No active crowd risk</div>`
+      + (lastTimeStr ? `<div style="font-size:10px;color:var(--label);">Last event: <span style="color:var(--muted);">${lastSummary}</span> · ${lastTimeStr}</div>` : '');
   }
 }
 
+function crowdScore(ev) {
+  // synthetic crowd score: higher mult reduction = higher score
+  const mult = ev.sizeMultiplier ?? 1;
+  return Math.round((1 - mult) * 100);
+}
+
+function renderCrowdHistory(events) {
+  const el = document.getElementById('crowdHistoryContent');
+  const moreWrap = document.getElementById('crowdShowMoreWrap');
+  if (!el) return;
+  if (!events || events.length === 0) {
+    el.innerHTML = '<div style="font-family:Space Mono,monospace;font-size:11px;color:var(--muted);">No events recorded yet.</div>';
+    if (moreWrap) moreWrap.style.display = 'none';
+    return;
+  }
+  const shown = crowdExpanded ? events : events.slice(0, HISTORY_PREVIEW);
+
+  let h = '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-family:Space Mono,monospace;font-size:10px;">';
+  h += '<thead><tr style="color:var(--label);text-transform:uppercase;letter-spacing:0.06em;">';
+  const cols = ['Time','Exchange','Event','Original','Final','Reduction'];
+  cols.forEach((c, i) => {
+    const align = i >= 3 ? 'right' : 'left';
+    h += `<th style="text-align:${align};padding:4px 6px;border-bottom:1px solid var(--border);">${c}</th>`;
+  });
+  h += '</tr></thead><tbody>';
+
+  for (const ev of shown) {
+    const t = new Date(ev.timestamp);
+    const ts = t.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit'}) + ' ' + t.toTimeString().slice(0,5);
+    const exchange = ev.alerts?.[0]?.exchange?.toUpperCase() || '—';
+    const evType = ev.alerts?.length > 0
+      ? ev.alerts.map(a => a.type === 'fr_outlier' ? 'FR outlier' : a.type === 'oi_concentration' ? 'OI spike' : 'FR spike')[0]
+      : 'FR spike';
+    const orig = ev.original_size_pct != null ? ((ev.original_size_pct) * 100).toFixed(0) + '%' : '—';
+    const final = ((ev.size_pct || 0) * 100).toFixed(0) + '%';
+    const reduction = ev.reduction_pct != null ? ((ev.reduction_pct) * 100).toFixed(0) + '%' : '—';
+    const hasReduction = ev.reduction_pct != null && ev.reduction_pct > 0.01;
+    const reductionColor = hasReduction ? 'var(--yellow)' : 'var(--muted)';
+    const rowBg = hasReduction ? 'rgba(240,201,74,0.04)' : '';
+
+    h += `<tr style="border-bottom:1px solid rgba(255,255,255,0.04);background:${rowBg};">
+      <td style="padding:6px 6px;color:var(--label);white-space:nowrap;">${ts}</td>
+      <td style="padding:6px 6px;color:var(--red);">${exchange}</td>
+      <td style="padding:6px 6px;color:var(--muted);">${evType}</td>
+      <td style="padding:6px 6px;text-align:right;color:var(--muted);">${orig}</td>
+      <td style="padding:6px 6px;text-align:right;color:var(--text);">${final}</td>
+      <td style="padding:6px 6px;text-align:right;color:${reductionColor};font-weight:${hasReduction?'700':'400'};">${hasReduction ? '−'+reduction : '—'}</td>
+    </tr>`;
+  }
+  h += '</tbody></table></div>';
+  el.innerHTML = h;
+
+  if (moreWrap) {
+    if (events.length > HISTORY_PREVIEW) {
+      moreWrap.style.display = '';
+      moreWrap.querySelector('button').textContent = crowdExpanded ? 'Show less' : `Show all ${events.length} events`;
+    } else {
+      moreWrap.style.display = 'none';
+    }
+  }
+}
+
+function toggleCrowdHistory() {
+  crowdExpanded = !crowdExpanded;
+  renderCrowdHistory(allCrowdEvents);
+}
 
 function median(arr) {
   const s = [...arr].sort((a,b)=>a-b);
@@ -373,113 +499,85 @@ function heatColor(dev, maxDev) {
   const b = isPos ? Math.round(149*(1-ratio*0.8)) : Math.round(90 + (240-90)*ratio);
   return `rgba(${r},${g},${b},${0.12 + ratio*0.5})`;
 }
+
 function renderCrowdMap(state) {
   const el = document.getElementById('crowdMapContent');
   if (!el) return;
   const sources = state.market?.sources || [];
   const oiChanges = state.risk?.oiChanges || {};
   const frChanges = state.risk?.frChanges || {};
-  const CEX = ['binance','bitget','bybit','kucoin','okx','hyperliquid'];
-
-  const frs  = CEX.map(n => sources.find(s=>s.exchange===n)?.fr).filter(v=>v!=null);
-  const oics = CEX.map(n => oiChanges[n]).filter(v=>v!=null && isFinite(v));
-  const frcs = CEX.map(n => frChanges[n]).filter(v=>v!=null && isFinite(v));
+  const frs  = CEX_ORDER.map(n => sources.find(s=>s.exchange===n)?.fr).filter(v=>v!=null);
+  const oics = CEX_ORDER.map(n => oiChanges[n]).filter(v=>v!=null && isFinite(v));
   const medFR  = frs.length  ? median(frs)  : 0;
   const medOIC = oics.length ? median(oics) : 0;
-  const medFRC = frcs.length ? median(frcs) : 0;
+  const frDevs = CEX_ORDER.map(n => { const s=sources.find(x=>x.exchange===n); return s?.fr!=null ? s.fr-medFR : null; });
+  const oiDevs = CEX_ORDER.map(n => { const v=oiChanges[n]; return (v!=null&&isFinite(v)) ? v-medOIC : null; });
+  const maxFRD = Math.max(...frDevs.filter(v=>v!=null).map(Math.abs), 0.00001);
+  const maxOID = Math.max(...oiDevs.filter(v=>v!=null).map(Math.abs), 0.001);
 
-  const frDevs  = CEX.map(n => { const s=sources.find(x=>x.exchange===n); return s?.fr!=null ? s.fr-medFR : null; });
-  const oiDevs  = CEX.map(n => { const v=oiChanges[n]; return (v!=null&&isFinite(v)) ? v-medOIC : null; });
-  const frCDevs = CEX.map(n => { const v=frChanges[n]; return (v!=null&&isFinite(v)) ? v-medFRC : null; });
+  const COL  = 'font-family:Space Mono,monospace;font-size:9px;padding:5px 8px;text-align:center;';
+  const LCOL = 'font-family:Space Mono,monospace;font-size:10px;padding:5px 8px;color:var(--text);font-weight:700;';
 
-  const maxFRD  = Math.max(...frDevs.filter(v=>v!=null).map(Math.abs),  0.00001);
-  const maxOID  = Math.max(...oiDevs.filter(v=>v!=null).map(Math.abs),  0.001);
-  const maxFRCD = Math.max(...frCDevs.filter(v=>v!=null).map(Math.abs), 0.1);
-
-  const COL = 'font-family:Space Mono,monospace;font-size:9px;padding:4px 8px;text-align:center;letter-spacing:0.04em;';
-  const LCOL = 'font-family:Space Mono,monospace;font-size:10px;padding:5px 8px;color:var(--text);font-weight:700;letter-spacing:0.06em;';
-
-  let t = '<table style="width:100%;border-collapse:separate;border-spacing:2px;">';
-  t += '<thead><tr>';
-  t += '<th style="'+COL+'text-align:left;color:var(--label);">CEX</th>';
-  t += '<th style="'+COL+'color:var(--label);">FR</th>';
-  t += '<th style="'+COL+'color:var(--label);">FR vs Median</th>';
-  t += '<th style="'+COL+'color:var(--label);">FR Δ vs Median</th>';
-  t += '<th style="'+COL+'color:var(--label);">OI Δ vs Median</th>';
+  let t = '<table style="width:100%;border-collapse:separate;border-spacing:2px;"><thead><tr>';
+  ['Exchange','FR Divergence','OI Divergence','Crowd Score'].forEach((h,i) => {
+    t += `<th style="${COL}${i===0?'text-align:left;':''}color:var(--label);">${h}</th>`;
+  });
   t += '</tr></thead><tbody>';
 
-  CEX.forEach((name, i) => {
+  CEX_ORDER.forEach((name, i) => {
     const src = sources.find(s=>s.exchange===name);
-    const fr    = src?.fr;
     const frDev = frDevs[i];
-    const frCD  = frCDevs[i];
-    const oiD   = oiDevs[i];
+    const oiDev = oiDevs[i];
     const isDex = name === 'hyperliquid';
 
-    function cell(val, dev, maxD, fmt) {
-      if (val==null||dev==null) return '<td style="'+COL+'color:var(--label);">—</td>';
+    // Crowd Score: weighted sum of FR deviation + OI deviation, 0-100
+    const frScore = frDev != null ? Math.min(1, Math.abs(frDev) / maxFRD) : 0;
+    const oiScore = oiDev != null ? Math.min(1, Math.abs(oiDev) / maxOID) : 0;
+    const cs = Math.round((frScore * 0.6 + oiScore * 0.4) * 100);
+    const csColor = cs >= 70 ? 'var(--red)' : cs >= 40 ? 'var(--yellow)' : 'var(--green)';
+    const csLabel = cs >= 70 ? 'HIGH' : cs >= 40 ? 'MED' : 'LOW';
+
+    function devCell(dev, maxD) {
+      if (dev == null) return `<td style="${COL}color:var(--label);">—</td>`;
       const bg = heatColor(dev, maxD);
       const col = dev > 0 ? 'var(--green)' : dev < 0 ? 'var(--red)' : 'var(--muted)';
-      const devStr = (dev>=0?'+':'')+fmt(dev);
-      return `<td style="${COL}background:${bg};border-radius:4px;color:${col};">${fmt(val)}<br><span style="font-size:8px;opacity:0.7">${devStr}</span></td>`;
+      const label = Math.abs(dev)/maxD >= 0.7 ? 'HIGH' : Math.abs(dev)/maxD >= 0.35 ? 'MED' : 'LOW';
+      const sign = dev >= 0 ? '+' : '';
+      const fmtVal = (dev*100).toFixed(4) + '%';
+      return `<td style="${COL}background:${bg};border-radius:4px;color:${col};">${label}<br><span style="font-size:8px;opacity:0.65;">${sign}${fmtVal}</span></td>`;
     }
 
-    const fmtFR  = v => (v>=0?'+':'')+(v*100).toFixed(4)+'%';
-    const fmtOI  = v => (v>=0?'+':'')+(v*100).toFixed(2)+'%';
-    const fmtFRC = v => (v>=0?'+':'')+(v*100).toFixed(1)+'%';
-
-    t += '<tr>';
-    t += `<td style="${LCOL}">${name.toUpperCase()}${isDex?'<span style="font-size:8px;color:var(--accent);margin-left:4px;">DEX</span>':''}</td>`;
-    t += cell(fr,    frDev,  maxFRD,  fmtFR);
-    t += cell(frDev, frDev,  maxFRD,  fmtFR);
-    t += cell(frChanges[name]??null, frCD, maxFRCD, fmtFRC);
-    t += cell(oiChanges[name]??null, oiD,  maxOID,  fmtOI);
-    t += '</tr>';
+    t += `<tr>
+      <td style="${LCOL}">${name.toUpperCase()}${isDex?'<span style="font-size:8px;color:var(--accent);margin-left:4px;">DEX</span>':''}</td>
+      ${devCell(frDev, maxFRD)}
+      ${devCell(oiDev, maxOID)}
+      <td style="${COL}background:${heatColor(cs-50, 50)};border-radius:4px;color:${csColor};font-weight:700;">${csLabel}<br><span style="font-size:8px;opacity:0.7;">${cs}</span></td>
+    </tr>`;
   });
-
   t += '</tbody></table>';
-  t += '<div style="margin-top:8px;font-size:9px;color:var(--label);font-family:Space Mono,monospace;">Color intensity = deviation from cross-CEX median. Green=above median, Red=below.</div>';
+  t += '<div style="margin-top:8px;font-size:9px;color:var(--label);font-family:Space Mono,monospace;">Crowd Score = FR divergence (60%) + OI divergence (40%) vs cross-CEX median.</div>';
   el.innerHTML = t;
 }
+
+async function poll() {
+  try {
+    const res = await fetch('/api/state');
+    const data = await res.json();
+    if (data?.risk) { update(data); renderCrowdMap(data); }
+    document.getElementById('statusText').textContent = 'live';
+  } catch(e) {
+    document.getElementById('statusText').textContent = 'error';
+  }
+}
+
 async function loadCrowdHistory() {
   try {
     const res = await fetch('/api/crowd-events');
-    const events = await res.json();
-    const el = document.getElementById('crowdHistoryContent');
-    if (!el) return;
-    if (!events || events.length === 0) {
-      el.innerHTML = '<div style="font-family:Space Mono,monospace;font-size:11px;color:var(--muted);">No crowd risk events recorded yet.</div>';
-      return;
-    }
-    let h = '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-family:Space Mono,monospace;font-size:10px;">';
-    h += '<thead><tr style="color:var(--label);text-transform:uppercase;letter-spacing:0.06em;">';
-    h += '<th style="text-align:left;padding:4px 6px;border-bottom:1px solid var(--border);">Time</th>';
-    h += '<th style="text-align:left;padding:4px 6px;border-bottom:1px solid var(--border);">Alert</th>';
-    h += '<th style="text-align:center;padding:4px 6px;border-bottom:1px solid var(--border);">Risk</th>';
-    h += '<th style="text-align:center;padding:4px 6px;border-bottom:1px solid var(--border);">Mult</th>';
-    h += '<th style="text-align:center;padding:4px 6px;border-bottom:1px solid var(--border);">Action</th>';
-    h += '<th style="text-align:right;padding:4px 6px;border-bottom:1px solid var(--border);">Size</th>';
-    h += '</tr></thead><tbody>';
-    for (const ev of events) {
-      const t = new Date(ev.timestamp);
-      const ts = t.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit'}) + ' ' + t.toTimeString().slice(0,5);
-      const riskColor = ev.riskLevel==='risk_off'?'var(--red)':ev.riskLevel==='neutral'?'var(--yellow)':'var(--green)';
-      const actColor  = ev.action==='long'?'var(--green)':ev.action==='short'?'var(--red)':'var(--muted)';
-      const multColor = ev.sizeMultiplier>=1?'var(--green)':ev.sizeMultiplier>=0.5?'var(--yellow)':'var(--red)';
-      const summary = ev.alerts && ev.alerts.length > 0
-        ? ev.alerts.map(a => a.exchange.toUpperCase() + ' ' + (a.type==='fr_outlier'?'FR outlier':a.type==='oi_concentration'?'OI spike':'FR spike')).join(', ')
-        : ev.summary || '—';
-      h += '<tr style="border-bottom:1px solid rgba(255,255,255,0.04);">';
-      h += '<td style="padding:5px 6px;color:var(--label);white-space:nowrap;">' + ts + '</td>';
-      h += '<td style="padding:5px 6px;color:var(--red);">' + summary + '</td>';
-      h += '<td style="padding:5px 6px;text-align:center;color:' + riskColor + ';">' + (ev.riskLevel||'').replace('_',' ').toUpperCase() + '</td>';
-      h += '<td style="padding:5px 6px;text-align:center;color:' + multColor + ';">x' + parseFloat(ev.sizeMultiplier||1).toFixed(2) + '</td>';
-      h += '<td style="padding:5px 6px;text-align:center;color:' + actColor + ';">' + (ev.action||'hold').toUpperCase() + '</td>';
-      h += '<td style="padding:5px 6px;text-align:right;color:var(--text);">' + ((ev.size_pct||0)*100).toFixed(0) + '%</td>';
-      h += '</tr>';
-    }
-    h += '</tbody></table></div>';
-    el.innerHTML = h;
+    allCrowdEvents = await res.json();
+    renderCrowdHistory(allCrowdEvents);
+    // update current status with latest event
+    const crowdState = await fetch('/api/state').then(r=>r.json()).catch(()=>null);
+    if (crowdState) updateCrowdStatus(crowdState.crowd);
   } catch(e) {
     const el = document.getElementById('crowdHistoryContent');
     if (el) el.innerHTML = '<div style="color:var(--muted);font-size:11px;">Failed to load.</div>';
