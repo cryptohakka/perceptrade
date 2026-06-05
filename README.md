@@ -60,9 +60,33 @@ The AI core of PercepTrade. Three adversarial agents debate each cycle — no ag
 - **Auditor** — receives natural language Crowd Risk warning (exchange name, FR value, MAD deviation) and regime context; challenges proposal, can reduce confidence
 - **Arbiter** — final decision: `action` + `size_pct = confidence × sizeMultiplier × regimeFactor`
 
-The council's value is not just decision-making — it's the Auditor's ability to receive unstructured market context (crowd anomaly descriptions, regime warnings) and translate that into a confidence adjustment. This is work a rule-based system cannot do.
+The council provides a flexible layer for interpreting unstructured market context — crowd anomaly descriptions, regime warnings, and cross-venue sentiment — and translating it into position sizing decisions.
 
 **Fallback behavior:** If OpenRouter is unavailable or rate-limited, each agent falls back to a safe default — Architect and Arbiter default to `hold`, Auditor defaults to conservative reject. The system never trades on an incomplete council decision.
+
+### Example: One Cycle
+
+```
+frZ         = +2.1   (crowd statistically over-long)
+OI momentum = +0.08% (below +30bps gate — ALLOWED)
+frRegime    = Extreme (|frZ| ≥ 2σ → ×0.7)
+Crowd Risk  = none
+Bitget L/S  = 73% long
+
+Architect:
+  "Cross-CEX FR is elevated at +2.1σ above 24h baseline.
+   Bitget L/S shows 73% positioned long — crowd over-extended.
+   Recommend SHORT."
+
+Auditor:
+  "No single-exchange anomaly detected (all venues within 2× MAD).
+   Extreme frRegime noted — size caution applies.
+   Signal remains valid. No objection."
+
+Arbiter:
+  SHORT · confidence 78% · size 39%
+  (78% confidence × ×0.7 regime factor × base = 39% of max position)
+```
 
 ---
 
