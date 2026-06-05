@@ -1,3 +1,6 @@
 node_modules/
 .env
 *.log
+snapshots.json
+crowd_events.json
+crowd_outcomes.json
