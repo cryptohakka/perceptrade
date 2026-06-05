@@ -70,7 +70,7 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 }
 .council-top { padding: 0.9rem 1.1rem 0.75rem; border-bottom: 1px solid var(--border); }
 .council-action { font-size: 24px; font-weight: 500; transition: color 0.4s; }
-.council-meta { display: flex; gap: 1rem; margin-top: 6px; }
+.council-meta { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 6px; }
 
 .council-body { padding: 0.75rem 1.1rem; }
 .council-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: flex-start; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 6px; padding: 8px 10px; }
@@ -143,6 +143,7 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
       <a href="/" class="tab-link">Home</a>
       <a href="/app" class="tab-link active">Dashboard</a>
       <a href="/analysis" class="tab-link">Analysis</a>
+      <a href="/history" class="tab-link">History</a>
     </nav>
     <div class="header-right">
       <div class="status-dot" id="statusDot"></div>
@@ -173,15 +174,15 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
           <div class="risk-label">Agent Council · Decision</div>
           <div class="council-action" id="councilAction">HOLD</div>
           <div class="council-meta">
-            <div class="meta-item">
-              <span class="meta-label">Confidence <span style="font-size:8px;opacity:0.45;letter-spacing:0">AI SIGNAL</span></span>
+            <div class="meta-item" style="text-align:center;">
+              <span class="meta-label">Signal Strength</span>
               <span class="meta-val" id="councilConf">—</span>
             </div>
-            <div style="display:flex;flex-direction:column;gap:4px;align-items:center;">
+            <div class="meta-item" style="text-align:center;">
               <span class="meta-label">Multiplier <span style="font-size:8px;opacity:0.45;letter-spacing:0">RISK FACTOR</span></span>
               <span class="meta-val" id="councilMult" style="transition:color 0.3s;">—</span>
             </div>
-            <div class="meta-item">
+            <div class="meta-item" style="text-align:center;">
               <span class="meta-label">Size <span style="font-size:8px;opacity:0.45;letter-spacing:0">RISK ADJUSTED</span></span>
               <span class="meta-val" id="councilSize" style="transition:color 0.3s;">—</span>
             </div>
@@ -278,18 +279,18 @@ function updateCouncil(proposal, audit, decision, crowd, risk) {
     } else if (archAction === 'long') {
       archLine = 'Crowd over-short detected — fading with long.';
     }
-    document.getElementById('archText').textContent = `${archAction.toUpperCase()} (${archConf}%)\n${archLine}`;
+    document.getElementById('archText').textContent = `${archAction.toUpperCase()} · ${archConf}% size\n${archLine}`;
   }
 
   if (audit) {
     const audEl = document.getElementById('audText');
-    const audStatus = audit.approved ? 'Approved.' : 'Rejected.';
+    const audStatus = audit.approved ? 'Approved.' : (proposal.action === 'hold' ? 'Caution.' : 'Rejected.');
     const audLines = [];
-    if (crowd?.hasCrowdRisk) audLines.push(crowd.summary.split('|')[0].trim());
+    if (crowd?.hasCrowdRisk && proposal.action !== 'hold') audLines.push(crowd.summary.split('|')[0].trim());
     if (risk) {
       if (risk.deviationScore > 50) audLines.push(`CEX spread divergence elevated (${risk.deviationScore.toFixed(0)}).`);
       else if (risk.deviationScore > 30) audLines.push(`CEX spread divergence moderate (${risk.deviationScore.toFixed(0)}).`);
-      if (risk.sizeMultiplier < 1) audLines.push(`Size reduction applied: ×${risk.sizeMultiplier}.`);
+      if (risk.sizeMultiplier < 1 && proposal.action !== 'hold') audLines.push(`Size reduction applied: ×${risk.sizeMultiplier}.`);
       if (audLines.length === 0) audLines.push('Risk within acceptable limits.');
     }
     audEl.textContent = `${audStatus}\n${audLines.join('\n')}`;
@@ -306,8 +307,8 @@ function updateCouncil(proposal, audit, decision, crowd, risk) {
     }
     const arbAction = (decision.action || 'hold').toUpperCase();
     const arbText = decision.action === 'hold'
-      ? `HOLD\n${conf}% confidence < 40% execution threshold.`
-      : `${arbAction} @ ${sizePct}%\n${conf}% confidence × ×${parseFloat(mult).toFixed(2)} risk multiplier = ${sizePct}% size\nExecution threshold: 40%`;
+      ? `HOLD\n${conf}% signal strength < 40% execution threshold.`
+      : `${arbAction} @ ${sizePct}%\n${conf}% strength × ${parseFloat(mult).toFixed(2)} risk multiplier = ${sizePct}% size\nExecution threshold: 40%`;
     document.getElementById('arbText').textContent = arbText;
   }
 
@@ -388,12 +389,26 @@ async function poll() {
         const msg = data.crowd.alerts?.[0]?.msg || data.crowd.summary;
         addLog('tag-blocked', 'blocked', `${ex} crowd concentration · ${msg}`);
       }
-      if (data.proposal) addLog('tag-architect', 'architect', `${data.proposal.action} conf=${((data.proposal.confidence||0)*100).toFixed(0)}%`);
-      if (data.audit)    addLog('tag-auditor',   'auditor',   `${data.audit.approved?'approved':'rejected'} conf=${((data.audit.confidence||0)*100).toFixed(0)}%`);
+      if (data.proposal) {
+        const archConf = ((data.proposal.confidence||0)*100).toFixed(0);
+        const archReason = data.proposal.reasoning || data.proposal.reason || '';
+        addLog('tag-architect', 'architect', `${data.proposal.action} strength=${archConf}%${archReason?' · '+archReason.split('\n')[0].slice(0,60):''}`);
+      }
+      if (data.audit) {
+        const audConf   = ((data.audit.confidence||0)*100).toFixed(0);
+        const audReason = data.audit.feedback || data.audit.reason || '';
+        const audReduce = data.crowd?.sizeMultiplier != null && data.crowd.sizeMultiplier < 1
+          ? ` · size ×${data.crowd.sizeMultiplier}` : '';
+        addLog('tag-auditor', 'auditor', `${data.audit.approved?'approved':'rejected'} strength=${audConf}%${audReason?' · '+audReason.slice(0,50):''}${audReduce}`);
+      }
       if (data.decision) {
         const isAction = data.decision.action !== 'hold';
-        addLog(isAction ? 'tag-action' : 'tag-execute', 'arbiter',
-          `${data.decision.action} conf=${((data.decision.confidence||0)*100).toFixed(0)}% size=${((data.decision.size_pct||0)*100).toFixed(0)}%`);
+        const conf     = ((data.decision.confidence||0)*100).toFixed(0);
+        const size     = ((data.decision.size_pct||0)*100).toFixed(0);
+        const arbDetail = data.decision.action === 'hold'
+          ? `hold strength=${conf}% (< 40% threshold) size=${size}%`
+          : `${data.decision.action} strength=${conf}% size=${size}%`;
+        addLog(isAction ? 'tag-action' : 'tag-execute', 'arbiter', arbDetail);
       }
     }
   } catch(e) {

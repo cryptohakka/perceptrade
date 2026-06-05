@@ -1,6 +1,6 @@
 # PercepTrade
 
-**Multi-CEX Crowd Risk Detection Trading Agent** — Bitget Hackathon S1
+**Multi-CEX FR Z-Score Contrarian Trading Agent** — Bitget Hackathon S1
 
 Live demo: [perceptrade.a2aflow.space](https://perceptrade.a2aflow.space)
 
@@ -10,9 +10,9 @@ Live demo: [perceptrade.a2aflow.space](https://perceptrade.a2aflow.space)
 
 Most trading agents react to price. PercepTrade reads the crowd.
 
-Funding Rate and Open Interest are real-time signals of how leveraged the market is — and *which exchange* is driving that leverage. When one venue shows anomalous FR or OI relative to peers, it indicates localized crowd behavior before price reacts.
+Funding Rate is a real-time signal of how leveraged and directionally biased the market is across all major venues. When the cross-CEX average FR deviates significantly from its recent baseline, it signals a statistically over-extended crowd — ripe for mean reversion.
 
-PercepTrade aggregates 6 CEX/DEX sources, detects these cross-venue anomalies in real time (**Crowd Risk Detection**), and adjusts position sizing before the crowd unwinds.
+PercepTrade aggregates 6 CEX/DEX sources, computes a **FR Z-Score** against a 24-hour rolling baseline, and fades the crowd when the signal is statistically clear. An **OI momentum gate** prevents entry when the crowd is still actively building. A **Crowd Risk detector** identifies single-exchange anomalies and suppresses position size before forced liquidations cascade.
 
 ---
 
@@ -25,32 +25,66 @@ Perception Layer (6 sources)
        │
        ▼
 Signal Computation
-  directionSignal  →  long / short + confidence %
-  riskSignal       →  sizeMultiplier (×0.25 / ×0.50 / ×1.00)
-  crowdRisk        →  anomalous exchange detection + size suppression
+  frZ              →  z-score of cross-CEX avgFR vs 24h rolling baseline
+  oiMomentum       →  log-change of OI vs previous cycle (entry gate)
+  frRegime         →  Normal / Extreme (|frZ| ≥ 2σ → ×0.7 size caution)
+  crowdRisk        →  single-exchange FR/OI anomaly detection (MAD-based)
   riskAttribution  →  per-component score breakdown (CEX Spread / OI Momentum / Total Risk)
        │
        ▼
 Triple-A Agent Council (OpenRouter / gemini-2.5-flash-lite)
-  Architect  →  proposes action with L/S ratio context
-  Auditor    →  stress-tests proposal, flags crowd risk
+  Architect  →  proposes action with frZ, frRegime, L/S ratio context
+  Auditor    →  stress-tests proposal, flags crowd risk and regime conditions
   Arbiter    →  final decision + position size
        │
        ▼
 Bitget Futures Execution
-  Market order + TP/SL (place-pos-tpsl)
+  Limit order (reduced fees) + TP/SL (place-pos-tpsl)
 ```
 
 **Cycle:** 5 minutes | **Bot/Agent split:** ~60% rule-based / ~40% LLM
 
 ---
 
+## Core Strategy: FR Z-Score Contrarian
+
+The primary signal. PercepTrade computes `frZ` — the z-score of the current cross-CEX average funding rate against a 24-hour rolling baseline (288 five-minute samples).
+
+| frZ | Interpretation | Action |
+|-----|---------------|--------|
+| ≥ +1.5 | Crowd statistically over-long | **SHORT** |
+| ≤ −1.5 | Crowd statistically over-short | **LONG** |
+| −1.5 to +1.5 | No clear over-extension | **HOLD** |
+
+**Why contrarian?** Funding rates mean-revert. When FR is unusually elevated, leveraged longs are paying — pressure builds for unwind. Fading the crowd at statistical extremes captures this reversion.
+
+### OI Momentum Gate
+
+Before any entry, OI log-momentum is checked. If open interest is still actively building (threshold: **+30 bps**), the trade is blocked regardless of frZ signal — entering into an accelerating crowd trend defeats the contrarian premise.
+
+### FR Regime
+
+`frRegime` tracks the absolute magnitude of `frZ` against σ-bands:
+
+| Regime | Condition | Size Factor |
+|--------|-----------|-------------|
+| Normal | \|frZ\| < 2σ | ×1.0 |
+| Extreme | \|frZ\| ≥ 2σ | ×0.7 |
+
+Extreme regime means unstable liquidity — size is reduced as a caution measure, not as a signal amplifier. The threshold that triggers a trade (±1.5) and the regime label are intentionally separate layers.
+
+### Restart Resilience
+
+On restart, `frHistory` and `prevSources` are restored from the most recent `snapshots.json` entry (with a 10-minute guard). frZ computation and OI momentum are never zeroed by a service restart.
+
+---
+
 ## Crowd Risk Detection
 
-The core differentiator. Each cycle, PercepTrade checks whether any single exchange is behaving anomalously relative to the 6-source aggregate.
+A secondary defense layer. Each cycle, PercepTrade checks whether any single exchange is behaving anomalously relative to the 6-source aggregate.
 
 **Trigger conditions (OR logic):**
-- FR of one venue deviates >3.5× MAD from the cross-CEX median (robust to outlier distortion on N=6)
+- FR of one venue deviates >3.5× MAD from the cross-CEX median
 - OI change at one venue is abnormally concentrated relative to peers
 
 **When triggered:**
@@ -86,39 +120,10 @@ Beyond execution, PercepTrade uses Bitget-specific market data unavailable on ot
 | Signal | Endpoint | Usage |
 |--------|----------|-------|
 | Long/Short Position Ratio | `/api/v2/mix/market/position-long-short` | Injected into Architect prompt as crowd sentiment context |
-| Funding Rate (with upper/lower bounds) | `/api/v2/mix/market/current-fund-rate` | FR deviation baseline for Crowd Risk |
-| Open Interest | `/api/v2/mix/market/open-interest` | OI momentum computation |
+| Funding Rate (with upper/lower bounds) | `/api/v2/mix/market/current-fund-rate` | Included in cross-CEX frZ baseline |
+| Open Interest | `/api/v2/mix/market/open-interest` | OI momentum gate computation |
 
 The Long/Short Ratio is displayed as a live gauge in the Analysis UI with a **BITGET EXCLUSIVE** label.
-
----
-
-## Signal Design
-
-### Direction Signal
-| Value | Condition |
-|-------|-----------|
-| `long` + high confidence | FR elevated, OI growing — crowd leveraged long |
-| `short` + high confidence | FR negative, OI growing — crowd leveraged short |
-| `neutral` | Mixed or low-conviction signals |
-
-### Risk Signal → sizeMultiplier
-| Multiplier | Condition |
-|------------|-----------|
-| `×1.00` | Low FR deviation, stable OI |
-| `×0.50` | Moderate cross-CEX divergence |
-| `×0.25` | High deviation, rapid OI shift, or Crowd Risk triggered |
-
-### Risk Attribution
-Each cycle, the risk score is decomposed into three components visible in the Dashboard:
-
-| Component | Description |
-|-----------|-------------|
-| **CEX Spread** | Degree of FR divergence across the 6 venues |
-| **OI Momentum** | Rate and direction of Open Interest change |
-| **Total Risk** | Weighted composite → drives sizeMultiplier |
-
-This breakdown makes the risk decision transparent and auditable — not a black box.
 
 ---
 
@@ -126,9 +131,9 @@ This breakdown makes the risk decision transparent and auditable — not a black
 
 Sequential debate — no agent shares system prompts with others:
 
-- **Architect** — evaluates direction + risk signals + Bitget L/S ratio, proposes `long / short / hold`
-- **Auditor** — receives natural language Crowd Risk warning (exchange name, FR value, MAD deviation), challenges proposal, can reduce confidence
-- **Arbiter** — final decision: `action` + `size_pct = proposal.confidence × sizeMultiplier`
+- **Architect** — evaluates frZ, frRegime, OI gate status, and Bitget L/S ratio; proposes `long / short / hold`
+- **Auditor** — receives natural language Crowd Risk warning (exchange name, FR value, MAD deviation) and regime context; challenges proposal, can reduce confidence
+- **Arbiter** — final decision: `action` + `size_pct = confidence × sizeMultiplier × regimeFactor`
 
 **Fallback behavior:** If OpenRouter is unavailable or rate-limited, each agent falls back to a safe default — Architect and Arbiter default to `hold`, Auditor defaults to conservative reject. The system never trades on an incomplete council decision.
 
@@ -141,7 +146,7 @@ Sequential debate — no agent shares system prompts with others:
 | Runtime | Node.js |
 | LLM | OpenRouter → `gemini-2.5-flash-lite` |
 | Perception | Bybit / OKX / Bitget / Binance / KuCoin / Hyperliquid |
-| Execution | Bitget Futures API v2 (market order + place-pos-tpsl) |
+| Execution | Bitget Futures API v2 (limit order + place-pos-tpsl) |
 | UI | Vanilla HTML/CSS/JS |
 | Process | systemd (`perceptrade-agent`) |
 | Infra | VPS + nginx |
@@ -154,7 +159,8 @@ Sequential debate — no agent shares system prompts with others:
 |------|------|-------------|
 | Landing | `/` | Project overview |
 | Dashboard | `/app` | Live position (with TP/SL), Triple-A council log, execution log with `[blocked]` entries, **Risk Attribution** (CEX Spread / OI Momentum / Total Risk / Size Multiplier breakdown) |
-| Analysis | `/analysis` | Per-CEX FR/OI charts, direction confidence, Crowd Risk status, Bitget L/S Ratio gauge, **Cross-CEX Crowd Map** (FR/OI deviation heatmap across 6 venues), **Crowd Risk Event History** |
+| Analysis | `/analysis` | FR Z-Score gauge, OI momentum gate status, frRegime indicator, per-CEX FR/OI breakdown, Crowd Risk status, Bitget L/S Ratio gauge, **Cross-CEX Crowd Map** (FR/OI deviation heatmap across 6 venues), **Crowd Risk Event History** |
+| History | `/history` | Trade history, FR Z-Score log, Crowd Outcomes (post-event 1h/3h/6h/12h tracking), Protection Log |
 
 ---
 
@@ -189,19 +195,20 @@ MAX_POSITION_SIZE_USDT=100
 
 ```
 perceptrade/
-├── main.js             # entry point
-├── agent.js            # Triple-A council + execution logic
-├── perception.js       # FR/OI/L-S collection (6 sources)
-├── risk.js             # directionSignal + riskSignal + crowdRisk (Median/MAD)
-├── bitget.js           # Bitget API wrapper (order + market data)
-├── server.js           # Express UI server
-├── crowd_events.json   # Crowd Risk event log (auto-generated)
-├── crowd_outcomes.json # Post-event price outcome tracking 1h/3h/6h/12h (auto-generated)
-├── snapshots.json      # Per-cycle FR/OI/risk snapshots for backtesting (auto-generated)
+├── main.js              # entry point
+├── agent.js             # Triple-A council + execution logic
+├── perception.js        # FR/OI/L-S collection (6 sources) + frZ computation
+├── risk.js              # riskSignal + crowdRisk (Median/MAD) + riskAttribution
+├── bitget.js            # Bitget API wrapper (order + market data)
+├── server.js            # Express UI server
+├── crowd_events.json    # Crowd Risk event log (auto-generated)
+├── crowd_outcomes.json  # Post-event price outcome tracking 1h/3h/6h/12h (auto-generated)
+├── snapshots.json       # Per-cycle FR/OI/frZ snapshots for backtesting (auto-generated)
 └── public/
     ├── landing.html
     ├── app.html
-    └── analysis.html
+    ├── analysis.html
+    └── history.html
 ```
 
 ---

@@ -1,0 +1,3398 @@
+[
+  {
+    "eventTimestamp": "2026-06-05T19:38:00.998Z",
+    "entryPrice": 59763.7,
+    "alertSummary": "bitget FR spike: +250.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 61138.9,
+        "changePct": 2.301
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T19:33:00.978Z",
+    "entryPrice": 59510.8,
+    "alertSummary": "hyperliquid FR spike: +41.1% change | bitget FR spike: -200.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 61103.1,
+        "changePct": 2.676
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T19:28:00.956Z",
+    "entryPrice": 59812,
+    "alertSummary": "hyperliquid FR spike: +390.2% change | bitget FR spike: -33.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60896.6,
+        "changePct": 1.813
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T19:23:00.938Z",
+    "entryPrice": 59446.9,
+    "alertSummary": "hyperliquid FR spike: +257.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60851.1,
+        "changePct": 2.362
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T19:18:00.918Z",
+    "entryPrice": 59169,
+    "alertSummary": "hyperliquid FR spike: -122.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60778.3,
+        "changePct": 2.72
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T19:13:00.904Z",
+    "entryPrice": 59284.9,
+    "alertSummary": "hyperliquid FR spike: +108.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60761.9,
+        "changePct": 2.491
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T19:08:00.886Z",
+    "entryPrice": 59282.9,
+    "alertSummary": "hyperliquid FR spike: +116.6% change | bitget FR spike: -44.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60238.8,
+        "changePct": 1.612
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T19:03:00.864Z",
+    "entryPrice": 59507.3,
+    "alertSummary": "hyperliquid FR spike: -229.7% change | binance FR spike: -763.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60149.6,
+        "changePct": 1.079
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T18:58:00.864Z",
+    "entryPrice": 59483.2,
+    "alertSummary": "binance FR spike: -114.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60195.2,
+        "changePct": 1.197
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T18:33:00.802Z",
+    "entryPrice": 60135.3,
+    "alertSummary": "bitget FR spike: +66.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 59505.3,
+        "changePct": -1.048
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T18:18:00.778Z",
+    "entryPrice": 60572.4,
+    "alertSummary": "bitget FR spike: +125.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 59170.1,
+        "changePct": -2.315
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T18:13:00.775Z",
+    "entryPrice": 60688,
+    "alertSummary": "bitget FR spike: +100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 59295.2,
+        "changePct": -2.295
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T18:03:00.769Z",
+    "entryPrice": 60789.2,
+    "alertSummary": "binance FR spike: +62.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 59481.9,
+        "changePct": -2.151
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T17:58:00.764Z",
+    "entryPrice": 60766.8,
+    "alertSummary": "bitget FR spike: +250.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 59483.2,
+        "changePct": -2.112
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T17:53:00.758Z",
+    "entryPrice": 60757,
+    "alertSummary": "bitget FR spike: +100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 59217.3,
+        "changePct": -2.534
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T17:48:00.758Z",
+    "entryPrice": 60752.8,
+    "alertSummary": "bitget FR spike: +150.0% change | binance FR spike: -36.1% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 59746.9,
+        "changePct": -1.656
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T17:43:00.738Z",
+    "entryPrice": 60942.4,
+    "alertSummary": "binance FR spike: +92.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 59920.1,
+        "changePct": -1.677
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T17:38:00.714Z",
+    "entryPrice": 60830.1,
+    "alertSummary": "binance FR spike: +134.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60139.8,
+        "changePct": -1.135
+      },
+      "3h": {
+        "exitPrice": 61133.5,
+        "changePct": 0.499
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T17:33:00.692Z",
+    "entryPrice": 60738.6,
+    "alertSummary": "binance FR spike: +341.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60147.7,
+        "changePct": -0.973
+      },
+      "3h": {
+        "exitPrice": 61103.1,
+        "changePct": 0.6
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T17:28:00.668Z",
+    "entryPrice": 60707.5,
+    "alertSummary": "bitget FR spike: -160.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60199.7,
+        "changePct": -0.836
+      },
+      "3h": {
+        "exitPrice": 60899.3,
+        "changePct": 0.316
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T17:23:00.664Z",
+    "entryPrice": 60894.4,
+    "alertSummary": "bitget FR spike: -58.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60381.1,
+        "changePct": -0.843
+      },
+      "3h": {
+        "exitPrice": 60854.9,
+        "changePct": -0.065
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T17:18:00.651Z",
+    "entryPrice": 60818.3,
+    "alertSummary": "binance FR spike: -394.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60572.4,
+        "changePct": -0.404
+      },
+      "3h": {
+        "exitPrice": 60772.4,
+        "changePct": -0.075
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T17:13:00.628Z",
+    "entryPrice": 60984.3,
+    "alertSummary": "binance FR spike: +138.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60687.9,
+        "changePct": -0.486
+      },
+      "3h": {
+        "exitPrice": 60761.8,
+        "changePct": -0.365
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T17:08:00.603Z",
+    "entryPrice": 61286.1,
+    "alertSummary": "binance FR spike: -196.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60810.8,
+        "changePct": -0.776
+      },
+      "3h": {
+        "exitPrice": 60257.7,
+        "changePct": -1.678
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T17:03:00.578Z",
+    "entryPrice": 61187.7,
+    "alertSummary": "hyperliquid FR spike: +103.2% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60789.2,
+        "changePct": -0.651
+      },
+      "3h": {
+        "exitPrice": 60146.9,
+        "changePct": -1.701
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T16:58:00.554Z",
+    "entryPrice": 61403.3,
+    "alertSummary": "binance FR spike: +179.5% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60766.8,
+        "changePct": -1.037
+      },
+      "3h": {
+        "exitPrice": 60195.2,
+        "changePct": -1.967
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T16:53:00.539Z",
+    "entryPrice": 61314.1,
+    "alertSummary": "binance FR spike: +111.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60757,
+        "changePct": -0.909
+      },
+      "3h": {
+        "exitPrice": 60309,
+        "changePct": -1.639
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T16:48:00.514Z",
+    "entryPrice": 60933.3,
+    "alertSummary": "hyperliquid FR spike: +154.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60756,
+        "changePct": -0.291
+      },
+      "3h": {
+        "exitPrice": 60318.1,
+        "changePct": -1.01
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T16:43:00.508Z",
+    "entryPrice": 60734.7,
+    "alertSummary": "hyperliquid FR spike: +208.4% change | bitget FR spike: -57.1% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60942.4,
+        "changePct": 0.342
+      },
+      "3h": {
+        "exitPrice": 59615.1,
+        "changePct": -1.843
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T16:23:00.463Z",
+    "entryPrice": 61452.5,
+    "alertSummary": "bybit FR spike: +222.4% change | hyperliquid FR spike: +44.0% change | bitget FR spike: +354.5% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60894.4,
+        "changePct": -0.908
+      },
+      "3h": {
+        "exitPrice": 59426.4,
+        "changePct": -3.297
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T16:18:00.440Z",
+    "entryPrice": 61039.7,
+    "alertSummary": "bitget FR spike: +178.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60835.3,
+        "changePct": -0.335
+      },
+      "3h": {
+        "exitPrice": 59174.4,
+        "changePct": -3.056
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T16:13:00.414Z",
+    "entryPrice": 60302.7,
+    "alertSummary": "bybit FR spike: -216.9% change | bitget FR spike: -128.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60990.1,
+        "changePct": 1.14
+      },
+      "3h": {
+        "exitPrice": 59295.2,
+        "changePct": -1.671
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T16:08:00.404Z",
+    "entryPrice": 60303.2,
+    "alertSummary": "bybit FR spike: +848.3% change | hyperliquid FR spike: +36.5% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 61286.1,
+        "changePct": 1.63
+      },
+      "3h": {
+        "exitPrice": 59282.9,
+        "changePct": -1.692
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T16:03:00.400Z",
+    "entryPrice": 60175.4,
+    "alertSummary": "bitget FR outlier: 0.0100% vs avg 0.0011% | bybit FR spike: +119.1% change | bitget FR spike: +222.6% change | binance FR spike: -39.8% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 61187.7,
+        "changePct": 1.682
+      },
+      "3h": {
+        "exitPrice": 59507.3,
+        "changePct": -1.11
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T15:03:00.164Z",
+    "entryPrice": 60961.2,
+    "alertSummary": "hyperliquid FR spike: -69.8% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60179.3,
+        "changePct": -1.283
+      },
+      "3h": {
+        "exitPrice": 60776.2,
+        "changePct": -0.303
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T14:58:00.142Z",
+    "entryPrice": 60837.8,
+    "alertSummary": "hyperliquid FR spike: -84.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60512.3,
+        "changePct": -0.535
+      },
+      "3h": {
+        "exitPrice": 60780.9,
+        "changePct": -0.094
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T14:53:00.114Z",
+    "entryPrice": 60870.6,
+    "alertSummary": "hyperliquid FR spike: -1359.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60535.6,
+        "changePct": -0.55
+      },
+      "3h": {
+        "exitPrice": 60756.9,
+        "changePct": -0.187
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T14:48:00.105Z",
+    "entryPrice": 60921.4,
+    "alertSummary": "hyperliquid FR spike: -109.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60215.1,
+        "changePct": -1.159
+      },
+      "3h": {
+        "exitPrice": 60756,
+        "changePct": -0.271
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T14:38:00.104Z",
+    "entryPrice": 61114.2,
+    "alertSummary": "bybit FR spike: -40.6% change | hyperliquid FR spike: +241.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60337.9,
+        "changePct": -1.27
+      },
+      "3h": {
+        "exitPrice": 60824,
+        "changePct": -0.475
+      },
+      "6h": {
+        "exitPrice": 61133.5,
+        "changePct": 0.032
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T14:33:00.083Z",
+    "entryPrice": 60349.8,
+    "alertSummary": "bybit FR spike: -320.5% change | hyperliquid FR spike: -898.1% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60565.6,
+        "changePct": 0.358
+      },
+      "3h": {
+        "exitPrice": 60738.7,
+        "changePct": 0.644
+      },
+      "6h": {
+        "exitPrice": 61103.7,
+        "changePct": 1.249
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T14:28:00.054Z",
+    "entryPrice": 60364.2,
+    "alertSummary": "bybit FR spike: -185.5% change | kucoin OI concentration: +7.43% vs avg",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60845.2,
+        "changePct": 0.797
+      },
+      "3h": {
+        "exitPrice": 60700.6,
+        "changePct": 0.557
+      },
+      "6h": {
+        "exitPrice": 60903.5,
+        "changePct": 0.893
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T14:23:00.035Z",
+    "entryPrice": 60663.5,
+    "alertSummary": "bybit FR spike: -73.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60732.4,
+        "changePct": 0.114
+      },
+      "3h": {
+        "exitPrice": 60894.5,
+        "changePct": 0.381
+      },
+      "6h": {
+        "exitPrice": 60847.3,
+        "changePct": 0.303
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T14:18:00.006Z",
+    "entryPrice": 60807.8,
+    "alertSummary": "hyperliquid FR spike: +176.8% change | okx FR spike: -73.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60785.3,
+        "changePct": -0.037
+      },
+      "3h": {
+        "exitPrice": 60835.1,
+        "changePct": 0.045
+      },
+      "6h": {
+        "exitPrice": 60793.2,
+        "changePct": -0.024
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T14:12:59.976Z",
+    "entryPrice": 60714.7,
+    "alertSummary": "bybit FR spike: -35.0% change | hyperliquid FR spike: +34.6% change | okx FR spike: -2877.1% change | bitget FR spike: +75.0% change | kucoin OI concentration: +3.79% vs avg",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60536.9,
+        "changePct": -0.293
+      },
+      "3h": {
+        "exitPrice": 60984.3,
+        "changePct": 0.444
+      },
+      "6h": {
+        "exitPrice": 60761.8,
+        "changePct": 0.078
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T14:07:59.976Z",
+    "entryPrice": 60804.8,
+    "alertSummary": "okx FR spike: -104.6% change | kucoin OI concentration: -4.11% vs avg",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60862.7,
+        "changePct": 0.095
+      },
+      "3h": {
+        "exitPrice": 61286.1,
+        "changePct": 0.792
+      },
+      "6h": {
+        "exitPrice": 60238.8,
+        "changePct": -0.931
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T14:02:59.975Z",
+    "entryPrice": 60822.6,
+    "alertSummary": "hyperliquid FR spike: -177.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60961.2,
+        "changePct": 0.228
+      },
+      "3h": {
+        "exitPrice": 61189,
+        "changePct": 0.602
+      },
+      "6h": {
+        "exitPrice": 60149.6,
+        "changePct": -1.106
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T13:57:59.974Z",
+    "entryPrice": 60831.6,
+    "alertSummary": "bitget FR spike: +66.7% change | bitget OI concentration: +3.76% vs avg",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60839.8,
+        "changePct": 0.013
+      },
+      "3h": {
+        "exitPrice": 61412.5,
+        "changePct": 0.955
+      },
+      "6h": {
+        "exitPrice": 60183.9,
+        "changePct": -1.065
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T13:07:59.960Z",
+    "entryPrice": 61960,
+    "alertSummary": "hyperliquid FR spike: +100.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 60815.6,
+        "changePct": -1.847
+      },
+      "3h": {
+        "exitPrice": 60290.5,
+        "changePct": -2.694
+      },
+      "6h": {
+        "exitPrice": 59258.8,
+        "changePct": -4.36
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T12:42:59.952Z",
+    "entryPrice": 61869,
+    "alertSummary": "okx FR spike: +88.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 61681,
+        "changePct": -0.304
+      },
+      "3h": {
+        "exitPrice": 60410.9,
+        "changePct": -2.357
+      },
+      "6h": {
+        "exitPrice": 59959.6,
+        "changePct": -3.086
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T12:27:59.943Z",
+    "entryPrice": 62198.4,
+    "alertSummary": "hyperliquid FR spike: +94.3% change | bitget FR spike: +800.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62174.8,
+        "changePct": -0.038
+      },
+      "3h": {
+        "exitPrice": 60845.2,
+        "changePct": -2.176
+      },
+      "6h": {
+        "exitPrice": 60207.1,
+        "changePct": -3.202
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T12:22:59.939Z",
+    "entryPrice": 62257.1,
+    "alertSummary": "hyperliquid FR spike: +137.7% change | okx FR spike: +142.1% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62164.2,
+        "changePct": -0.149
+      },
+      "3h": {
+        "exitPrice": 60732.4,
+        "changePct": -2.449
+      },
+      "6h": {
+        "exitPrice": 60374.3,
+        "changePct": -3.024
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T12:17:59.935Z",
+    "entryPrice": 62255.6,
+    "alertSummary": "hyperliquid FR spike: +139.9% change | okx FR spike: +219.2% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 61985.4,
+        "changePct": -0.434
+      },
+      "3h": {
+        "exitPrice": 60787.5,
+        "changePct": -2.358
+      },
+      "6h": {
+        "exitPrice": 60582.8,
+        "changePct": -2.687
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T12:02:59.923Z",
+    "entryPrice": 61817.4,
+    "alertSummary": "hyperliquid FR spike: -328.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 61906.4,
+        "changePct": 0.144
+      },
+      "3h": {
+        "exitPrice": 60813,
+        "changePct": -1.625
+      },
+      "6h": {
+        "exitPrice": 60787.4,
+        "changePct": -1.666
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T10:42:59.852Z",
+    "entryPrice": 62411,
+    "alertSummary": "bybit FR spike: +139.2% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62176.5,
+        "changePct": -0.376
+      },
+      "3h": {
+        "exitPrice": 61681,
+        "changePct": -1.17
+      },
+      "6h": {
+        "exitPrice": 60749,
+        "changePct": -2.663
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T10:32:59.839Z",
+    "entryPrice": 62612.5,
+    "alertSummary": "bybit FR spike: +100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62271.6,
+        "changePct": -0.544
+      },
+      "3h": {
+        "exitPrice": 62121.1,
+        "changePct": -0.785
+      },
+      "6h": {
+        "exitPrice": 60930.6,
+        "changePct": -2.686
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T10:27:59.831Z",
+    "entryPrice": 62533.7,
+    "alertSummary": "bybit FR spike: +75.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62421.6,
+        "changePct": -0.179
+      },
+      "3h": {
+        "exitPrice": 62185.5,
+        "changePct": -0.557
+      },
+      "6h": {
+        "exitPrice": 61138.6,
+        "changePct": -2.231
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T09:37:59.754Z",
+    "entryPrice": 62926.8,
+    "alertSummary": "bybit FR spike: -169.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62424.4,
+        "changePct": -0.798
+      },
+      "3h": {
+        "exitPrice": 61959.9,
+        "changePct": -1.537
+      },
+      "6h": {
+        "exitPrice": 60327.6,
+        "changePct": -4.131
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T09:32:59.753Z",
+    "entryPrice": 62966.5,
+    "alertSummary": "bybit FR spike: +68.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62612.4,
+        "changePct": -0.562
+      },
+      "3h": {
+        "exitPrice": 61926.6,
+        "changePct": -1.652
+      },
+      "6h": {
+        "exitPrice": 60550.3,
+        "changePct": -3.837
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T08:52:59.687Z",
+    "entryPrice": 62433.7,
+    "alertSummary": "okx FR spike: -71.2% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62894.5,
+        "changePct": 0.738
+      },
+      "3h": {
+        "exitPrice": 62116.8,
+        "changePct": -0.508
+      },
+      "6h": {
+        "exitPrice": 60870.6,
+        "changePct": -2.504
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T08:47:59.677Z",
+    "entryPrice": 62518.5,
+    "alertSummary": "okx FR spike: -4720.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62847.8,
+        "changePct": 0.527
+      },
+      "3h": {
+        "exitPrice": 62143.9,
+        "changePct": -0.599
+      },
+      "6h": {
+        "exitPrice": 60917.8,
+        "changePct": -2.56
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T08:42:59.665Z",
+    "entryPrice": 62606.2,
+    "alertSummary": "okx FR spike: -103.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62793.6,
+        "changePct": 0.299
+      },
+      "3h": {
+        "exitPrice": 62173.7,
+        "changePct": -0.691
+      },
+      "6h": {
+        "exitPrice": 60973.5,
+        "changePct": -2.608
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T08:37:59.653Z",
+    "entryPrice": 62555.2,
+    "alertSummary": "bitget FR outlier: -0.0109% vs avg -0.0019% | bybit FR spike: -149.8% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62909,
+        "changePct": 0.566
+      },
+      "3h": {
+        "exitPrice": 62284.9,
+        "changePct": -0.432
+      },
+      "6h": {
+        "exitPrice": 61116.1,
+        "changePct": -2.301
+      },
+      "12h": {
+        "exitPrice": 61126.4,
+        "changePct": -2.284
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T08:32:59.654Z",
+    "entryPrice": 62756,
+    "alertSummary": "bitget FR outlier: -0.0094% vs avg -0.0013%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62953.3,
+        "changePct": 0.314
+      },
+      "3h": {
+        "exitPrice": 62274.7,
+        "changePct": -0.767
+      },
+      "6h": {
+        "exitPrice": 60349.8,
+        "changePct": -3.834
+      },
+      "12h": {
+        "exitPrice": 61103.7,
+        "changePct": -2.633
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T08:27:59.644Z",
+    "entryPrice": 62818.7,
+    "alertSummary": "bitget FR outlier: -0.0104% vs avg -0.0015% | bybit FR spike: -83.5% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63034.8,
+        "changePct": 0.344
+      },
+      "3h": {
+        "exitPrice": 62436.2,
+        "changePct": -0.609
+      },
+      "6h": {
+        "exitPrice": 60364.2,
+        "changePct": -3.907
+      },
+      "12h": {
+        "exitPrice": 60899.4,
+        "changePct": -3.055
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T08:22:59.631Z",
+    "entryPrice": 62676.6,
+    "alertSummary": "bitget FR outlier: -0.0118% vs avg -0.0015%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63019.9,
+        "changePct": 0.548
+      },
+      "3h": {
+        "exitPrice": 62599.9,
+        "changePct": -0.122
+      },
+      "6h": {
+        "exitPrice": 60660.3,
+        "changePct": -3.217
+      },
+      "12h": {
+        "exitPrice": 60849.6,
+        "changePct": -2.915
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T08:17:59.629Z",
+    "entryPrice": 62545.9,
+    "alertSummary": "bitget FR outlier: -0.0123% vs avg -0.0015% | bybit FR spike: -239.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62973.1,
+        "changePct": 0.683
+      },
+      "3h": {
+        "exitPrice": 62388.7,
+        "changePct": -0.251
+      },
+      "6h": {
+        "exitPrice": 60805.9,
+        "changePct": -2.782
+      },
+      "12h": {
+        "exitPrice": 60793.2,
+        "changePct": -2.802
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T08:12:59.617Z",
+    "entryPrice": 62740.1,
+    "alertSummary": "bitget FR outlier: -0.0117% vs avg -0.0011%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62605.7,
+        "changePct": -0.214
+      },
+      "3h": {
+        "exitPrice": 62311.1,
+        "changePct": -0.684
+      },
+      "6h": {
+        "exitPrice": 60728,
+        "changePct": -3.207
+      },
+      "12h": {
+        "exitPrice": 60765.7,
+        "changePct": -3.147
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T08:07:59.614Z",
+    "entryPrice": 62836.6,
+    "alertSummary": "bitget FR outlier: -0.0117% vs avg -0.0010% | bybit FR spike: +129.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62604.6,
+        "changePct": -0.369
+      },
+      "3h": {
+        "exitPrice": 62378.1,
+        "changePct": -0.73
+      },
+      "6h": {
+        "exitPrice": 60815.6,
+        "changePct": -3.216
+      },
+      "12h": {
+        "exitPrice": 60251.4,
+        "changePct": -4.114
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T08:02:59.612Z",
+    "entryPrice": 62934.7,
+    "alertSummary": "bitget FR outlier: -0.0090% vs avg -0.0012% | bitget FR spike: -330.8% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62576.6,
+        "changePct": -0.569
+      },
+      "3h": {
+        "exitPrice": 62408.1,
+        "changePct": -0.837
+      },
+      "6h": {
+        "exitPrice": 60806.7,
+        "changePct": -3.381
+      },
+      "12h": {
+        "exitPrice": 60137.6,
+        "changePct": -4.444
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T06:47:59.464Z",
+    "entryPrice": 61992.2,
+    "alertSummary": "hyperliquid FR spike: +686.5% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62860.4,
+        "changePct": 1.4
+      },
+      "3h": {
+        "exitPrice": 62847.8,
+        "changePct": 1.38
+      },
+      "6h": {
+        "exitPrice": 61891.1,
+        "changePct": -0.163
+      },
+      "12h": {
+        "exitPrice": 59740.3,
+        "changePct": -3.633
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T06:42:59.454Z",
+    "entryPrice": 61752.5,
+    "alertSummary": "hyperliquid FR spike: +113.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62792.8,
+        "changePct": 1.685
+      },
+      "3h": {
+        "exitPrice": 62793.5,
+        "changePct": 1.686
+      },
+      "6h": {
+        "exitPrice": 61876,
+        "changePct": 0.2
+      },
+      "12h": {
+        "exitPrice": 59949,
+        "changePct": -2.921
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T06:27:59.421Z",
+    "entryPrice": 61694.8,
+    "alertSummary": "binance FR spike: -109.2% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62210.6,
+        "changePct": 0.836
+      },
+      "3h": {
+        "exitPrice": 63034.8,
+        "changePct": 2.172
+      },
+      "6h": {
+        "exitPrice": 62205.7,
+        "changePct": 0.828
+      },
+      "12h": {
+        "exitPrice": 60182,
+        "changePct": -2.452
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T06:22:59.420Z",
+    "entryPrice": 61291.6,
+    "alertSummary": "binance FR spike: -2762.5% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 61757.3,
+        "changePct": 0.76
+      },
+      "3h": {
+        "exitPrice": 63019.7,
+        "changePct": 2.819
+      },
+      "6h": {
+        "exitPrice": 62257.1,
+        "changePct": 1.575
+      },
+      "12h": {
+        "exitPrice": 60371.2,
+        "changePct": -1.502
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T06:17:59.411Z",
+    "entryPrice": 62012.6,
+    "alertSummary": "binance FR spike: -96.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 61690.7,
+        "changePct": -0.519
+      },
+      "3h": {
+        "exitPrice": 62973.1,
+        "changePct": 1.549
+      },
+      "6h": {
+        "exitPrice": 62249.3,
+        "changePct": 0.382
+      },
+      "12h": {
+        "exitPrice": 60582.8,
+        "changePct": -2.306
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T06:02:59.381Z",
+    "entryPrice": 62246,
+    "alertSummary": "hyperliquid FR spike: -214.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 61597.1,
+        "changePct": -1.042
+      },
+      "3h": {
+        "exitPrice": 62576.6,
+        "changePct": 0.531
+      },
+      "6h": {
+        "exitPrice": 61807.6,
+        "changePct": -0.704
+      },
+      "12h": {
+        "exitPrice": 60787.4,
+        "changePct": -2.343
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T04:27:59.132Z",
+    "entryPrice": 63124.8,
+    "alertSummary": "binance FR spike: +107.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63497.1,
+        "changePct": 0.59
+      },
+      "3h": {
+        "exitPrice": 62210.6,
+        "changePct": -1.448
+      },
+      "6h": {
+        "exitPrice": 62533.7,
+        "changePct": -0.936
+      },
+      "12h": {
+        "exitPrice": 61156.8,
+        "changePct": -3.118
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T04:07:59.067Z",
+    "entryPrice": 62891.2,
+    "alertSummary": "hyperliquid FR spike: +463.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63445.2,
+        "changePct": 0.881
+      },
+      "3h": {
+        "exitPrice": 61507.2,
+        "changePct": -2.201
+      },
+      "6h": {
+        "exitPrice": 62643.8,
+        "changePct": -0.393
+      },
+      "12h": {
+        "exitPrice": 60298.2,
+        "changePct": -4.123
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T04:02:59.046Z",
+    "entryPrice": 62580.7,
+    "alertSummary": "hyperliquid FR spike: +122.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63479.4,
+        "changePct": 1.436
+      },
+      "3h": {
+        "exitPrice": 61597.1,
+        "changePct": -1.572
+      },
+      "6h": {
+        "exitPrice": 62769.5,
+        "changePct": 0.302
+      },
+      "12h": {
+        "exitPrice": 60189.7,
+        "changePct": -3.821
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T03:17:58.868Z",
+    "entryPrice": 62700,
+    "alertSummary": "bybit FR spike: -109.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62719.8,
+        "changePct": 0.032
+      },
+      "3h": {
+        "exitPrice": 62012.6,
+        "changePct": -1.096
+      },
+      "6h": {
+        "exitPrice": 62973.1,
+        "changePct": 0.436
+      },
+      "12h": {
+        "exitPrice": 60790.6,
+        "changePct": -3.045
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T03:02:58.804Z",
+    "entryPrice": 62498.2,
+    "alertSummary": "hyperliquid FR spike: -325.8% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62580.7,
+        "changePct": 0.132
+      },
+      "3h": {
+        "exitPrice": 62246,
+        "changePct": -0.404
+      },
+      "6h": {
+        "exitPrice": 62578.9,
+        "changePct": 0.129
+      },
+      "12h": {
+        "exitPrice": 60803.8,
+        "changePct": -2.711
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T02:52:58.780Z",
+    "entryPrice": 62737.4,
+    "alertSummary": "bybit FR spike: +100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62752.2,
+        "changePct": 0.024
+      },
+      "3h": {
+        "exitPrice": 62855.8,
+        "changePct": 0.189
+      },
+      "6h": {
+        "exitPrice": 62446.1,
+        "changePct": -0.464
+      },
+      "12h": {
+        "exitPrice": 60889.3,
+        "changePct": -2.946
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T02:47:58.764Z",
+    "entryPrice": 62705.4,
+    "alertSummary": "bybit FR spike: +68.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62774.9,
+        "changePct": 0.111
+      },
+      "3h": {
+        "exitPrice": 62701,
+        "changePct": -0.007
+      },
+      "6h": {
+        "exitPrice": 62518.5,
+        "changePct": -0.298
+      },
+      "12h": {
+        "exitPrice": 60886.5,
+        "changePct": -2.901
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T02:32:58.716Z",
+    "entryPrice": 62795.9,
+    "alertSummary": "hyperliquid FR spike: -1057.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62825.5,
+        "changePct": 0.047
+      },
+      "3h": {
+        "exitPrice": 63433.5,
+        "changePct": 1.015
+      },
+      "6h": {
+        "exitPrice": 62760.1,
+        "changePct": -0.057
+      },
+      "12h": {
+        "exitPrice": 60375,
+        "changePct": -3.855
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T02:27:58.714Z",
+    "entryPrice": 62771.2,
+    "alertSummary": "hyperliquid FR spike: -76.1% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62553.3,
+        "changePct": -0.347
+      },
+      "3h": {
+        "exitPrice": 63501.4,
+        "changePct": 1.163
+      },
+      "6h": {
+        "exitPrice": 62818.6,
+        "changePct": 0.076
+      },
+      "12h": {
+        "exitPrice": 60362,
+        "changePct": -3.838
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T02:07:58.653Z",
+    "entryPrice": 63187.1,
+    "alertSummary": "hyperliquid FR spike: +207.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62357.1,
+        "changePct": -1.314
+      },
+      "3h": {
+        "exitPrice": 63443.9,
+        "changePct": 0.406
+      },
+      "6h": {
+        "exitPrice": 62834.1,
+        "changePct": -0.559
+      },
+      "12h": {
+        "exitPrice": 60834.8,
+        "changePct": -3.723
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T02:02:58.644Z",
+    "entryPrice": 63274,
+    "alertSummary": "hyperliquid FR spike: -124.5% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62469.7,
+        "changePct": -1.271
+      },
+      "3h": {
+        "exitPrice": 63479.4,
+        "changePct": 0.325
+      },
+      "6h": {
+        "exitPrice": 62929.7,
+        "changePct": -0.544
+      },
+      "12h": {
+        "exitPrice": 60821.8,
+        "changePct": -3.876
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T01:32:58.542Z",
+    "entryPrice": 63404.9,
+    "alertSummary": "kucoin FR spike: +100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62795.9,
+        "changePct": -0.96
+      },
+      "3h": {
+        "exitPrice": 63056,
+        "changePct": -0.55
+      },
+      "6h": {
+        "exitPrice": 62272.6,
+        "changePct": -1.786
+      },
+      "12h": {
+        "exitPrice": 62111.9,
+        "changePct": -2.039
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T01:07:58.486Z",
+    "entryPrice": 63234.4,
+    "alertSummary": "bybit FR spike: -169.7% change | hyperliquid FR spike: +388.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63182.5,
+        "changePct": -0.082
+      },
+      "3h": {
+        "exitPrice": 62898.9,
+        "changePct": -0.531
+      },
+      "6h": {
+        "exitPrice": 61507.3,
+        "changePct": -2.731
+      },
+      "12h": {
+        "exitPrice": 61984.5,
+        "changePct": -1.977
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T01:02:58.461Z",
+    "entryPrice": 63190.1,
+    "alertSummary": "hyperliquid FR spike: -79.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63274,
+        "changePct": 0.133
+      },
+      "3h": {
+        "exitPrice": 62580.7,
+        "changePct": -0.964
+      },
+      "6h": {
+        "exitPrice": 61586.5,
+        "changePct": -2.538
+      },
+      "12h": {
+        "exitPrice": 61897.6,
+        "changePct": -2.045
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T00:57:58.454Z",
+    "entryPrice": 63410.1,
+    "alertSummary": "bybit FR spike: -100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63350.1,
+        "changePct": -0.095
+      },
+      "3h": {
+        "exitPrice": 62722,
+        "changePct": -1.085
+      },
+      "6h": {
+        "exitPrice": 61969.9,
+        "changePct": -2.271
+      },
+      "12h": {
+        "exitPrice": 61907.3,
+        "changePct": -2.37
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T00:22:58.304Z",
+    "entryPrice": 63804.8,
+    "alertSummary": "bybit FR spike: +374.5% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63147.6,
+        "changePct": -1.03
+      },
+      "3h": {
+        "exitPrice": 62567.9,
+        "changePct": -1.939
+      },
+      "6h": {
+        "exitPrice": 61299.9,
+        "changePct": -3.926
+      },
+      "12h": {
+        "exitPrice": 62250.9,
+        "changePct": -2.435
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T00:17:58.282Z",
+    "entryPrice": 63599.8,
+    "alertSummary": "bybit FR spike: +76.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63384.7,
+        "changePct": -0.338
+      },
+      "3h": {
+        "exitPrice": 62687.9,
+        "changePct": -1.434
+      },
+      "6h": {
+        "exitPrice": 61958.8,
+        "changePct": -2.58
+      },
+      "12h": {
+        "exitPrice": 62247.7,
+        "changePct": -2.126
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T00:12:58.253Z",
+    "entryPrice": 63696.6,
+    "alertSummary": "bybit FR spike: +56.0% change | bitget FR spike: +1160.0% change | kucoin FR spike: +50.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63261.5,
+        "changePct": -0.683
+      },
+      "3h": {
+        "exitPrice": 62375.1,
+        "changePct": -2.075
+      },
+      "6h": {
+        "exitPrice": 62274.8,
+        "changePct": -2.232
+      },
+      "12h": {
+        "exitPrice": 62104.5,
+        "changePct": -2.5
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-05T00:02:58.214Z",
+    "entryPrice": 63782,
+    "alertSummary": "bybit FR outlier: -0.0061% vs avg -0.0002% | bybit FR spike: -146.5% change | bitget FR spike: -119.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63190.1,
+        "changePct": -0.928
+      },
+      "3h": {
+        "exitPrice": 62469.7,
+        "changePct": -2.057
+      },
+      "6h": {
+        "exitPrice": 62233.9,
+        "changePct": -2.427
+      },
+      "12h": {
+        "exitPrice": 61799.8,
+        "changePct": -3.108
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T23:37:58.147Z",
+    "entryPrice": 63641.6,
+    "alertSummary": "binance FR spike: +1153.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63705.4,
+        "changePct": 0.1
+      },
+      "3h": {
+        "exitPrice": 62915.2,
+        "changePct": -1.141
+      },
+      "6h": {
+        "exitPrice": 63114.1,
+        "changePct": -0.829
+      },
+      "12h": {
+        "exitPrice": 62273,
+        "changePct": -2.15
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T23:32:58.140Z",
+    "entryPrice": 63566.9,
+    "alertSummary": "binance FR spike: +114.1% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63829.4,
+        "changePct": 0.413
+      },
+      "3h": {
+        "exitPrice": 62795.9,
+        "changePct": -1.213
+      },
+      "6h": {
+        "exitPrice": 63428.2,
+        "changePct": -0.218
+      },
+      "12h": {
+        "exitPrice": 62288.3,
+        "changePct": -2.011
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T23:22:58.104Z",
+    "entryPrice": 63442.1,
+    "alertSummary": "binance FR spike: -70.8% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63804.7,
+        "changePct": 0.572
+      },
+      "3h": {
+        "exitPrice": 62774.1,
+        "changePct": -1.053
+      },
+      "6h": {
+        "exitPrice": 63359.9,
+        "changePct": -0.13
+      },
+      "12h": {
+        "exitPrice": 62575.3,
+        "changePct": -1.366
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T23:17:58.104Z",
+    "entryPrice": 63481.8,
+    "alertSummary": "binance FR spike: -67.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63599.8,
+        "changePct": 0.186
+      },
+      "3h": {
+        "exitPrice": 63223.9,
+        "changePct": -0.406
+      },
+      "6h": {
+        "exitPrice": 63276.5,
+        "changePct": -0.323
+      },
+      "12h": {
+        "exitPrice": 62380.3,
+        "changePct": -1.735
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T23:12:58.103Z",
+    "entryPrice": 63613.6,
+    "alertSummary": "binance FR spike: -233.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63696.6,
+        "changePct": 0.13
+      },
+      "3h": {
+        "exitPrice": 63227.4,
+        "changePct": -0.607
+      },
+      "6h": {
+        "exitPrice": 63345.6,
+        "changePct": -0.421
+      },
+      "12h": {
+        "exitPrice": 62311.1,
+        "changePct": -2.048
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T23:07:58.085Z",
+    "entryPrice": 63792.2,
+    "alertSummary": "binance FR spike: +280.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63750.9,
+        "changePct": -0.065
+      },
+      "3h": {
+        "exitPrice": 63182.5,
+        "changePct": -0.956
+      },
+      "6h": {
+        "exitPrice": 63443.9,
+        "changePct": -0.546
+      },
+      "12h": {
+        "exitPrice": 62366.4,
+        "changePct": -2.235
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T23:02:58.055Z",
+    "entryPrice": 63665.1,
+    "alertSummary": "hyperliquid FR spike: +92.1% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63782,
+        "changePct": 0.184
+      },
+      "3h": {
+        "exitPrice": 63274,
+        "changePct": -0.614
+      },
+      "6h": {
+        "exitPrice": 63479.4,
+        "changePct": -0.292
+      },
+      "12h": {
+        "exitPrice": 62424.1,
+        "changePct": -1.949
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T22:57:58.044Z",
+    "entryPrice": 63705.6,
+    "alertSummary": "binance FR spike: -87.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63797.3,
+        "changePct": 0.144
+      },
+      "3h": {
+        "exitPrice": 63350.1,
+        "changePct": -0.558
+      },
+      "6h": {
+        "exitPrice": 63219.6,
+        "changePct": -0.763
+      },
+      "12h": {
+        "exitPrice": 62508.3,
+        "changePct": -1.879
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T22:37:58.023Z",
+    "entryPrice": 63292.6,
+    "alertSummary": "binance FR spike: -593.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63641.6,
+        "changePct": 0.551
+      },
+      "3h": {
+        "exitPrice": 63439.1,
+        "changePct": 0.231
+      },
+      "6h": {
+        "exitPrice": 63119.9,
+        "changePct": -0.273
+      },
+      "12h": {
+        "exitPrice": 62423.9,
+        "changePct": -1.373
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T22:32:58.023Z",
+    "entryPrice": 63313.8,
+    "alertSummary": "binance FR spike: -79.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63566.9,
+        "changePct": 0.4
+      },
+      "3h": {
+        "exitPrice": 63408,
+        "changePct": 0.149
+      },
+      "6h": {
+        "exitPrice": 63068.6,
+        "changePct": -0.387
+      },
+      "12h": {
+        "exitPrice": 62602.3,
+        "changePct": -1.124
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T22:07:58.014Z",
+    "entryPrice": 63209.9,
+    "alertSummary": "hyperliquid FR spike: -51.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63792.2,
+        "changePct": 0.921
+      },
+      "3h": {
+        "exitPrice": 63234.4,
+        "changePct": 0.039
+      },
+      "6h": {
+        "exitPrice": 62891.2,
+        "changePct": -0.504
+      },
+      "12h": {
+        "exitPrice": 62631.2,
+        "changePct": -0.916
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T22:02:58.012Z",
+    "entryPrice": 63425.7,
+    "alertSummary": "hyperliquid FR spike: +228.5% change | binance FR spike: -31.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63674.4,
+        "changePct": 0.392
+      },
+      "3h": {
+        "exitPrice": 63190.2,
+        "changePct": -0.371
+      },
+      "6h": {
+        "exitPrice": 62578.3,
+        "changePct": -1.336
+      },
+      "12h": {
+        "exitPrice": 62766.3,
+        "changePct": -1.04
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T21:47:58.006Z",
+    "entryPrice": 63416.8,
+    "alertSummary": "bybit FR spike: -94.1% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63499,
+        "changePct": 0.13
+      },
+      "3h": {
+        "exitPrice": 63731.9,
+        "changePct": 0.497
+      },
+      "6h": {
+        "exitPrice": 62774.9,
+        "changePct": -1.012
+      },
+      "12h": {
+        "exitPrice": 62848.3,
+        "changePct": -0.896
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T20:12:57.867Z",
+    "entryPrice": 63463.8,
+    "alertSummary": "hyperliquid FR spike: +324.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63804.1,
+        "changePct": 0.536
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T19:02:47.022Z",
+    "entryPrice": 63761.5,
+    "alertSummary": "hyperliquid FR spike: -65.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63471.1,
+        "changePct": -0.455
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T18:47:47.018Z",
+    "entryPrice": 63934.9,
+    "alertSummary": "kucoin FR spike: +100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63716.1,
+        "changePct": -0.342
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T18:37:47.016Z",
+    "entryPrice": 63961.3,
+    "alertSummary": "kucoin FR spike: +100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63789,
+        "changePct": -0.269
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T18:27:47.013Z",
+    "entryPrice": 63543,
+    "alertSummary": "kucoin FR spike: +100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64009.6,
+        "changePct": 0.734
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T18:17:47.007Z",
+    "entryPrice": 63337,
+    "alertSummary": "kucoin FR spike: +100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63919.5,
+        "changePct": 0.92
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T16:55:10.478Z",
+    "entryPrice": 63627.9,
+    "alertSummary": "hyperliquid FR spike: -197.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63513.8,
+        "changePct": -0.179
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T16:50:10.448Z",
+    "entryPrice": 63734,
+    "alertSummary": "hyperliquid FR spike: -64.4% change | bitget FR spike: +114.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63092.9,
+        "changePct": -1.006
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T16:45:10.434Z",
+    "entryPrice": 63765.3,
+    "alertSummary": "bitget FR spike: +275.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63037.9,
+        "changePct": -1.141
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T16:40:10.428Z",
+    "entryPrice": 63697,
+    "alertSummary": "bitget FR spike: -500.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62975.5,
+        "changePct": -1.133
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T16:35:10.407Z",
+    "entryPrice": 63441,
+    "alertSummary": "bitget FR spike: -90.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63045.9,
+        "changePct": -0.623
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T16:30:10.404Z",
+    "entryPrice": 63621.2,
+    "alertSummary": "hyperliquid FR spike: -33.9% change | bitget FR spike: +375.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63233.2,
+        "changePct": -0.61
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T16:25:10.403Z",
+    "entryPrice": 63835.1,
+    "alertSummary": "bitget FR spike: -300.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63123.2,
+        "changePct": -1.115
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T16:20:10.392Z",
+    "entryPrice": 63673.3,
+    "alertSummary": "bitget FR spike: +128.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63247,
+        "changePct": -0.67
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T16:15:10.362Z",
+    "entryPrice": 63653.9,
+    "alertSummary": "bitget FR spike: -177.8% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63527.4,
+        "changePct": -0.199
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T16:10:10.361Z",
+    "entryPrice": 63755.8,
+    "alertSummary": "hyperliquid FR spike: +320.6% change | bitget FR spike: +250.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63511,
+        "changePct": -0.384
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T16:05:10.361Z",
+    "entryPrice": 63695.1,
+    "alertSummary": "bybit FR spike: -63.3% change | hyperliquid FR spike: +110.5% change | okx FR spike: +94.7% change | bitget FR spike: -50.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63477.2,
+        "changePct": -0.342
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T16:00:10.360Z",
+    "entryPrice": 63872.7,
+    "alertSummary": "bybit FR outlier: 0.0100% vs avg 0.0012% | bybit FR spike: +2684.0% change | hyperliquid FR spike: -265.7% change | okx FR spike: +240.8% change | bitget FR spike: -118.2% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63475.2,
+        "changePct": -0.622
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T15:10:10.345Z",
+    "entryPrice": 64251.7,
+    "alertSummary": "hyperliquid FR spike: +496.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63755.8,
+        "changePct": -0.772
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T15:05:10.344Z",
+    "entryPrice": 63923.3,
+    "alertSummary": "hyperliquid FR spike: +112.8% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63695.1,
+        "changePct": -0.357
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T15:00:10.345Z",
+    "entryPrice": 63917.6,
+    "alertSummary": "hyperliquid FR spike: -4448.5% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63869.6,
+        "changePct": -0.075
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T14:55:10.343Z",
+    "entryPrice": 63818.7,
+    "alertSummary": "hyperliquid FR spike: +129.8% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63693.4,
+        "changePct": -0.196
+      },
+      "3h": {
+        "exitPrice": 63513.8,
+        "changePct": -0.478
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T14:50:10.340Z",
+    "entryPrice": 63867.5,
+    "alertSummary": "hyperliquid FR spike: +158.8% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63731.4,
+        "changePct": -0.213
+      },
+      "3h": {
+        "exitPrice": 63092.9,
+        "changePct": -1.213
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T14:45:10.337Z",
+    "entryPrice": 63972.5,
+    "alertSummary": "hyperliquid FR spike: +77.6% change | okx FR spike: -105.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63799.8,
+        "changePct": -0.27
+      },
+      "3h": {
+        "exitPrice": 63033.9,
+        "changePct": -1.467
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T14:35:10.332Z",
+    "entryPrice": 63980.9,
+    "alertSummary": "okx FR spike: -201.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63951,
+        "changePct": -0.047
+      },
+      "3h": {
+        "exitPrice": 63045.9,
+        "changePct": -1.461
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T14:15:10.320Z",
+    "entryPrice": 64318,
+    "alertSummary": "hyperliquid FR spike: +62.1% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64380.2,
+        "changePct": 0.097
+      },
+      "3h": {
+        "exitPrice": 63527.4,
+        "changePct": -1.229
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T14:05:06.632Z",
+    "entryPrice": 64018.1,
+    "alertSummary": "hyperliquid FR spike: -210.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63945.7,
+        "changePct": -0.113
+      },
+      "3h": {
+        "exitPrice": 63452.9,
+        "changePct": -0.883
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T13:02:50.904Z",
+    "entryPrice": 63648.3,
+    "alertSummary": "hyperliquid FR spike: -37.4% change | bitget FR spike: +400.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64235,
+        "changePct": 0.922
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T12:57:50.876Z",
+    "entryPrice": 63663.8,
+    "alertSummary": "bitget FR spike: +66.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64016.7,
+        "changePct": 0.554
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T12:27:50.857Z",
+    "entryPrice": 63195.1,
+    "alertSummary": "hyperliquid FR spike: +137.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63192.9,
+        "changePct": -0.003
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T12:22:50.857Z",
+    "entryPrice": 62937.1,
+    "alertSummary": "hyperliquid FR spike: +5515.2% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63090,
+        "changePct": 0.243
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T12:17:50.855Z",
+    "entryPrice": 62693.1,
+    "alertSummary": "hyperliquid FR spike: +101.5% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63389.5,
+        "changePct": 1.111
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T11:22:50.834Z",
+    "entryPrice": 62385.1,
+    "alertSummary": "okx FR outlier: 0.0068% vs avg -0.0015%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62934.3,
+        "changePct": 0.88
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T11:17:50.830Z",
+    "entryPrice": 62405,
+    "alertSummary": "okx FR outlier: 0.0070% vs avg -0.0014%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62685,
+        "changePct": 0.449
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T11:12:50.826Z",
+    "entryPrice": 62273.1,
+    "alertSummary": "okx FR outlier: 0.0072% vs avg -0.0013%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62485,
+        "changePct": 0.34
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T11:07:50.823Z",
+    "entryPrice": 62428.3,
+    "alertSummary": "okx FR outlier: 0.0072% vs avg -0.0009%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62491.4,
+        "changePct": 0.101
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T11:02:50.818Z",
+    "entryPrice": 62434.1,
+    "alertSummary": "okx FR outlier: 0.0072% vs avg -0.0006% | hyperliquid FR spike: -90.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62501,
+        "changePct": 0.107
+      },
+      "3h": {
+        "exitPrice": 64235,
+        "changePct": 2.884
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T10:57:50.814Z",
+    "entryPrice": 62365.2,
+    "alertSummary": "okx FR outlier: 0.0075% vs avg -0.0004%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62485.5,
+        "changePct": 0.193
+      },
+      "3h": {
+        "exitPrice": 64016.7,
+        "changePct": 2.648
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T10:52:50.814Z",
+    "entryPrice": 62413,
+    "alertSummary": "okx FR outlier: 0.0079% vs avg -0.0000% | bitget FR spike: -366.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62350.6,
+        "changePct": -0.1
+      },
+      "3h": {
+        "exitPrice": 63759.9,
+        "changePct": 2.158
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T10:47:50.810Z",
+    "entryPrice": 62446.4,
+    "alertSummary": "okx FR outlier: 0.0081% vs avg 0.0005% | bitget FR spike: -130.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62359,
+        "changePct": -0.14
+      },
+      "3h": {
+        "exitPrice": 63915.4,
+        "changePct": 2.352
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T10:42:50.805Z",
+    "entryPrice": 62566.7,
+    "alertSummary": "okx FR outlier: 0.0082% vs avg 0.0009%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62238.7,
+        "changePct": -0.524
+      },
+      "3h": {
+        "exitPrice": 63855,
+        "changePct": 2.059
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T10:37:50.801Z",
+    "entryPrice": 62675.9,
+    "alertSummary": "okx FR outlier: 0.0080% vs avg 0.0009%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62341.2,
+        "changePct": -0.534
+      },
+      "3h": {
+        "exitPrice": 63796.9,
+        "changePct": 1.789
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T10:32:50.798Z",
+    "entryPrice": 62516.4,
+    "alertSummary": "okx FR outlier: 0.0078% vs avg 0.0009% | hyperliquid FR spike: -198.4% change | binance FR spike: -186.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62500.6,
+        "changePct": -0.025
+      },
+      "3h": {
+        "exitPrice": 63604.2,
+        "changePct": 1.74
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T10:27:50.792Z",
+    "entryPrice": 62587,
+    "alertSummary": "binance FR spike: -234.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62545.5,
+        "changePct": -0.066
+      },
+      "3h": {
+        "exitPrice": 63192.9,
+        "changePct": 0.968
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T10:17:50.781Z",
+    "entryPrice": 62857.9,
+    "alertSummary": "binance FR spike: -204.5% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62405,
+        "changePct": -0.721
+      },
+      "3h": {
+        "exitPrice": 63389.5,
+        "changePct": 0.846
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T10:12:50.775Z",
+    "entryPrice": 62940.7,
+    "alertSummary": "binance FR spike: -107.2% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62273.2,
+        "changePct": -1.061
+      },
+      "3h": {
+        "exitPrice": 63662.2,
+        "changePct": 1.146
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T09:47:50.754Z",
+    "entryPrice": 63003,
+    "alertSummary": "binance FR spike: +168.5% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62446.3,
+        "changePct": -0.884
+      },
+      "3h": {
+        "exitPrice": 63574.9,
+        "changePct": 0.908
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T09:37:50.748Z",
+    "entryPrice": 62918.5,
+    "alertSummary": "binance FR spike: +681.5% change | kucoin FR spike: -33.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62675.8,
+        "changePct": -0.386
+      },
+      "3h": {
+        "exitPrice": 63665.9,
+        "changePct": 1.188
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T09:32:50.741Z",
+    "entryPrice": 62851.4,
+    "alertSummary": "binance FR spike: -107.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62515.8,
+        "changePct": -0.534
+      },
+      "3h": {
+        "exitPrice": 63542.1,
+        "changePct": 1.099
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T09:27:50.733Z",
+    "entryPrice": 62920,
+    "alertSummary": "kucoin FR spike: -100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62587,
+        "changePct": -0.529
+      },
+      "3h": {
+        "exitPrice": 63195.1,
+        "changePct": 0.437
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T09:17:50.718Z",
+    "entryPrice": 63192.7,
+    "alertSummary": "bybit FR spike: -103.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62862.9,
+        "changePct": -0.522
+      },
+      "3h": {
+        "exitPrice": 62693.1,
+        "changePct": -0.791
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T09:12:50.714Z",
+    "entryPrice": 63173.5,
+    "alertSummary": "bybit FR spike: -481.5% change | bitget FR spike: -38.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62940.7,
+        "changePct": -0.369
+      },
+      "3h": {
+        "exitPrice": 62491.9,
+        "changePct": -1.079
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T09:07:50.712Z",
+    "entryPrice": 63301.3,
+    "alertSummary": "bybit FR spike: -116.6% change | kucoin FR spike: +50.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62934.6,
+        "changePct": -0.579
+      },
+      "3h": {
+        "exitPrice": 62491.4,
+        "changePct": -1.279
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T09:02:50.704Z",
+    "entryPrice": 63485.3,
+    "alertSummary": "hyperliquid FR spike: +143.7% change | kucoin FR spike: -100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63179.5,
+        "changePct": -0.482
+      },
+      "3h": {
+        "exitPrice": 62501,
+        "changePct": -1.55
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T08:57:50.698Z",
+    "entryPrice": 63615.9,
+    "alertSummary": "bybit FR spike: +80.1% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63155,
+        "changePct": -0.725
+      },
+      "3h": {
+        "exitPrice": 62485.5,
+        "changePct": -1.777
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T08:42:50.680Z",
+    "entryPrice": 63461.4,
+    "alertSummary": "bybit FR spike: +104.1% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62894.6,
+        "changePct": -0.893
+      },
+      "3h": {
+        "exitPrice": 62238.7,
+        "changePct": -1.927
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T08:37:50.672Z",
+    "entryPrice": 63515.9,
+    "alertSummary": "bybit FR spike: +154.6% change | bitget FR spike: +212.5% change | kucoin FR spike: +33.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62918.5,
+        "changePct": -0.941
+      },
+      "3h": {
+        "exitPrice": 62341.2,
+        "changePct": -1.849
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T08:32:50.664Z",
+    "entryPrice": 63445.3,
+    "alertSummary": "bybit FR spike: +35.9% change | hyperliquid FR spike: +5675.6% change | bitget FR spike: +100.0% change | kucoin FR spike: +50.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62857.1,
+        "changePct": -0.927
+      },
+      "3h": {
+        "exitPrice": 62497.3,
+        "changePct": -1.494
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T08:27:50.654Z",
+    "entryPrice": 63436.4,
+    "alertSummary": "bybit FR spike: -256.7% change | hyperliquid FR spike: +97.6% change | bitget FR spike: +300.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 62920,
+        "changePct": -0.814
+      },
+      "3h": {
+        "exitPrice": 62545.5,
+        "changePct": -1.404
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T08:17:50.642Z",
+    "entryPrice": 63308.7,
+    "alertSummary": "bybit FR spike: -601.2% change | hyperliquid FR spike: -183.2% change | bitget FR spike: +42.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63192.7,
+        "changePct": -0.183
+      },
+      "3h": {
+        "exitPrice": 62405,
+        "changePct": -1.427
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T08:12:50.633Z",
+    "entryPrice": 63369.6,
+    "alertSummary": "bitget FR spike: -184.8% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63173.5,
+        "changePct": -0.309
+      },
+      "3h": {
+        "exitPrice": 62273.2,
+        "changePct": -1.73
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T08:07:50.623Z",
+    "entryPrice": 63604.9,
+    "alertSummary": "bybit FR spike: +214.0% change | bitget FR spike: +466.7% change | kucoin FR spike: -33.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63273.9,
+        "changePct": -0.52
+      },
+      "3h": {
+        "exitPrice": 62428.2,
+        "changePct": -1.85
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T08:02:50.613Z",
+    "entryPrice": 63643.5,
+    "alertSummary": "bybit FR spike: -194.2% change | hyperliquid FR spike: +34.6% change | bitget FR spike: +80.4% change | kucoin FR spike: -200.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63485,
+        "changePct": -0.249
+      },
+      "3h": {
+        "exitPrice": 62429.1,
+        "changePct": -1.908
+      },
+      "6h": {
+        "exitPrice": 64235,
+        "changePct": 0.929
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T07:47:50.590Z",
+    "entryPrice": 63760.5,
+    "alertSummary": "kucoin FR spike: -100.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63444.7,
+        "changePct": -0.495
+      },
+      "3h": {
+        "exitPrice": 62446.4,
+        "changePct": -2.061
+      },
+      "6h": {
+        "exitPrice": 63915.4,
+        "changePct": 0.243
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T07:37:50.572Z",
+    "entryPrice": 63762.9,
+    "alertSummary": "kucoin FR spike: -66.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63520.1,
+        "changePct": -0.381
+      },
+      "3h": {
+        "exitPrice": 62675.9,
+        "changePct": -1.705
+      },
+      "6h": {
+        "exitPrice": 63796.9,
+        "changePct": 0.053
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T07:12:50.528Z",
+    "entryPrice": 63707.7,
+    "alertSummary": "kucoin FR spike: -50.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63369.6,
+        "changePct": -0.531
+      },
+      "3h": {
+        "exitPrice": 62945.5,
+        "changePct": -1.196
+      },
+      "6h": {
+        "exitPrice": 63666,
+        "changePct": -0.065
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T07:07:50.516Z",
+    "entryPrice": 63804.3,
+    "alertSummary": "hyperliquid FR spike: -69.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63604.9,
+        "changePct": -0.313
+      },
+      "3h": {
+        "exitPrice": 62947.2,
+        "changePct": -1.343
+      },
+      "6h": {
+        "exitPrice": 63611.9,
+        "changePct": -0.302
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T06:57:50.503Z",
+    "entryPrice": 63989.8,
+    "alertSummary": "okx FR spike: +55.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63665.6,
+        "changePct": -0.507
+      },
+      "3h": {
+        "exitPrice": 63151.2,
+        "changePct": -1.311
+      },
+      "6h": {
+        "exitPrice": 63666,
+        "changePct": -0.506
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T06:52:50.503Z",
+    "entryPrice": 64117.8,
+    "alertSummary": "okx FR spike: +631.2% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63749,
+        "changePct": -0.575
+      },
+      "3h": {
+        "exitPrice": 62976.9,
+        "changePct": -1.779
+      },
+      "6h": {
+        "exitPrice": 63832.1,
+        "changePct": -0.446
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T06:47:50.492Z",
+    "entryPrice": 64208.3,
+    "alertSummary": "okx FR spike: +139.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63760.5,
+        "changePct": -0.697
+      },
+      "3h": {
+        "exitPrice": 63003,
+        "changePct": -1.877
+      },
+      "6h": {
+        "exitPrice": 63572.2,
+        "changePct": -0.991
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T06:42:50.480Z",
+    "entryPrice": 64292.1,
+    "alertSummary": "okx FR spike: +76.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63947.5,
+        "changePct": -0.536
+      },
+      "3h": {
+        "exitPrice": 62895.7,
+        "changePct": -2.172
+      },
+      "6h": {
+        "exitPrice": 63550.1,
+        "changePct": -1.154
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T06:32:50.464Z",
+    "entryPrice": 64071.8,
+    "alertSummary": "bitget FR outlier: -0.0054% vs avg 0.0001%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63824,
+        "changePct": -0.387
+      },
+      "3h": {
+        "exitPrice": 62863.2,
+        "changePct": -1.886
+      },
+      "6h": {
+        "exitPrice": 63529.6,
+        "changePct": -0.846
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T06:27:50.464Z",
+    "entryPrice": 64221.6,
+    "alertSummary": "bitget FR outlier: -0.0055% vs avg 0.0001%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63580.8,
+        "changePct": -0.998
+      },
+      "3h": {
+        "exitPrice": 62920,
+        "changePct": -2.027
+      },
+      "6h": {
+        "exitPrice": 63195.1,
+        "changePct": -1.598
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T06:22:50.454Z",
+    "entryPrice": 64295.1,
+    "alertSummary": "bitget FR outlier: -0.0055% vs avg 0.0001% | okx FR spike: -81.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63494,
+        "changePct": -1.246
+      },
+      "3h": {
+        "exitPrice": 63045,
+        "changePct": -1.944
+      },
+      "6h": {
+        "exitPrice": 62934.1,
+        "changePct": -2.117
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T06:17:50.453Z",
+    "entryPrice": 64320,
+    "alertSummary": "bitget FR outlier: -0.0055% vs avg 0.0001%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63642,
+        "changePct": -1.054
+      },
+      "3h": {
+        "exitPrice": 63192.7,
+        "changePct": -1.753
+      },
+      "6h": {
+        "exitPrice": 62693.1,
+        "changePct": -2.529
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T06:12:50.449Z",
+    "entryPrice": 64202.9,
+    "alertSummary": "bitget FR outlier: -0.0055% vs avg 0.0000%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63707.7,
+        "changePct": -0.771
+      },
+      "3h": {
+        "exitPrice": 63188.6,
+        "changePct": -1.58
+      },
+      "6h": {
+        "exitPrice": 62485,
+        "changePct": -2.676
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T06:07:50.436Z",
+    "entryPrice": 64104.6,
+    "alertSummary": "bitget FR outlier: -0.0056% vs avg -0.0001%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63804.3,
+        "changePct": -0.468
+      },
+      "3h": {
+        "exitPrice": 63309,
+        "changePct": -1.241
+      },
+      "6h": {
+        "exitPrice": 62491.4,
+        "changePct": -2.517
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T06:02:50.422Z",
+    "entryPrice": 64050,
+    "alertSummary": "bitget FR outlier: -0.0058% vs avg -0.0002%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63947.2,
+        "changePct": -0.16
+      },
+      "3h": {
+        "exitPrice": 63485.3,
+        "changePct": -0.882
+      },
+      "6h": {
+        "exitPrice": 62488.3,
+        "changePct": -2.438
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T05:37:50.354Z",
+    "entryPrice": 64073,
+    "alertSummary": "binance FR spike: +97.1% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64328.3,
+        "changePct": 0.398
+      },
+      "3h": {
+        "exitPrice": 63520.1,
+        "changePct": -0.863
+      },
+      "6h": {
+        "exitPrice": 62341.2,
+        "changePct": -2.703
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T05:32:50.354Z",
+    "entryPrice": 64011.9,
+    "alertSummary": "hyperliquid FR spike: +2600.9% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64071.8,
+        "changePct": 0.094
+      },
+      "3h": {
+        "exitPrice": 63445.3,
+        "changePct": -0.885
+      },
+      "6h": {
+        "exitPrice": 62497.3,
+        "changePct": -2.366
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T05:27:50.353Z",
+    "entryPrice": 63839.2,
+    "alertSummary": "hyperliquid FR spike: +108.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64221.7,
+        "changePct": 0.599
+      },
+      "3h": {
+        "exitPrice": 63442.1,
+        "changePct": -0.622
+      },
+      "6h": {
+        "exitPrice": 62545.5,
+        "changePct": -2.026
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T05:17:50.325Z",
+    "entryPrice": 63921,
+    "alertSummary": "binance FR spike: +285.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64316.5,
+        "changePct": 0.619
+      },
+      "3h": {
+        "exitPrice": 63316.5,
+        "changePct": -0.946
+      },
+      "6h": {
+        "exitPrice": 62404.9,
+        "changePct": -2.372
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T05:07:50.295Z",
+    "entryPrice": 63814.1,
+    "alertSummary": "hyperliquid FR spike: -81.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64098.6,
+        "changePct": 0.446
+      },
+      "3h": {
+        "exitPrice": 63596.2,
+        "changePct": -0.341
+      },
+      "6h": {
+        "exitPrice": 62428.3,
+        "changePct": -2.172
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T05:02:50.280Z",
+    "entryPrice": 64102.4,
+    "alertSummary": "hyperliquid FR spike: -192.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64045,
+        "changePct": -0.09
+      },
+      "3h": {
+        "exitPrice": 63643.4,
+        "changePct": -0.716
+      },
+      "6h": {
+        "exitPrice": 62434.2,
+        "changePct": -2.602
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T04:37:50.215Z",
+    "entryPrice": 64327.2,
+    "alertSummary": "okx FR spike: -89.6% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64073,
+        "changePct": -0.395
+      },
+      "3h": {
+        "exitPrice": 63762.9,
+        "changePct": -0.877
+      },
+      "6h": {
+        "exitPrice": 62675.9,
+        "changePct": -2.567
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T04:32:50.214Z",
+    "entryPrice": 64335.5,
+    "alertSummary": "bitget FR outlier: -0.0067% vs avg -0.0006% | okx FR spike: -521.7% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63994.8,
+        "changePct": -0.53
+      },
+      "3h": {
+        "exitPrice": 63824,
+        "changePct": -0.795
+      },
+      "6h": {
+        "exitPrice": 62515.9,
+        "changePct": -2.828
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T04:27:50.211Z",
+    "entryPrice": 64642.5,
+    "alertSummary": "bitget FR outlier: -0.0065% vs avg -0.0004% | okx FR spike: -86.2% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63838.1,
+        "changePct": -1.244
+      },
+      "3h": {
+        "exitPrice": 63580.8,
+        "changePct": -1.642
+      },
+      "6h": {
+        "exitPrice": 62587.1,
+        "changePct": -3.18
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T04:22:50.194Z",
+    "entryPrice": 64699.4,
+    "alertSummary": "bitget FR outlier: -0.0065% vs avg -0.0004%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63670.4,
+        "changePct": -1.59
+      },
+      "3h": {
+        "exitPrice": 63510.6,
+        "changePct": -1.837
+      },
+      "6h": {
+        "exitPrice": 62864.8,
+        "changePct": -2.836
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T04:17:50.180Z",
+    "entryPrice": 64468,
+    "alertSummary": "bitget FR outlier: -0.0066% vs avg -0.0004%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63921,
+        "changePct": -0.848
+      },
+      "3h": {
+        "exitPrice": 63642,
+        "changePct": -1.281
+      },
+      "6h": {
+        "exitPrice": 62862.9,
+        "changePct": -2.49
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T04:12:50.164Z",
+    "entryPrice": 64567.9,
+    "alertSummary": "bitget FR outlier: -0.0067% vs avg -0.0004% | bybit FR spike: +65.3% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63766.7,
+        "changePct": -1.241
+      },
+      "3h": {
+        "exitPrice": 63716.6,
+        "changePct": -1.318
+      },
+      "6h": {
+        "exitPrice": 62945.5,
+        "changePct": -2.513
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T04:07:50.154Z",
+    "entryPrice": 64378.9,
+    "alertSummary": "bitget FR outlier: -0.0067% vs avg -0.0003% | bybit FR spike: +278.1% change | hyperliquid FR spike: -33.4% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 63810,
+        "changePct": -0.884
+      },
+      "3h": {
+        "exitPrice": 63804.3,
+        "changePct": -0.893
+      },
+      "6h": {
+        "exitPrice": 62934.1,
+        "changePct": -2.244
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T04:02:50.138Z",
+    "entryPrice": 64402.9,
+    "alertSummary": "bitget FR outlier: -0.0068% vs avg -0.0003% | bybit FR spike: +179.0% change",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64102.4,
+        "changePct": -0.467
+      },
+      "3h": {
+        "exitPrice": 63947.2,
+        "changePct": -0.708
+      },
+      "6h": {
+        "exitPrice": 63179.5,
+        "changePct": -1.9
+      }
+    }
+  },
+  {
+    "eventTimestamp": "2026-06-04T03:57:50.121Z",
+    "entryPrice": 64274.6,
+    "alertSummary": "bitget FR outlier: -0.0070% vs avg -0.0004%",
+    "priceChanges": {
+      "1h": {
+        "exitPrice": 64335.2,
+        "changePct": 0.094
+      },
+      "3h": {
+        "exitPrice": 63989.8,
+        "changePct": -0.443
+      },
+      "6h": {
+        "exitPrice": 63155.1,
+        "changePct": -1.742
+      }
+    }
+  }
+]

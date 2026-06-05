@@ -281,16 +281,25 @@ async function runCycle(server) {
     console.log(`[perception] ${market.sources.length} CEX sources, dir=${market.directionSignal.direction} frZ=${market.directionSignal.frZ} strength=${market.directionSignal.strength} baseline=${market.directionSignal.baselineReady}`);
     console.log(`[risk] ${risk.summary}`);
     const crowd = detectCrowdRisk(market.sources, risk.frChanges, risk.oiChanges);
-    if (crowd.hasCrowdRisk) console.log(`[crowd] ${crowd.summary}`);
+    if (crowd.hasCrowdRisk) {
+      const crowdMult = 0.7;
+      risk.sizeMultiplier = parseFloat((risk.sizeMultiplier * crowdMult).toFixed(2));
+      risk.summary += ` crowdMult=${crowdMult}→sizeMult=${risk.sizeMultiplier}`;
+      console.log(`[crowd] ${crowd.summary} → sizeMultiplier ×${crowdMult} = ${risk.sizeMultiplier}`);
+    } else {
+      console.log(`[crowd] no risk detected`);
+    }
 
     const proposal = await callLLM(ARCHITECT_PROMPT(market, risk), {
       action: 'hold', confidence: 0, reasoning: 'LLM unavailable — safe hold'
     });
     console.log(`[architect] action=${proposal.action} confidence=${proposal.confidence}`);
 
-    const audit = await callLLM(AUDITOR_PROMPT(proposal, risk, crowd), {
-      approved: false, confidence: 0, feedback: 'LLM unavailable — conservative reject'
-    });
+    const audit = proposal.action === 'hold'
+      ? { approved: false, confidence: 0, feedback: 'hold — audit skipped' }
+      : await callLLM(AUDITOR_PROMPT(proposal, risk, crowd), {
+          approved: false, confidence: 0, feedback: 'LLM unavailable — conservative reject'
+        });
     console.log(`[auditor] approved=${audit.approved} confidence=${audit.confidence}`);
 
     const decision = await callLLM(ARBITER_PROMPT(proposal, audit, risk), {

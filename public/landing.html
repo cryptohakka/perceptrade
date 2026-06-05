@@ -16,11 +16,12 @@
     --border: rgba(255,255,255,0.055);
     --border-accent: rgba(168,223,240,0.22);
     --text: #dde0e8;
-    --muted: #5a5a72;
-    --muted2: #8890a0;
+    --muted: #6a6a82;
+    --muted2: #9aa0b0;
     --accent: #a8dff0;
     --accent2: #7ec8e3;
     --accent3: #5aaed0;
+    --cyan: #7ec8e3;
     --accent-glow: rgba(168,223,240,0.06);
     --accent-glow2: rgba(168,223,240,0.12);
     --warn: #d4a855;
@@ -210,7 +211,7 @@
   .hero-desc {
     font-size: clamp(0.95rem, 1.8vw, 1.1rem);
     color: var(--muted2);
-    max-width: 540px;
+    max-width: 560px;
     line-height: 1.75;
     margin-bottom: 2.5rem;
   }
@@ -284,7 +285,7 @@
   .ticker-val.orange { color: var(--accent); }
   .ticker-val.green { color: var(--green); }
 
-  .risk-pill {
+  .signal-pill {
     display: inline-flex;
     align-items: center;
     gap: 5px;
@@ -292,14 +293,14 @@
     letter-spacing: 0.1em;
     padding: 3px 9px;
     border-radius: 2px;
-    border: 1px solid rgba(74,210,149,0.28);
-    background: rgba(74,210,149,0.07);
-    color: var(--green);
+    border: 1px solid rgba(168,223,240,0.25);
+    background: rgba(168,223,240,0.07);
+    color: var(--accent);
   }
-  .risk-dot {
+  .signal-dot {
     width: 5px; height: 5px;
     border-radius: 50%;
-    background: var(--green);
+    background: var(--accent);
     animation: pulse 2.5s infinite;
   }
 
@@ -487,33 +488,95 @@
   }
   .cex-row:hover { border-color: var(--border-accent); }
 
-  .cex-name { width: 80px; color: var(--text); letter-spacing: 0.06em; font-size: 9px; font-weight: 700; }
+  .cex-name { width: 88px; color: var(--text); letter-spacing: 0.06em; font-size: 9px; font-weight: 700; }
   .cex-bar-wrap { flex: 1; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; margin: 0 10px; overflow: hidden; }
   .cex-bar { height: 100%; border-radius: 2px; background: var(--accent); opacity: 0.7; transition: width 0.3s; }
   .cex-fr { width: 70px; text-align: right; color: var(--muted2); font-size: 9px; }
   .cex-fr.pos { color: var(--accent); }
   .cex-fr.neg { color: var(--danger); }
 
-  /* position sizing visual */
-  .sizing-visual {
-    margin-top: 5px;
+  /* frZ gauge */
+  .frz-visual {
     padding: 1rem 1.25rem;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
     font-family: var(--mono);
     font-size: 10px;
   }
 
-  .sizing-row {
+  .frz-track-wrap {
+    position: relative;
+    height: 28px;
+    margin: 8px 0 4px;
+  }
+
+  .frz-track {
+    position: absolute;
+    inset: 50% 0;
+    transform: translateY(-50%);
+    height: 6px;
+    border-radius: 3px;
+    display: flex;
+    overflow: hidden;
+  }
+
+  .frz-zone {
+    flex: 1;
+    height: 100%;
+  }
+  .frz-zone.short { background: rgba(192,80,80,0.35); }
+  .frz-zone.hold  { background: rgba(255,255,255,0.07); }
+  .frz-zone.long  { background: rgba(74,210,149,0.35); }
+
+  .frz-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 8px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .frz-label-short { color: var(--danger); }
+  .frz-label-long  { color: var(--green); }
+
+  .frz-marker {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg-card);
+    box-shadow: 0 0 6px rgba(168,223,240,0.4);
+    z-index: 2;
+  }
+
+  .frz-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .frz-key { font-size: 9px; color: var(--muted); letter-spacing: 0.08em; }
+  .frz-val { font-size: 10px; color: var(--text); }
+
+  /* regime visual */
+  .regime-visual {
+    padding: 1rem 1.25rem;
+    font-family: var(--mono);
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .regime-row {
     display: flex;
     align-items: center;
     gap: 8px;
   }
-
-  .sizing-label { width: 60px; font-size: 9px; letter-spacing: 0.06em; }
-  .sizing-bar-wrap { flex: 1; height: 18px; background: var(--bg); border: 1px solid var(--border); border-radius: 2px; overflow: hidden; }
-  .sizing-bar { height: 100%; display: flex; align-items: center; padding-left: 6px; font-size: 8px; }
+  .regime-label { width: 72px; font-size: 9px; letter-spacing: 0.06em; }
+  .regime-bar-wrap { flex: 1; height: 22px; border: 1px solid var(--border); border-radius: 2px; overflow: hidden; background: var(--bg); }
+  .regime-bar { height: 100%; display: flex; align-items: center; padding-left: 8px; font-size: 8px; letter-spacing: 0.06em; }
+  .regime-mult { width: 36px; text-align: right; font-size: 9px; }
 
   .steps { display: flex; flex-direction: column; gap: 1.8rem; }
 
@@ -669,10 +732,10 @@
     <span class="line-accent">Trade With Precision.</span>
   </h1>
 
-  <p class="hero-sub-headline">FR-aware · Risk-calibrated · Autonomously executed</p>
+  <p class="hero-sub-headline">FR z-score contrarian · OI-gated · Autonomously executed</p>
 
   <p class="hero-desc">
-    Three adversarial AI agents continuously monitor funding rates and open interest across 6 major exchanges — detecting market regime shifts and executing trades on Bitget Futures with risk-adjusted position sizing.
+    Three adversarial AI agents continuously monitor funding rates and open interest across 6 major exchanges — detecting crowd over-extension via FR z-score and executing mean-reversion trades on Bitget Futures with regime-aware position sizing.
   </p>
 
   <div class="hero-actions">
@@ -691,12 +754,12 @@
       <span class="ticker-val orange">5 CEX + 1 DEX</span>
     </div>
     <div class="ticker-item">
-      <span class="ticker-label">Agents</span>
-      <span class="ticker-val orange">3 active</span>
+      <span class="ticker-label">Strategy</span>
+      <span class="ticker-val orange">FR Z-Score</span>
     </div>
     <div class="ticker-item">
-      <span class="ticker-label">Risk</span>
-      <span class="risk-pill"><span class="risk-dot"></span>RISK_ON</span>
+      <span class="ticker-label">Signal</span>
+      <span class="signal-pill"><span class="signal-dot"></span>MONITORING</span>
     </div>
     <div class="ticker-item">
       <span class="ticker-label">Cycle</span>
@@ -719,8 +782,8 @@
       <div class="stat-label">CEX Data Sources<br>Binance · Bitget · Bybit · KuCoin · OKX + Hyperliquid</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num">3</div>
-      <div class="stat-label">Risk Dimensions<br>Heat · Deviation · OI Change</div>
+      <div class="stat-num">±1.5σ</div>
+      <div class="stat-label">FR Z-Score Threshold<br>SHORT ≥+1.5 · LONG ≤−1.5 · HOLD in between</div>
     </div>
     <div class="stat-item">
       <div class="stat-num">3</div>
@@ -735,49 +798,49 @@
 <section>
   <div class="section-label">// system primitives</div>
   <h2 class="section-title">Market perception,<br>not prediction</h2>
-  <p class="section-sub">PercepTrade doesn't predict price. It reads the collective positioning of 6 exchanges and acts when the signal is clear — with risk automatically calibrated to market conditions.</p>
+  <p class="section-sub">PercepTrade doesn't predict price. It reads collective crowd positioning across 6 exchanges, detects statistical over-extension, and fades the crowd — with sizing calibrated to regime conditions.</p>
 
   <div class="features-grid">
     <div class="feature-card">
       <div class="feature-icon">📡</div>
       <div class="feature-title">6-CEX Perception Layer</div>
-      <div class="feature-desc">Funding rates and open interest aggregated every 5 min from 5 CEX (Binance, Bitget, Bybit, KuCoin, OKX) and Hyperliquid DEX. No single venue bias.</div>
+      <div class="feature-desc">Funding rates and open interest aggregated every 5 min from 5 CEX (Binance, Bitget, Bybit, KuCoin, OKX) and Hyperliquid DEX. Cross-CEX average FR computed as the baseline signal.</div>
       <span class="feature-tag">5 CEX + 1 DEX · No Auth Required</span>
     </div>
 
     <div class="feature-card">
-      <div class="feature-icon">🌡️</div>
-      <div class="feature-title">Dual-Axis Risk Scoring</div>
-      <div class="feature-desc">heatScore measures overall market euphoria via avgFR magnitude. deviationScore flags cross-exchange imbalances. Combined into a single 0–100 riskScore.</div>
-      <span class="feature-tag">Heat + Deviation</span>
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">FR Z-Score Contrarian</div>
+      <div class="feature-desc">frZ measures how many standard deviations the current cross-CEX avgFR deviates from its 24h rolling baseline. frZ ≥ +1.5 triggers SHORT (crowd over-long). frZ ≤ −1.5 triggers LONG (crowd over-short).</div>
+      <span class="feature-tag">Mean Reversion · 24h Baseline</span>
     </div>
 
     <div class="feature-card">
       <div class="feature-icon">⚡</div>
       <div class="feature-title">Adversarial AI Council</div>
-      <div class="feature-desc">Architect proposes. Auditor challenges risk assumptions and FR bias conflicts. Arbiter resolves with confidence threshold gating. Minimum 0.3 confidence to execute.</div>
+      <div class="feature-desc">Architect proposes direction. Auditor stress-tests FR bias, OI concentration, and regime conditions. Arbiter resolves with a final confidence score — hold if below threshold.</div>
       <span class="feature-tag">Triple-A Framework</span>
     </div>
 
     <div class="feature-card">
-      <div class="feature-icon">📐</div>
-      <div class="feature-title">Risk-Adjusted Sizing</div>
-      <div class="feature-desc">Position size scales inversely with riskScore. risk_off = 25% of base. neutral = 50%. risk_on = full size. No fixed bets — every trade sized to current conditions.</div>
-      <span class="feature-tag">Dynamic Position Sizing</span>
+      <div class="feature-icon">🔒</div>
+      <div class="feature-title">OI Momentum Gate</div>
+      <div class="feature-desc">Open interest log-momentum filters false entries when crowd positioning is still actively building. If OI growth exceeds +30 bps, the trade is blocked regardless of FR signal — avoiding entries into accelerating trends.</div>
+      <span class="feature-tag">Log-Momentum · +30bps Threshold</span>
     </div>
 
     <div class="feature-card">
-      <div class="feature-icon">🔄</div>
-      <div class="feature-title">Full Strategy Loop</div>
-      <div class="feature-desc">Perception → decision → execution → exit. Agent manages open positions across cycles, closes on direction reversal, and re-enters on fresh signals.</div>
-      <span class="feature-tag">Autonomous Execution</span>
+      <div class="feature-icon">📐</div>
+      <div class="feature-title">Regime-Aware Sizing</div>
+      <div class="feature-desc">frRegime tracks the absolute magnitude of frZ against σ-bands. Normal regime runs full size. Extreme regime (|frZ| ≥ 2σ) applies a ×0.7 caution factor — extreme FR zones signal unstable liquidity, not opportunity to press.</div>
+      <span class="feature-tag">Normal · Extreme ×0.7</span>
     </div>
 
     <div class="feature-card">
       <div class="feature-icon">🎯</div>
       <div class="feature-title">Bitget Futures Native</div>
-      <div class="feature-desc">USDT-margined perpetuals on Bitget. Isolated margin mode. Market orders with real-time mark price conversion. Clean API integration via Bitget Agent Hub.</div>
-      <span class="feature-tag">Bitget Agent Hub</span>
+      <div class="feature-desc">USDT-margined perpetuals on Bitget via Agent Hub integration. Isolated margin. Limit orders for reduced fees. Position managed across cycles with automatic reversal on signal flip.</div>
+      <span class="feature-tag">Bitget Agent Hub · Limit Orders</span>
     </div>
   </div>
 </section>
@@ -787,8 +850,8 @@
 <!-- HOW IT WORKS -->
 <section>
   <div class="section-label">// the perception loop</div>
-  <h2 class="section-title">Every 5 minutes,<br>the council reads the market</h2>
-  <p class="section-sub">FR signals in. Adversarial debate. Risk-calibrated execution. The system never sleeps.</p>
+  <h2 class="section-title">Every 5 minutes,<br>the council reads the crowd</h2>
+  <p class="section-sub">FR signals in. Z-score computed. OI gate checked. Adversarial debate. Regime-calibrated execution. The system never sleeps.</p>
 
   <div class="arch-row">
     <div style="display:flex;flex-direction:column;gap:1rem;">
@@ -801,43 +864,43 @@
             <div class="win-dot wd-y"></div>
             <div class="win-dot wd-g"></div>
           </div>
-          <span>perception layer · live FR snapshot</span>
+          <span>perception layer · cross-cex FR snapshot</span>
         </div>
         <div class="cex-table">
           <div class="cex-row">
             <span class="cex-name">BINANCE</span>
             <div class="cex-bar-wrap"><div class="cex-bar" style="width:40%"></div></div>
-            <span class="cex-fr pos">+0.0001</span>
+            <span class="cex-fr pos">+0.0101%</span>
           </div>
           <div class="cex-row">
             <span class="cex-name">BITGET</span>
-            <div class="cex-bar-wrap"><div class="cex-bar" style="width:55%"></div></div>
-            <span class="cex-fr pos">+0.0001</span>
+            <div class="cex-bar-wrap"><div class="cex-bar" style="width:72%"></div></div>
+            <span class="cex-fr pos">+0.0184%</span>
           </div>
           <div class="cex-row">
             <span class="cex-name">BYBIT</span>
             <div class="cex-bar-wrap"><div class="cex-bar" style="width:45%"></div></div>
-            <span class="cex-fr pos">+0.0001</span>
+            <span class="cex-fr pos">+0.0115%</span>
           </div>
           <div class="cex-row">
             <span class="cex-name">KUCOIN</span>
             <div class="cex-bar-wrap"><div class="cex-bar" style="width:35%"></div></div>
-            <span class="cex-fr pos">+0.0001</span>
+            <span class="cex-fr pos">+0.0089%</span>
           </div>
           <div class="cex-row">
             <span class="cex-name">OKX</span>
             <div class="cex-bar-wrap"><div class="cex-bar" style="width:38%"></div></div>
-            <span class="cex-fr pos">+0.0001</span>
+            <span class="cex-fr pos">+0.0097%</span>
           </div>
           <div class="cex-row">
-            <span class="cex-name" style="color:var(--cyan)">HYPERLIQUID <span style="font-size:8px;border:1px solid rgba(126,200,227,0.3);padding:1px 4px;border-radius:2px;">DEX</span></span>
+            <span class="cex-name" style="color:var(--cyan)">HYPERLIQUID <span style="font-size:8px;border:1px solid rgba(126,200,227,0.3);padding:1px 4px;border-radius:2px;margin-left:2px;">DEX</span></span>
             <div class="cex-bar-wrap"><div class="cex-bar" style="width:32%;background:var(--cyan)"></div></div>
-            <span class="cex-fr pos">+0.0000</span>
+            <span class="cex-fr pos" style="color:var(--cyan)">+0.0082%</span>
           </div>
         </div>
       </div>
 
-      <!-- Position sizing visual -->
+      <!-- FR Z-Score gauge -->
       <div class="arch-visual">
         <div class="arch-visual-header">
           <div class="win-dots">
@@ -845,26 +908,67 @@
             <div class="win-dot wd-y"></div>
             <div class="win-dot wd-g"></div>
           </div>
-          <span>risk level → position size</span>
+          <span>fr z-score · signal zone</span>
         </div>
-        <div class="sizing-visual">
-          <div class="sizing-row">
-            <span class="sizing-label" style="color:var(--green)">RISK_ON</span>
-            <div class="sizing-bar-wrap">
-              <div class="sizing-bar" style="width:100%;background:rgba(74,210,149,0.2);color:#4ad295;">100% of base size</div>
+        <div class="frz-visual">
+          <div class="frz-row">
+            <span class="frz-key">frZ (avg 24h baseline)</span>
+            <span class="frz-val" style="color:var(--accent)">+1.28</span>
+          </div>
+          <div class="frz-track-wrap">
+            <div class="frz-track">
+              <div class="frz-zone short" style="flex:1.5"></div>
+              <div class="frz-zone hold"  style="flex:3"></div>
+              <div class="frz-zone long"  style="flex:1.5"></div>
+            </div>
+            <!-- marker at ~78% = frZ +1.28 of -3 to +3 range mapped to 0-100 -->
+            <div class="frz-marker" style="left:71%"></div>
+          </div>
+          <div class="frz-labels">
+            <span class="frz-label-short">−3σ SHORT</span>
+            <span style="color:var(--muted)">−1.5 · HOLD · +1.5</span>
+            <span class="frz-label-long">+3σ SHORT</span>
+          </div>
+          <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
+            <div class="frz-row">
+              <span class="frz-key">OI Momentum</span>
+              <span class="frz-val" style="color:var(--warn)">+58 bps · BLOCKED</span>
+            </div>
+            <div class="frz-row">
+              <span class="frz-key">frRegime</span>
+              <span class="frz-val" style="color:var(--text)">NORMAL · ×1.0</span>
             </div>
           </div>
-          <div class="sizing-row">
-            <span class="sizing-label" style="color:var(--warn)">NEUTRAL</span>
-            <div class="sizing-bar-wrap">
-              <div class="sizing-bar" style="width:50%;background:rgba(212,168,85,0.15);color:#d4a855;">50%</div>
-            </div>
+        </div>
+      </div>
+
+      <!-- Regime visual -->
+      <div class="arch-visual">
+        <div class="arch-visual-header">
+          <div class="win-dots">
+            <div class="win-dot wd-r"></div>
+            <div class="win-dot wd-y"></div>
+            <div class="win-dot wd-g"></div>
           </div>
-          <div class="sizing-row">
-            <span class="sizing-label" style="color:var(--danger)">RISK_OFF</span>
-            <div class="sizing-bar-wrap">
-              <div class="sizing-bar" style="width:25%;background:rgba(192,80,80,0.15);color:#c05050;">25%</div>
+          <span>fr regime → size multiplier</span>
+        </div>
+        <div class="regime-visual">
+          <div class="regime-row">
+            <span class="regime-label" style="color:var(--green)">NORMAL</span>
+            <div class="regime-bar-wrap">
+              <div class="regime-bar" style="width:100%;background:rgba(74,210,149,0.15);color:#4ad295;">|frZ| &lt; 2σ · full size</div>
             </div>
+            <span class="regime-mult" style="color:var(--green)">×1.0</span>
+          </div>
+          <div class="regime-row">
+            <span class="regime-label" style="color:var(--danger)">EXTREME</span>
+            <div class="regime-bar-wrap">
+              <div class="regime-bar" style="width:70%;background:rgba(192,80,80,0.15);color:#c05050;">|frZ| ≥ 2σ · caution</div>
+            </div>
+            <span class="regime-mult" style="color:var(--danger)">×0.7</span>
+          </div>
+          <div style="margin-top:6px;font-size:9px;color:var(--muted);letter-spacing:0.06em;line-height:1.6;">
+            Extreme = unstable liquidity regime.<br>Size reduced, not signal strength amplified.
           </div>
         </div>
       </div>
@@ -875,28 +979,35 @@
         <div class="step-num">01</div>
         <div class="step-body">
           <h4>Multi-CEX perception</h4>
-          <p>Funding rates and open interest pulled from 6 exchanges every 5 min. avgFR and frDeviation computed as the primary market signals.</p>
+          <p>Funding rates and open interest pulled from 6 exchanges every 5 min. Cross-CEX avgFR computed as the baseline crowd positioning signal.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">02</div>
         <div class="step-body">
-          <h4>Dual-axis risk scoring</h4>
-          <p>heatScore quantifies overall market leverage bias. deviationScore detects cross-exchange imbalances. Combined riskScore gates position sizing.</p>
+          <h4>FR z-score detection</h4>
+          <p>frZ = (current avgFR − 24h mean) ÷ 24h stddev. When frZ ≥ +1.5, the crowd is statistically over-long → SHORT. When frZ ≤ −1.5, crowd is over-short → LONG. Hold in between.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">03</div>
         <div class="step-body">
-          <h4>Adversarial debate</h4>
-          <p>Architect proposes a direction. Auditor stress-tests against frBias, OI concentration, and risk level. Arbiter makes the final call — hold if confidence &lt; 0.65.</p>
+          <h4>OI momentum gate</h4>
+          <p>OI log-momentum is checked before any entry. If open interest is still actively building (+30 bps threshold), the trade is blocked — entering into an accelerating crowd trend defeats the contrarian premise.</p>
         </div>
       </div>
       <div class="step">
         <div class="step-num">04</div>
         <div class="step-body">
-          <h4>Risk-calibrated execution</h4>
-          <p>Order size = confidence × sizeMultiplier × base. TP at +1.5%, SL at -1.0% set via mark price. Direction reversal triggers close before re-entry. Bitget USDT-margined perpetuals, isolated margin.</p>
+          <h4>Adversarial debate</h4>
+          <p>Architect proposes direction. Auditor stress-tests FR bias, regime conditions, and crowd concentration signals from all 6 sources. Arbiter resolves with final confidence score.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-body">
+          <h4>Regime-calibrated execution</h4>
+          <p>Position size = confidence × sizeMultiplier × regimeFactor × base. Normal regime: full size. Extreme regime (|frZ| ≥ 2σ): ×0.7 caution. Limit orders on Bitget USDT-margined perpetuals, isolated margin.</p>
         </div>
       </div>
     </div>
@@ -905,8 +1016,8 @@
 
 <!-- CTA -->
 <div class="cta-banner">
-  <h2>Watch the agents<br>read the market live</h2>
-  <p>See real-time FR aggregation, risk scoring, and adversarial agent deliberation — the full perception-to-execution loop.</p>
+  <h2>Watch the agents<br>read the crowd live</h2>
+  <p>Real-time FR aggregation, z-score computation, OI gate status, and adversarial agent deliberation — the full perception-to-execution loop.</p>
   <a href="/app" class="btn-primary">
     Open PercepTrade
     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style="margin-left:4px"><path d="M1.5 11.5L11.5 1.5M11.5 1.5H4.5M11.5 1.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
