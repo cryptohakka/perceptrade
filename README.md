@@ -4,6 +4,8 @@
 
 Live demo: [perceptrade.a2aflow.space](https://perceptrade.a2aflow.space)
 
+PercepTrade combines quantitative crowd positioning signals with a **Triple-A AI Council** (Architect, Auditor, Arbiter) to determine when — and how aggressively — to fade leveraged crowd extremes across 6 CEX/DEX sources.
+
 ---
 
 ## The Problem
@@ -20,11 +22,13 @@ PercepTrade aggregates 6 CEX/DEX sources, computes a **FR Z-Score** against a 24
 
 ```
 Perception Layer (6 sources)
-  Bybit / OKX / Binance / KuCoin / Hyperliquid DEX
-  + Bitget (FR / OI / Long-Short Ratio — Bitget exclusive)
+  Bybit / OKX / Binance / KuCoin / Bitget / Hyperliquid DEX
+  │
+  │  Bitget contributes additional proprietary signals:
+  │  Funding Rate bounds, Open Interest, and Long/Short Ratio
        │
        ▼
-Signal Computation
+Signal Computation (rule-based, deterministic)
   frZ              →  z-score of cross-CEX avgFR vs 24h rolling baseline
   oiMomentum       →  log-change of OI vs previous cycle (entry gate)
   frRegime         →  Normal / Extreme (|frZ| ≥ 2σ → ×0.7 size caution)
@@ -42,7 +46,23 @@ Bitget Futures Execution
   Limit order (reduced fees) + TP/SL (place-pos-tpsl)
 ```
 
-**Cycle:** 5 minutes | **Bot/Agent split:** ~60% rule-based / ~40% LLM
+**Cycle:** 5 minutes
+
+**Bot/Agent split:** ~60% rule-based / ~40% LLM — Deterministic signals (FR Z-score, OI momentum, Crowd Risk) remain rule-based for consistency and auditability, while the Triple-A council interprets context and determines position sizing.
+
+---
+
+## Triple-A Agent Council
+
+The AI core of PercepTrade. Three adversarial agents debate each cycle — no agent shares system prompts with others:
+
+- **Architect** — evaluates frZ, frRegime, OI gate status, and Bitget L/S ratio; proposes `long / short / hold`
+- **Auditor** — receives natural language Crowd Risk warning (exchange name, FR value, MAD deviation) and regime context; challenges proposal, can reduce confidence
+- **Arbiter** — final decision: `action` + `size_pct = confidence × sizeMultiplier × regimeFactor`
+
+The council's value is not just decision-making — it's the Auditor's ability to receive unstructured market context (crowd anomaly descriptions, regime warnings) and translate that into a confidence adjustment. This is work a rule-based system cannot do.
+
+**Fallback behavior:** If OpenRouter is unavailable or rate-limited, each agent falls back to a safe default — Architect and Arbiter default to `hold`, Auditor defaults to conservative reject. The system never trades on an incomplete council decision.
 
 ---
 
@@ -109,6 +129,8 @@ Deviation = 3.4× MAD → statistically anomalous
 → [risk-mgmt] crowd risk prevented full exposure · original 72% → final 18%
 ```
 
+**Validation status:** Crowd Risk outcomes (1h/3h/6h/12h post-event price tracking) are being collected live via `crowd_outcomes.json`. Historical validation is ongoing.
+
 > PercepTrade doesn't just trade. It knows when *not* to trade at full size.
 
 ---
@@ -124,18 +146,6 @@ Beyond execution, PercepTrade uses Bitget-specific market data unavailable on ot
 | Open Interest | `/api/v2/mix/market/open-interest` | OI momentum gate computation |
 
 The Long/Short Ratio is displayed as a live gauge in the Analysis UI with a **BITGET EXCLUSIVE** label.
-
----
-
-## Triple-A Framework
-
-Sequential debate — no agent shares system prompts with others:
-
-- **Architect** — evaluates frZ, frRegime, OI gate status, and Bitget L/S ratio; proposes `long / short / hold`
-- **Auditor** — receives natural language Crowd Risk warning (exchange name, FR value, MAD deviation) and regime context; challenges proposal, can reduce confidence
-- **Arbiter** — final decision: `action` + `size_pct = confidence × sizeMultiplier × regimeFactor`
-
-**Fallback behavior:** If OpenRouter is unavailable or rate-limited, each agent falls back to a safe default — Architect and Arbiter default to `hold`, Auditor defaults to conservative reject. The system never trades on an incomplete council decision.
 
 ---
 
