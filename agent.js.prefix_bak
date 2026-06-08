@@ -383,8 +383,7 @@ async function runCycle(server) {
               marginSize: (sizeUsdt / leverage).toFixed(4),
               unrealizedPL: '0',
               takeProfit: tpPrice,
-              stopLoss: slPrice,
-              frZ_at_entry: market.directionSignal?.frZ ?? null
+              stopLoss: slPrice
             };
           } else {
             console.error(`[execute] order failed: ${JSON.stringify(order)}`);
@@ -424,30 +423,11 @@ const POSTMORTEM_FILE = process.env.POSTMORTEM_FILE || '/home/agent/perceptrade/
 async function runPostMortem(closedPosition, exitPrice, closeReason) {
   try {
     if (!closedPosition) return;
-    const entryPrice = parseFloat(closedPosition.openPriceAvg || 0);
-    const side       = closedPosition.holdSide || closedPosition.side || 'unknown';
-
-    const PM_LEVERAGE  = parseFloat(process.env.LEVERAGE || '2');
-    const PM_ENTRY_FEE = parseFloat(process.env.ENTRY_FEE_PCT || '0.0006'); // taker
-    const PM_EXIT_FEE  = parseFloat(process.env.EXIT_FEE_PCT  || '0.0006'); // taker (TP/SL market)
-
-    let pnl = { raw: null, leveraged: null, fee_pct: null, net: null, usdt: null };
-    if (entryPrice > 0) {
-      const dir    = side === 'long' ? 1 : -1;
-      const raw    = (exitPrice - entryPrice) / entryPrice * dir;
-      const lev    = raw * PM_LEVERAGE;
-      const feePct = (PM_ENTRY_FEE + PM_EXIT_FEE) * PM_LEVERAGE;
-      const net    = lev - feePct;
-      const marginUsdt = parseFloat(closedPosition.marginSize || 0);
-      pnl = {
-        raw:       parseFloat((raw * 100).toFixed(4)),
-        leveraged: parseFloat((lev * 100).toFixed(4)),
-        fee_pct:   parseFloat((feePct * 100).toFixed(4)),
-        net:       parseFloat((net * 100).toFixed(4)),
-        usdt:      marginUsdt > 0 ? parseFloat((net * marginUsdt * PM_LEVERAGE).toFixed(4)) : null
-      };
-    }
-    const pnlPct = pnl.net;
+    const entryPrice  = parseFloat(closedPosition.openPriceAvg || 0);
+    const side        = closedPosition.holdSide || closedPosition.side || 'unknown';
+    const pnlPct      = entryPrice > 0
+      ? ((exitPrice - entryPrice) / entryPrice * 100 * (side === 'long' ? 1 : -1)).toFixed(3)
+      : null;
 
     // 期間中のcrowd eventsを取得
     let recentCrowdEvents = [];
@@ -503,17 +483,11 @@ Respond ONLY with JSON: {"result":"win"|"loss"|"unknown","pnl_pct":${pnlPct ?? n
       side,
       entry_price: entryPrice,
       exit_price:  exitPrice,
-      pnl_pct:        pnl.net,
-      pnl_pct_raw:    pnl.raw,
-      pnl_pct_lev:    pnl.leveraged,
-      fee_pct:        pnl.fee_pct,
-      pnl_usdt:       pnl.usdt,
-      leverage:       PM_LEVERAGE,
+      pnl_pct:     parsed.pnl_pct,
       result:      parsed.result,
       analysis:    parsed.analysis,
       close_reason: closeReason,
-      frZ_at_close: currentFrZ,
-      frZ_at_entry: closedPosition.frZ_at_entry ?? null
+      frZ_at_close: currentFrZ
     });
     if (mortems.length > 20) mortems = mortems.slice(0, 20);
     fs.writeFileSync(POSTMORTEM_FILE, JSON.stringify(mortems, null, 2));

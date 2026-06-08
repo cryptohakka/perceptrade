@@ -125,7 +125,8 @@ function calcDirectionSignal(sources, prevSources = [], frHistory = []) {
 
   // FR Regime label (statistical bands, independent of trigger)
   const absZ = Math.abs(frZ);
-  const frRegime = absZ >= 2.0 ? 'extreme' : 'normal'; //        // |frZ| < 1.0  noise
+  const EXTREME_Z = parseFloat(process.env.FR_Z_EXTREME || '2.0'); // default 2.0 維持。backtest sweep で最適化
+  const frRegime = absZ >= EXTREME_Z ? 'extreme' : 'normal';
 
   // Extreme regime → caution: scale size down (unstable liquidity, not conviction)
   const EXTREME_FACTOR = 0.7;

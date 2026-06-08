@@ -3,9 +3,15 @@
   "current_confidence": 0.7,
   "pending_regime": null,
   "pending_count": 0,
-  "last_updated": "2026-06-08T07:11:06.078Z",
+  "last_updated": "2026-06-08T07:34:54.048Z",
   "stale": false,
   "history": [
+    {
+      "ts": "2026-06-08T07:34:54.048Z",
+      "regime": "mean_reverting",
+      "confidence": 0.7,
+      "reasoning": "The funding rate (frZ) shows significant oscillation, moving from positive to negative and back, indicating a lack of sustained directional bias. The price change is relatively small, supporting a mean-reverting environment where contrarian signals are likely to be effective."
+    },
     {
       "ts": "2026-06-08T07:11:06.078Z",
       "regime": "mean_reverting",
@@ -59,12 +65,6 @@
       "regime": "mean_reverting",
       "confidence": 0.7,
       "reasoning": "The average funding rate (avgFR) fluctuates around zero, indicating a lack of strong directional bias. While the price has seen some movement, the funding rates do not show sustained trends that would suggest a strong trending regime."
-    },
-    {
-      "ts": "2026-06-08T06:53:33.375Z",
-      "regime": "mean_reverting",
-      "confidence": 0.7,
-      "reasoning": "The funding rate (frZ) shows significant oscillation around zero, indicating a lack of sustained directional bias in the market. The price change is minimal, further supporting a mean-reverting environment where contrarian signals are likely to be effective."
     }
   ]
 }
