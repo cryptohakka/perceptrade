@@ -31,7 +31,7 @@ Perception Layer (6 sources)
 Signal Computation (rule-based, deterministic)
   frZ              →  z-score of cross-CEX avgFR vs 24h rolling baseline
   oiMomentum       →  log-change of OI vs previous cycle (entry gate)
-  frRegime         →  Normal / Extreme (|frZ| ≥ 2σ → ×0.7 size caution)
+  frRegime         →  Normal / Extreme (|frZ| ≥ FR_Z_EXTREME, default 2σ → ×0.7 size caution)
   crowdRisk        →  single-exchange FR/OI anomaly detection (MAD-based)
   riskAttribution  →  per-component score breakdown (CEX Spread / OI Momentum / Total Risk)
        │
@@ -43,7 +43,7 @@ Triple-A Agent Council (OpenRouter / gemini-2.5-flash-lite)
        │
        ▼
 Bitget Futures Execution
-  Limit order (reduced fees) + TP/SL (place-pos-tpsl)
+  Market order (taker) + TP/SL (place-pos-tpsl)
 ```
 
 **Cycle:** 5 minutes
@@ -113,7 +113,7 @@ Before any entry, OI log-momentum is checked. If open interest is still actively
 | Regime | Condition | Size Factor |
 |--------|-----------|-------------|
 | Normal | \|frZ\| < 2σ | ×1.0 |
-| Extreme | \|frZ\| ≥ 2σ | ×0.7 |
+| Extreme | \|frZ\| ≥ FR_Z_EXTREME (default 2σ, configurable) | ×0.7 |
 
 Extreme regime means unstable liquidity — size is reduced as a caution measure, not as a signal amplifier. The threshold that triggers a trade (±1.5) and the regime label are intentionally separate layers.
 
