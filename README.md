@@ -69,7 +69,7 @@ The council provides a flexible layer for interpreting unstructured market conte
 ```
 frZ         = +2.1   (crowd statistically over-long)
 OI momentum = +0.08% (below +30bps gate — ALLOWED)
-frRegime    = Extreme (|frZ| ≥ 2σ → ×0.7)
+frRegime    = Extreme (|frZ| ≥ FR_Z_EXTREME=2.0 → ×0.7)
 Crowd Risk  = none
 Bitget L/S  = 73% long
 
@@ -217,6 +217,11 @@ BITGET_SECRET_KEY=
 BITGET_PASSPHRASE=
 CYCLE_INTERVAL_MS=300000
 MAX_POSITION_SIZE_USDT=100
+LEVERAGE=2
+ENTRY_FEE_PCT=0.0006
+EXIT_FEE_PCT=0.0006
+FR_Z_THRESHOLD=1.5
+FR_Z_EXTREME=2.0
 ```
 
 > FR/OI perception uses public endpoints across all 6 sources. API keys are only required for Bitget execution.
