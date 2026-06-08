@@ -107,6 +107,8 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
     <button class="htab"         onclick="switchTab('signals')">FR Z-Score</button>
     <button class="htab"         onclick="switchTab('outcomes')">Crowd Outcomes</button>
     <button class="htab"         onclick="switchTab('protection')">Protection Log</button>
+    <button class="htab"         onclick="switchTab('regime')">Regime Log</button>
+    <button class="htab"         onclick="switchTab('postmortem')">Post-Mortem</button>
   </div>
 
   <!-- ① Trade History -->
@@ -156,10 +158,26 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
     </div>
   </div>
 
+  <!-- ⑤ Regime Log -->
+  <div id="pane-regime" class="pane">
+    <div class="stat-row" id="regimeStats"></div>
+    <div class="card">
+      <div class="card-title">Regime Classification Log</div>
+      <div id="regimeTableWrap"><div class="loading">Loading...</div></div>
+    </div>
+  </div>
+  <!-- ⑥ Post-Mortem -->
+  <div id="pane-postmortem" class="pane">
+    <div class="stat-row" id="postmortemStats"></div>
+    <div class="card">
+      <div class="card-title">Trade Post-Mortem Analysis</div>
+      <div id="postmortemTableWrap"><div class="loading">Loading...</div></div>
+    </div>
+  </div>
 </div>
 <script>
 // ─── tab switching ───────────────────────────────────────────────
-const TAB_NAMES = ['trades','signals','outcomes','protection'];
+const TAB_NAMES = ['trades','signals','outcomes','protection','regime','postmortem'];
 const loadedTabs = new Set(['trades']);
 
 function switchTab(name) {
@@ -172,6 +190,8 @@ function switchTab(name) {
     if (name==='outcomes')   loadOutcomes();
     if (name==='signals')    loadSignals();
     if (name==='protection') loadProtection();
+    if (name==='regime')      loadRegime();
+    if (name==='postmortem')  loadPostMortem();
   }
   if (name==='signals') setTimeout(renderSignalChart, 60);
 }
@@ -244,7 +264,7 @@ function renderTrades(raw) {
   );
   h += '</tr></thead><tbody>';
 
-  trades.slice(0,150).forEach(t => {
+  trades.slice(0,200).forEach(t => {
     const pnl   = parseFloat(t.totalProfits || 0);
     const fee   = parseFloat(t.fee || 0);
     const net   = pnl + fee;
@@ -264,7 +284,7 @@ function renderTrades(raw) {
     </tr>`;
   });
   h += '</tbody></table></div>';
-  if (trades.length > 150) h += `<div style="margin-top:8px;font-size:9px;color:var(--label);font-family:'Space Mono',monospace;">Showing 150 of ${trades.length} trades.</div>`;
+  if (trades.length > 200) h += `<div style="margin-top:8px;font-size:9px;color:var(--label);font-family:'Space Mono',monospace;">Showing 200 of ${trades.length} trades.</div>`;
   document.getElementById('tradeTableWrap').innerHTML = h;
 }
 
@@ -605,6 +625,54 @@ setInterval(async()=>{
     if(dot)dot.className="status-dot error";
   }
 },10000);
+
+// ─── ⑤ Regime Log ──────────────────────────────────────────────
+async function loadRegime() {
+  const wrap = document.getElementById('regimeTableWrap');
+  const stats = document.getElementById('regimeStats');
+  try {
+    const rows = await fetch('/api/regime').then(r => r.json());
+    if (!rows.length) { wrap.innerHTML = '<div class="loading">No data yet</div>'; return; }
+    const counts = {};
+    rows.forEach(r => counts[r.regime] = (counts[r.regime]||0)+1);
+    const dominant = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+    stats.innerHTML = chip('Total',rows.length,'') + chip('Dominant',dominant,'#f0c94a') + chip('Latest',rows[0].regime,'#4ade80');
+    const C = {mean_reverting:'#4ade80',trending_up:'#60a5fa',trending_down:'#f87171',chop:'#a78bfa'};
+    wrap.innerHTML = `<table class="h-table"><thead><tr><th>Time</th><th>Regime</th><th class="r">Conf</th><th>Reasoning</th></tr></thead><tbody>${
+      rows.map(r=>`<tr>
+        <td>${fmtTs(r.ts)}</td>
+        <td><span style="color:${C[r.regime]||'#aaa'};font-weight:600">${r.regime}</span></td>
+        <td class="r">${(r.confidence*100).toFixed(0)}%</td>
+        <td style="color:var(--muted);font-size:9px;max-width:320px">${r.reasoning||'—'}</td>
+      </tr>`).join('')
+    }</tbody></table>`;
+  } catch(e) { wrap.innerHTML = '<div class="loading">Error</div>'; }
+}
+
+// ─── ⑥ Post-Mortem ─────────────────────────────────────────────
+async function loadPostMortem() {
+  const wrap = document.getElementById('postmortemTableWrap');
+  const stats = document.getElementById('postmortemStats');
+  try {
+    const rows = await fetch('/api/mortems').then(r => r.json());
+    if (!rows.length) { wrap.innerHTML = '<div class="loading">No post-mortems yet</div>'; return; }
+    const wins = rows.filter(r=>r.result==='win').length;
+    const avgPnl = (rows.reduce((a,r)=>a+(r.pnl_pct||0),0)/rows.length).toFixed(2);
+    stats.innerHTML = chip('Total',rows.length,'') + chip('Win Rate',(wins/rows.length*100).toFixed(0)+'%','#4ade80') + chip('Avg PnL',avgPnl+'%',avgPnl>=0?'#4ade80':'#f87171');
+    wrap.innerHTML = `<table class="h-table"><thead><tr><th>Time</th><th>Side</th><th class="r">Entry</th><th class="r">Exit</th><th class="r">PnL%</th><th>Reason</th><th>Analysis</th></tr></thead><tbody>${
+      rows.map(r=>`<tr>
+        <td>${fmtTs(r.ts)}</td>
+        <td style="color:${r.side==='long'?'#4ade80':'#f87171'}">${r.side||'—'}</td>
+        <td class="r">$${(r.entry_price||0).toLocaleString()}</td>
+        <td class="r">$${(r.exit_price||0).toLocaleString()}</td>
+        <td class="r ${r.pnl_pct>=0?'profit':'loss'}">${r.pnl_pct>=0?'+':''}${r.pnl_pct?.toFixed(2)||'0.00'}%</td>
+        <td style="font-size:9px">${r.close_reason||'—'}</td>
+        <td style="color:var(--muted);font-size:9px;max-width:280px">${r.analysis||'—'}</td>
+      </tr>`).join('')
+    }</tbody></table>`;
+  } catch(e) { wrap.innerHTML = '<div class="loading">Error</div>'; }
+}
+
 </script>
 </body>
 </html>

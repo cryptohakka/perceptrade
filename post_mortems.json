@@ -1,0 +1,79 @@
+[
+  {
+    "ts": "2026-06-08T00:42:28.564Z",
+    "side": "short",
+    "entry_price": 63200.1,
+    "exit_price": 63669.2,
+    "pnl_pct": -0.742,
+    "result": "loss",
+    "analysis": "The short trade lost 0.742% as the price increased from $63200.1 to $63669.2, failing to capitalize on the contrarian signal from the volatile funding rate (frZ at 1.98) which suggested a potential price reversal.",
+    "close_reason": "tp_sl_hit",
+    "frZ_at_close": 1.98
+  },
+  {
+    "ts": "2026-06-07T22:17:26.397Z",
+    "side": "short",
+    "entry_price": 61830.4,
+    "exit_price": 63247.3,
+    "pnl_pct": -2.292,
+    "result": "loss",
+    "analysis": "The short trade lost 2.292% as the price increased from $61830.4 to $63247.3, contrary to the contrarian signal suggested by the elevated frZ of 1.1 and recent funding rate spikes, indicating the crowd was not excessively bullish.",
+    "close_reason": "tp_sl_hit",
+    "frZ_at_close": 1.1
+  },
+  {
+    "ts": "2026-06-07T12:47:27.445Z",
+    "side": "short",
+    "entry_price": 62584.9,
+    "exit_price": 61782.1,
+    "pnl_pct": 1.283,
+    "result": "win",
+    "analysis": "The short trade was a win as the price decreased from $62584.9 to $61782.1, aligning with the contrarian signal indicated by the elevated frZ of 2.38, suggesting the market was overheated and due for a correction.",
+    "close_reason": "tp_sl_hit",
+    "frZ_at_close": 2.38
+  },
+  {
+    "ts": "2026-06-07T08:52:25.832Z",
+    "side": "long",
+    "entry_price": 61809.7,
+    "exit_price": 62750,
+    "pnl_pct": 1.521,
+    "result": "win",
+    "analysis": "The trade was a win as the price increased from $61809.7 to $62750, profiting from a contrarian long position despite negative frZ values (-1.19) and significant Binance funding rate spikes.",
+    "close_reason": "tp_sl_hit",
+    "frZ_at_close": -1.19
+  },
+  {
+    "ts": "2026-06-07T05:22:25.996Z",
+    "side": "short",
+    "entry_price": 61416.4,
+    "exit_price": 61772.9,
+    "pnl_pct": -0.58,
+    "result": "loss",
+    "analysis": "The short trade lost 0.580% as the price increased from $61416.4 to $61772.9, failing to capitalize on the contrarian signal indicated by the negative frZ of -2.55 and significant funding rate spikes, which suggested a potential downturn that did not materialize.",
+    "close_reason": "tp_sl_hit",
+    "frZ_at_close": -2.55
+  },
+  {
+    "ts": "2026-06-07T01:17:24.114Z",
+    "side": "long",
+    "entry_price": 60337.1,
+    "exit_price": 61445.4,
+    "pnl_pct": 1.837,
+    "result": "win",
+    "analysis": "The long trade was successful as the price increased from $60337.1 to $61445.4, indicating that the contrarian signal from the recent significant funding rate spikes (e.g., +210.7% on Hyperliquid) did not lead to a reversal, and the trade closed at a profit with frZ at 1.",
+    "close_reason": "tp_sl_hit",
+    "frZ_at_close": 1
+  },
+  {
+    "ts": "2026-06-06T10:31:13.844Z",
+    "side": "long",
+    "entry_price": 60996.4,
+    "exit_price": 60218.6,
+    "pnl_pct": -1.275,
+    "result": "loss",
+    "analysis": "The trade lost as the contrarian signal from the significant negative frZ (-1.76) did not lead to a price reversal, with price continuing to move against the long position.",
+    "close_reason": "tp_sl_hit",
+    "frZ_at_close": -1.76
+  }
+]

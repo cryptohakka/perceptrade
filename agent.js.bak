@@ -36,7 +36,7 @@ function saveCrowdEvent(crowd, risk, decision, market, price) {
 }
 
 // ── 毎サイクル スナップショット保存 ──────────────────────────────
-function saveSnapshot(market, risk, crowd, decision, price, audit) {
+function saveSnapshot(market, risk, crowd, decision, price) {
   try {
     let snaps = [];
     if (fs.existsSync(SNAPSHOTS_FILE)) {
@@ -61,8 +61,7 @@ function saveSnapshot(market, risk, crowd, decision, price, audit) {
       crowdAlerts: crowd.alerts || [],
       action: decision?.action || 'hold',
       size_pct: decision?.size_pct || 0,
-      confidence: decision?.confidence || 0,
-      audit: audit ? { approved: audit.approved, feedback: audit.feedback, scenarios: audit.scenarios || [] } : null
+      confidence: decision?.confidence || 0
     });
     fs.writeFileSync(SNAPSHOTS_FILE, JSON.stringify(snaps));
   } catch(e) {
@@ -183,47 +182,42 @@ Respond in JSON. reasoning must be ONE sentence, max 10 words, no hedging.
 `;
 
 // ── AUDITOR (Red Team) ───────────────────────────────────────────
-function buildCrowdSection(crowd) {
-  if (!crowd.hasCrowdRisk) return 'none';
-  return '⚠ ACTIVE — ' + crowd.alerts.map(function(a) {
-    if (a.type === 'fr_outlier') return a.exchange + ' FR ' + (a.value*100).toFixed(4) + '% vs median ' + (a.avg*100).toFixed(4) + '% (' + a.deviationX + 'x MAD)';
-    if (a.type === 'oi_concentration') return a.exchange + ' OI change ' + (a.change*100).toFixed(2) + '% vs avg';
-    return a.msg;
-  }).join('; ');
+const AUDITOR_PROMPT = (proposal, risk, crowd) => `
+You are the Red Team Auditor. Your job is adversarial: find every reason this trade fails.
+You do NOT change direction. You stress-test sizing and timing.
+
+Proposal: ${JSON.stringify(proposal)}
+Risk:
+- riskLevel: ${risk.riskLevel} | sizeMultiplier: ${risk.sizeMultiplier}
+- deviationScore: ${risk.deviationScore.toFixed(1)} | oiChangeScore: ${risk.oiChangeScore.toFixed(1)}
+- oiConcentration: ${risk.oiConcentration.toFixed(2)}
+
+Crowd Risk:
+${crowd.hasCrowdRisk
+  ? `⚠ ACTIVE — ${crowd.alerts.map(a =>
+      a.type === 'fr_outlier'
+        ? `${a.exchange} FR ${(a.value*100).toFixed(4)}% vs median ${(a.avg*100).toFixed(4)}% (${a.deviationX}× MAD)`
+        : a.type === 'oi_concentration'
+        ? `${a.exchange} OI change ${(a.change*100).toFixed(2)}% vs avg`
+        : a.msg
+    ).join('; ')`
+  : 'none'}
+
+Your task:
+1. List exactly 3 scenarios where this trade loses. Be specific: reference frZ, oiMomentum, riskLevel, crowd data.
+2. Rate overall approval: if 2+ scenarios are high-probability, set approved=false.
+3. feedback = the single most dangerous scenario in one sentence.
+
+Respond in JSON:
+{
+  "approved": true|false,
+  "confidence": 0-1,
+  "feedback": "worst-case scenario in one sentence",
+  "scenarios": ["Scenario 1: ...", "Scenario 2: ...", "Scenario 3: ..."]
 }
+`;
 
-const AUDITOR_PROMPT = function(proposal, risk, crowd, pos) {
-  const posSection = pos
-    ? `Open Position: ${pos.holdSide} ${pos.total} BTC @ $${pos.openPriceAvg} (unrealizedPL: ${pos.unrealizedPL})`
-    : 'Open Position: none';
-  return 'You are the Red Team Auditor. Your job is adversarial: find every reason this trade fails.\n' +
-    'You do NOT change direction. You stress-test sizing and timing.\n\n' +
-    'Proposal: ' + JSON.stringify(proposal) + '\n' +
-    'Risk:\n' +
-    '- riskLevel: ' + risk.riskLevel + ' | sizeMultiplier: ' + risk.sizeMultiplier + '\n' +
-    '- deviationScore: ' + risk.deviationScore.toFixed(1) + ' | oiChangeScore: ' + risk.oiChangeScore.toFixed(1) + '\n' +
-    '- oiConcentration: ' + risk.oiConcentration.toFixed(2) + '\n' +
-    posSection + '\n\n' +
-    'Crowd Risk: ' + buildCrowdSection(crowd) + '\n\n' +
-    'Scenario constraints:\n' +
-    '- Each scenario must describe a SPECIFIC market mechanism (positioning, liquidity, regime shift, correlation break)\n' +
-    '- Do NOT invoke "unexpected news" or "macro shock" — these are not analyzable scenarios\n' +
-    '- Each scenario must reference at least one observable indicator (frZ, OI, crowd concentration, regime)\n' +
-    '- If proposal adds to an existing open position, assess compounding risk explicitly\n\n' +
-    'Your task:\n' +
-    '1. List exactly 3 scenarios where this trade loses. Be specific: reference frZ, oiMomentum, riskLevel, crowd data.\n' +
-    '2. Rate overall approval: if 2+ scenarios are high-probability, set approved=false.\n' +
-    '3. feedback = the single most dangerous scenario in one sentence.\n\n' +
-    'Respond in JSON:\n' +
-    '{\n' +
-    '  "approved": true|false,\n' +
-    '  "confidence": 0-1,\n' +
-    '  "feedback": "worst-case scenario in one sentence",\n' +
-    '  "scenarios": ["Scenario 1: ...", "Scenario 2: ...", "Scenario 3: ..."]\n' +
-    '}';
-};
-
-const ARBITER_PROMPT = (proposal, audit, risk) => `
+const ARBITER_PROMPTconst ARBITER_PROMPT = (proposal, audit, risk) => `
 You are the Arbiter. Make the final decision.
 
 Proposal: ${JSON.stringify(proposal)}
@@ -315,7 +309,7 @@ async function runCycle(server) {
 
     const audit = proposal.action === 'hold'
       ? { approved: false, confidence: 0, feedback: 'hold — audit skipped' }
-      : await callLLM(AUDITOR_PROMPT(proposal, risk, crowd, openPosition), {
+      : await callLLM(AUDITOR_PROMPT(proposal, risk, crowd), {
           approved: false, confidence: 0, feedback: 'LLM unavailable — conservative reject'
         });
     console.log(`[auditor] approved=${audit.approved} confidence=${audit.confidence}`);
@@ -341,7 +335,7 @@ async function runCycle(server) {
       }
     }
 
-    saveSnapshot(market, risk, crowd, decision, price, audit);
+    saveSnapshot(market, risk, crowd, decision, price);
 
     if (decision.action === 'long' || decision.action === 'short') {
       if (decision.confidence >= 0.4 && decision.size_pct > 0 && price > 0) {

@@ -293,7 +293,12 @@ function updateCouncil(proposal, audit, decision, crowd, risk) {
       if (risk.sizeMultiplier < 1 && proposal.action !== 'hold') audLines.push(`Size reduction applied: ×${risk.sizeMultiplier}.`);
       if (audLines.length === 0) audLines.push('Risk within acceptable limits.');
     }
-    audEl.textContent = `${audStatus}\n${audLines.join('\n')}`;
+    let audBody = audStatus + '\n' + audLines.join('\n');
+    if (!audit.approved && audit.scenarios && audit.scenarios.length > 0) {
+      audBody += '\n\nRisk Scenarios:';
+      audit.scenarios.forEach(s => { audBody += '\n▸ ' + s; });
+    }
+    audEl.textContent = audBody;
   }
 
   if (decision) {

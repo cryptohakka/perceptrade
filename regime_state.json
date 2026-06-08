@@ -1,0 +1,70 @@
+{
+  "current_regime": "mean_reverting",
+  "current_confidence": 0.7,
+  "pending_regime": null,
+  "pending_count": 0,
+  "last_updated": "2026-06-08T07:11:06.078Z",
+  "stale": false,
+  "history": [
+    {
+      "ts": "2026-06-08T07:11:06.078Z",
+      "regime": "mean_reverting",
+      "confidence": 0.7,
+      "reasoning": "The average FRZ is positive but not excessively high, and the price change is minimal, suggesting a lack of strong directional momentum. This indicates that FR is likely oscillating around a baseline, making contrarian signals potentially reliable."
+    },
+    {
+      "ts": "2026-06-08T07:10:25.125Z",
+      "regime": "mean_reverting",
+      "confidence": 0.7,
+      "reasoning": "The funding rate (frZ) shows significant oscillation, moving from negative to positive and back, indicating a lack of sustained directional bias. The small 24h price change further supports a mean-reverting environment where contrarian FR signals are likely to be effective."
+    },
+    {
+      "ts": "2026-06-08T07:07:35.238Z",
+      "regime": "mean_reverting",
+      "confidence": 0.7,
+      "reasoning": "The average funding rate (frZ) is positive but relatively low, suggesting a lack of strong directional conviction. The price has shown some fluctuation without a clear sustained trend, indicating potential for mean reversion."
+    },
+    {
+      "ts": "2026-06-08T07:04:47.604Z",
+      "regime": "mean_reverting",
+      "confidence": 0.7,
+      "reasoning": "The funding rate (frZ) shows significant oscillation, moving from negative to positive and back, indicating a lack of sustained trend. While there's a slight upward price movement, the funding rate's volatility suggests mean-reversion is more dominant."
+    },
+    {
+      "ts": "2026-06-08T07:03:49.575Z",
+      "regime": "mean_reverting",
+      "confidence": 0.7,
+      "reasoning": "The 24h average funding rate (frZ) is positive but not excessively high, and the price change is modest. This suggests a market that is not in a strong trend and where funding rates might oscillate, making contrarian signals potentially effective."
+    },
+    {
+      "ts": "2026-06-08T06:56:49.833Z",
+      "regime": "mean_reverting",
+      "confidence": 0.7,
+      "reasoning": "The 24h average funding rate (frZ) is slightly positive but not excessively high, and the price change is minimal, suggesting a lack of strong directional trend. This indicates that the market is likely oscillating, making contrarian funding rate signals more reliable."
+    },
+    {
+      "ts": "2026-06-08T06:56:28.733Z",
+      "regime": "mean_reverting",
+      "confidence": 0.6,
+      "reasoning": "The funding rate (frZ) shows significant oscillation, moving from negative to positive and back, indicating a lack of sustained directional bias. While the price has a slight upward drift, the funding rate's behavior suggests periods where contrarian plays might be effective."
+    },
+    {
+      "ts": "2026-06-08T06:55:16.992Z",
+      "regime": "mean_reverting",
+      "confidence": 0.7,
+      "reasoning": "The funding rate (frZ) shows significant oscillation, moving from negative to positive and back, indicating a lack of sustained directional bias. The small positive price change over 24 hours further supports a mean-reverting environment where contrarian signals are likely to be effective."
+    },
+    {
+      "ts": "2026-06-08T06:54:14.859Z",
+      "regime": "mean_reverting",
+      "confidence": 0.7,
+      "reasoning": "The average funding rate (avgFR) fluctuates around zero, indicating a lack of strong directional bias. While the price has seen some movement, the funding rates do not show sustained trends that would suggest a strong trending regime."
+    },
+    {
+      "ts": "2026-06-08T06:53:33.375Z",
+      "regime": "mean_reverting",
+      "confidence": 0.7,
+      "reasoning": "The funding rate (frZ) shows significant oscillation around zero, indicating a lack of sustained directional bias in the market. The price change is minimal, further supporting a mean-reverting environment where contrarian signals are likely to be effective."
+    }
+  ]
+}
