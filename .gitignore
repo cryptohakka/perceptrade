@@ -4,3 +4,16 @@ node_modules/
 snapshots.json
 crowd_events.json
 crowd_outcomes.json
+
+# backups
+*.bak
+*.bak-*
+
+# runtime state (regenerated; do not version)
+shadow_trades.json
+snapshots.json
+crowd_events.json
+crowd_outcomes.json
+
+# sweep dumps are large; uncomment to stop versioning new ones
+# backtest/output/

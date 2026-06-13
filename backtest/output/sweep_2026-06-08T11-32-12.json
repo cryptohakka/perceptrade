@@ -1,0 +1,26 @@
+{
+  "generated": "2026-06-08T11:32:12.272Z",
+  "results": [
+    {
+      "params": {
+        "FR_Z_EXTREME": 2,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 5,
+        "wins": 4,
+        "losses": 1,
+        "win_rate": 80,
+        "total_pnl_net": 4.8241,
+        "total_fee_drag": 1.2,
+        "avg_pnl_per_trade": 0.9648,
+        "avg_revert_ratio": 0.4602,
+        "reverted_count": 5,
+        "reverted_win_rate": 80,
+        "tp_hit_count": 3,
+        "sl_hit_count": 1
+      }
+    }
+  ]
+}

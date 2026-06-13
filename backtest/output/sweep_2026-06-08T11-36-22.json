@@ -1,0 +1,761 @@
+{
+  "generated": "2026-06-08T11:36:22.919Z",
+  "results": [
+    {
+      "params": {
+        "FR_Z_EXTREME": 1.5,
+        "TP_PCT": 0.012,
+        "SL_PCT": 0.01
+      },
+      "summary": {
+        "total": 6,
+        "wins": 4,
+        "losses": 2,
+        "win_rate": 66.7,
+        "total_pnl_net": 0.8633,
+        "total_fee_drag": 1.44,
+        "avg_pnl_per_trade": 0.1439,
+        "avg_revert_ratio": 0.419,
+        "reverted_count": 5,
+        "reverted_win_rate": 60,
+        "tp_hit_count": 3,
+        "sl_hit_count": 2
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 1.5,
+        "TP_PCT": 0.012,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 5,
+        "wins": 4,
+        "losses": 1,
+        "win_rate": 80,
+        "total_pnl_net": 5.2438,
+        "total_fee_drag": 1.2,
+        "avg_pnl_per_trade": 1.0488,
+        "avg_revert_ratio": 0.5046,
+        "reverted_count": 4,
+        "reverted_win_rate": 75,
+        "tp_hit_count": 3,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 1.5,
+        "TP_PCT": 0.012,
+        "SL_PCT": 0.015
+      },
+      "summary": {
+        "total": 5,
+        "wins": 4,
+        "losses": 1,
+        "win_rate": 80,
+        "total_pnl_net": 4.8558,
+        "total_fee_drag": 1.2,
+        "avg_pnl_per_trade": 0.9712,
+        "avg_revert_ratio": 0.5022,
+        "reverted_count": 4,
+        "reverted_win_rate": 75,
+        "tp_hit_count": 3,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 1.5,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.01
+      },
+      "summary": {
+        "total": 5,
+        "wins": 2,
+        "losses": 3,
+        "win_rate": 40,
+        "total_pnl_net": -3.5477,
+        "total_fee_drag": 1.2,
+        "avg_pnl_per_trade": -0.7095,
+        "avg_revert_ratio": 0.0561,
+        "reverted_count": 3,
+        "reverted_win_rate": 33.3,
+        "tp_hit_count": 2,
+        "sl_hit_count": 2
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 1.5,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 5,
+        "wins": 2,
+        "losses": 3,
+        "win_rate": 40,
+        "total_pnl_net": -4.0289,
+        "total_fee_drag": 1.2,
+        "avg_pnl_per_trade": -0.8058,
+        "avg_revert_ratio": 0.0383,
+        "reverted_count": 3,
+        "reverted_win_rate": 33.3,
+        "tp_hit_count": 2,
+        "sl_hit_count": 2
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 1.5,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.015
+      },
+      "summary": {
+        "total": 4,
+        "wins": 2,
+        "losses": 2,
+        "win_rate": 50,
+        "total_pnl_net": 0.8523,
+        "total_fee_drag": 0.96,
+        "avg_pnl_per_trade": 0.2131,
+        "avg_revert_ratio": 0.1038,
+        "reverted_count": 2,
+        "reverted_win_rate": 50,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 1.5,
+        "TP_PCT": 0.02,
+        "SL_PCT": 0.01
+      },
+      "summary": {
+        "total": 3,
+        "wins": 1,
+        "losses": 2,
+        "win_rate": 33.3,
+        "total_pnl_net": 0.1379,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": 0.046,
+        "avg_revert_ratio": 0.3826,
+        "reverted_count": 2,
+        "reverted_win_rate": 50,
+        "tp_hit_count": 1,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 1.5,
+        "TP_PCT": 0.02,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 3,
+        "wins": 1,
+        "losses": 2,
+        "win_rate": 33.3,
+        "total_pnl_net": -0.2517,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": -0.0839,
+        "avg_revert_ratio": 0.3756,
+        "reverted_count": 2,
+        "reverted_win_rate": 50,
+        "tp_hit_count": 1,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 1.5,
+        "TP_PCT": 0.02,
+        "SL_PCT": 0.015
+      },
+      "summary": {
+        "total": 3,
+        "wins": 1,
+        "losses": 2,
+        "win_rate": 33.3,
+        "total_pnl_net": -0.7101,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": -0.2367,
+        "avg_revert_ratio": 0.3673,
+        "reverted_count": 2,
+        "reverted_win_rate": 50,
+        "tp_hit_count": 1,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2,
+        "TP_PCT": 0.012,
+        "SL_PCT": 0.01
+      },
+      "summary": {
+        "total": 6,
+        "wins": 4,
+        "losses": 2,
+        "win_rate": 66.7,
+        "total_pnl_net": 0.5559,
+        "total_fee_drag": 1.44,
+        "avg_pnl_per_trade": 0.0927,
+        "avg_revert_ratio": 0.2583,
+        "reverted_count": 5,
+        "reverted_win_rate": 60,
+        "tp_hit_count": 3,
+        "sl_hit_count": 2
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2,
+        "TP_PCT": 0.012,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 6,
+        "wins": 4,
+        "losses": 2,
+        "win_rate": 66.7,
+        "total_pnl_net": 0.0748,
+        "total_fee_drag": 1.44,
+        "avg_pnl_per_trade": 0.0125,
+        "avg_revert_ratio": 0.2343,
+        "reverted_count": 4,
+        "reverted_win_rate": 75,
+        "tp_hit_count": 3,
+        "sl_hit_count": 2
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2,
+        "TP_PCT": 0.012,
+        "SL_PCT": 0.015
+      },
+      "summary": {
+        "total": 5,
+        "wins": 4,
+        "losses": 1,
+        "win_rate": 80,
+        "total_pnl_net": 4.9561,
+        "total_fee_drag": 1.2,
+        "avg_pnl_per_trade": 0.9912,
+        "avg_revert_ratio": 0.3849,
+        "reverted_count": 4,
+        "reverted_win_rate": 75,
+        "tp_hit_count": 3,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.01
+      },
+      "summary": {
+        "total": 5,
+        "wins": 4,
+        "losses": 1,
+        "win_rate": 80,
+        "total_pnl_net": 4.7316,
+        "total_fee_drag": 1.2,
+        "avg_pnl_per_trade": 0.9463,
+        "avg_revert_ratio": 0.463,
+        "reverted_count": 5,
+        "reverted_win_rate": 80,
+        "tp_hit_count": 3,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 5,
+        "wins": 4,
+        "losses": 1,
+        "win_rate": 80,
+        "total_pnl_net": 4.7316,
+        "total_fee_drag": 1.2,
+        "avg_pnl_per_trade": 0.9463,
+        "avg_revert_ratio": 0.463,
+        "reverted_count": 5,
+        "reverted_win_rate": 80,
+        "tp_hit_count": 3,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.015
+      },
+      "summary": {
+        "total": 5,
+        "wins": 4,
+        "losses": 1,
+        "win_rate": 80,
+        "total_pnl_net": 4.7316,
+        "total_fee_drag": 1.2,
+        "avg_pnl_per_trade": 0.9463,
+        "avg_revert_ratio": 0.463,
+        "reverted_count": 5,
+        "reverted_win_rate": 80,
+        "tp_hit_count": 3,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2,
+        "TP_PCT": 0.02,
+        "SL_PCT": 0.01
+      },
+      "summary": {
+        "total": 3,
+        "wins": 1,
+        "losses": 2,
+        "win_rate": 33.3,
+        "total_pnl_net": 1.2988,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": 0.4329,
+        "avg_revert_ratio": 0.4257,
+        "reverted_count": 3,
+        "reverted_win_rate": 33.3,
+        "tp_hit_count": 1,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2,
+        "TP_PCT": 0.02,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 3,
+        "wins": 1,
+        "losses": 2,
+        "win_rate": 33.3,
+        "total_pnl_net": 0.9092,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": 0.3031,
+        "avg_revert_ratio": 0.4188,
+        "reverted_count": 3,
+        "reverted_win_rate": 33.3,
+        "tp_hit_count": 1,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2,
+        "TP_PCT": 0.02,
+        "SL_PCT": 0.015
+      },
+      "summary": {
+        "total": 3,
+        "wins": 1,
+        "losses": 2,
+        "win_rate": 33.3,
+        "total_pnl_net": 0.4508,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": 0.1503,
+        "avg_revert_ratio": 0.4104,
+        "reverted_count": 3,
+        "reverted_win_rate": 33.3,
+        "tp_hit_count": 1,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2.5,
+        "TP_PCT": 0.012,
+        "SL_PCT": 0.01
+      },
+      "summary": {
+        "total": 3,
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 66.7,
+        "total_pnl_net": -0.4296,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": -0.1432,
+        "avg_revert_ratio": 0.5743,
+        "reverted_count": 3,
+        "reverted_win_rate": 66.7,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2.5,
+        "TP_PCT": 0.012,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 3,
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 66.7,
+        "total_pnl_net": -0.4296,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": -0.1432,
+        "avg_revert_ratio": 0.5743,
+        "reverted_count": 3,
+        "reverted_win_rate": 66.7,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2.5,
+        "TP_PCT": 0.012,
+        "SL_PCT": 0.015
+      },
+      "summary": {
+        "total": 3,
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 66.7,
+        "total_pnl_net": -0.4296,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": -0.1432,
+        "avg_revert_ratio": 0.5743,
+        "reverted_count": 3,
+        "reverted_win_rate": 66.7,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2.5,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.01
+      },
+      "summary": {
+        "total": 3,
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 66.7,
+        "total_pnl_net": -0.0485,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": -0.0162,
+        "avg_revert_ratio": 0.6027,
+        "reverted_count": 3,
+        "reverted_win_rate": 66.7,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2.5,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 3,
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 66.7,
+        "total_pnl_net": -0.0485,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": -0.0162,
+        "avg_revert_ratio": 0.6027,
+        "reverted_count": 3,
+        "reverted_win_rate": 66.7,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2.5,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.015
+      },
+      "summary": {
+        "total": 3,
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 66.7,
+        "total_pnl_net": -0.0485,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": -0.0162,
+        "avg_revert_ratio": 0.6027,
+        "reverted_count": 3,
+        "reverted_win_rate": 66.7,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2.5,
+        "TP_PCT": 0.02,
+        "SL_PCT": 0.01
+      },
+      "summary": {
+        "total": 3,
+        "wins": 1,
+        "losses": 2,
+        "win_rate": 33.3,
+        "total_pnl_net": -4.0058,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": -1.3353,
+        "avg_revert_ratio": 0.4235,
+        "reverted_count": 3,
+        "reverted_win_rate": 33.3,
+        "tp_hit_count": 1,
+        "sl_hit_count": 2
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2.5,
+        "TP_PCT": 0.02,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 2,
+        "wins": 1,
+        "losses": 1,
+        "win_rate": 50,
+        "total_pnl_net": 0.6722,
+        "total_fee_drag": 0.48,
+        "avg_pnl_per_trade": 0.3361,
+        "avg_revert_ratio": 0.6232,
+        "reverted_count": 2,
+        "reverted_win_rate": 50,
+        "tp_hit_count": 1,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 2.5,
+        "TP_PCT": 0.02,
+        "SL_PCT": 0.015
+      },
+      "summary": {
+        "total": 2,
+        "wins": 1,
+        "losses": 1,
+        "win_rate": 50,
+        "total_pnl_net": 0.2842,
+        "total_fee_drag": 0.48,
+        "avg_pnl_per_trade": 0.1421,
+        "avg_revert_ratio": 0.6173,
+        "reverted_count": 2,
+        "reverted_win_rate": 50,
+        "tp_hit_count": 1,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 3,
+        "TP_PCT": 0.012,
+        "SL_PCT": 0.01
+      },
+      "summary": {
+        "total": 3,
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 66.7,
+        "total_pnl_net": 2.2225,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": 0.7408,
+        "avg_revert_ratio": 0.4715,
+        "reverted_count": 2,
+        "reverted_win_rate": 50,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 3,
+        "TP_PCT": 0.012,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 3,
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 66.7,
+        "total_pnl_net": 2.2225,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": 0.7408,
+        "avg_revert_ratio": 0.4715,
+        "reverted_count": 2,
+        "reverted_win_rate": 50,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 3,
+        "TP_PCT": 0.012,
+        "SL_PCT": 0.015
+      },
+      "summary": {
+        "total": 3,
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 66.7,
+        "total_pnl_net": 1.6452,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": 0.5484,
+        "avg_revert_ratio": 0.4642,
+        "reverted_count": 2,
+        "reverted_win_rate": 50,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 3,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.01
+      },
+      "summary": {
+        "total": 3,
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 66.7,
+        "total_pnl_net": 0.1842,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": 0.0614,
+        "avg_revert_ratio": 0.4909,
+        "reverted_count": 3,
+        "reverted_win_rate": 66.7,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 3,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 3,
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 66.7,
+        "total_pnl_net": 0.1842,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": 0.0614,
+        "avg_revert_ratio": 0.4909,
+        "reverted_count": 3,
+        "reverted_win_rate": 66.7,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 3,
+        "TP_PCT": 0.015,
+        "SL_PCT": 0.015
+      },
+      "summary": {
+        "total": 3,
+        "wins": 2,
+        "losses": 1,
+        "win_rate": 66.7,
+        "total_pnl_net": 0.1842,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": 0.0614,
+        "avg_revert_ratio": 0.4909,
+        "reverted_count": 3,
+        "reverted_win_rate": 66.7,
+        "tp_hit_count": 2,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 3,
+        "TP_PCT": 0.02,
+        "SL_PCT": 0.01
+      },
+      "summary": {
+        "total": 3,
+        "wins": 1,
+        "losses": 2,
+        "win_rate": 33.3,
+        "total_pnl_net": -3.8259,
+        "total_fee_drag": 0.72,
+        "avg_pnl_per_trade": -1.2753,
+        "avg_revert_ratio": 0.4473,
+        "reverted_count": 3,
+        "reverted_win_rate": 33.3,
+        "tp_hit_count": 1,
+        "sl_hit_count": 2
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 3,
+        "TP_PCT": 0.02,
+        "SL_PCT": 0.012
+      },
+      "summary": {
+        "total": 2,
+        "wins": 1,
+        "losses": 1,
+        "win_rate": 50,
+        "total_pnl_net": 0.6722,
+        "total_fee_drag": 0.48,
+        "avg_pnl_per_trade": 0.3361,
+        "avg_revert_ratio": 0.6232,
+        "reverted_count": 2,
+        "reverted_win_rate": 50,
+        "tp_hit_count": 1,
+        "sl_hit_count": 1
+      }
+    },
+    {
+      "params": {
+        "FR_Z_EXTREME": 3,
+        "TP_PCT": 0.02,
+        "SL_PCT": 0.015
+      },
+      "summary": {
+        "total": 2,
+        "wins": 1,
+        "losses": 1,
+        "win_rate": 50,
+        "total_pnl_net": 0.2842,
+        "total_fee_drag": 0.48,
+        "avg_pnl_per_trade": 0.1421,
+        "avg_revert_ratio": 0.6173,
+        "reverted_count": 2,
+        "reverted_win_rate": 50,
+        "tp_hit_count": 1,
+        "sl_hit_count": 1
+      }
+    }
+  ]
+}

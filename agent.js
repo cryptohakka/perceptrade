@@ -5,6 +5,135 @@ const { loadRegimeState } = require('./regime_classifier');
 const CROWD_EVENTS_FILE = process.env.CROWD_EVENTS_FILE || '/home/agent/perceptrade/crowd_events.json';
 const SNAPSHOTS_FILE = process.env.SNAPSHOTS_FILE || '/home/agent/perceptrade/snapshots.json';
 const OUTCOMES_FILE = process.env.OUTCOMES_FILE || '/home/agent/perceptrade/crowd_outcomes.json';
+const SHADOW_TRADES_FILE = process.env.SHADOW_TRADES_FILE || '/home/agent/perceptrade/shadow_trades.json';
+const SHADOW_CHECK_MS    = parseInt(process.env.SHADOW_CHECK_MS || String(30 * 60 * 1000)); // 30min
+
+// ── Case 1: 多段ディベート設定 ────────────────────────────────────
+const MAX_DEBATE_ROUNDS = parseInt(process.env.MAX_DEBATE_ROUNDS || '2');
+
+// ── 案5: サーキットブレーカー設定 ────────────────────────────────
+const DAILY_LOSS_LIMIT_PCT      = parseFloat(process.env.DAILY_LOSS_LIMIT_PCT      || '-3.0');
+const CONSEC_LOSS_THRESHOLD     = parseInt(process.env.CONSEC_LOSS_THRESHOLD       || '3');
+const CONSEC_LOSS_COOLDOWN_CYCLES = parseInt(process.env.CONSEC_LOSS_COOLDOWN_CYCLES || '6');
+
+// サーキットブレーカー状態 (インメモリ、再起動でリセット)
+const cbState = { cooldownUntil: null };
+
+function checkCircuitBreaker(postMortems) {
+  const now = new Date();
+
+  // 1. 連敗クールダウン中か確認
+  if (cbState.cooldownUntil && now < cbState.cooldownUntil) {
+    const remainingMin = Math.ceil((cbState.cooldownUntil - now) / 60000);
+    return { blocked: true, reason: 'consecutive_loss_cooldown', remainingMin };
+  }
+  cbState.cooldownUntil = null;
+
+  if (!postMortems || postMortems.length === 0) return { blocked: false };
+
+  // 2. 日次損失上限チェック (UTC日付基準)
+  const todayStr   = now.toISOString().slice(0, 10);
+  const todayTrades = postMortems.filter(m => m.ts && m.ts.startsWith(todayStr));
+  const dailyPnl   = todayTrades.reduce((s, m) => s + (m.pnl_pct || 0), 0);
+
+  if (dailyPnl <= DAILY_LOSS_LIMIT_PCT) {
+    return {
+      blocked:  true,
+      reason:   'daily_loss_limit',
+      dailyPnl: parseFloat(dailyPnl.toFixed(4)),
+      limit:    DAILY_LOSS_LIMIT_PCT
+    };
+  }
+
+  // 3. 連敗チェック → クールダウン開始
+  const recent = postMortems.slice(0, CONSEC_LOSS_THRESHOLD);
+  if (recent.length >= CONSEC_LOSS_THRESHOLD && recent.every(m => m.result === 'loss')) {
+    const cooldownMs      = CONSEC_LOSS_COOLDOWN_CYCLES * CYCLE_MS;
+    cbState.cooldownUntil = new Date(now.getTime() + cooldownMs);
+    const cooldownMin     = Math.ceil(cooldownMs / 60000);
+    return {
+      blocked:    true,
+      reason:     'consecutive_losses',
+      count:      CONSEC_LOSS_THRESHOLD,
+      cooldownMin
+    };
+  }
+
+  return { blocked: false };
+}
+
+// ── 案3: Shadow Trade台帳 ─────────────────────────────────────────
+// 「トレードしなかった判断」を並行追跡し、Councilの介入価値を定量化
+// reason: 'auditor_rejected' | 'regime_gate'
+// 30分後に価格取得 → 仮想PnL計算 → shadow_trades.jsonに記録
+
+function recordShadowTrade(reason, side, entryPrice, frZ, confidence) {
+  if (!side || side === 'hold' || side === 'neutral') return null;
+  try {
+    let shadows = [];
+    if (fs.existsSync(SHADOW_TRADES_FILE)) {
+      shadows = JSON.parse(fs.readFileSync(SHADOW_TRADES_FILE, 'utf8'));
+    }
+    const id = new Date().toISOString();
+    shadows.unshift({
+      id,
+      ts:                   id,
+      reason,
+      side,
+      virtual_entry_price:  entryPrice,
+      frZ_at_block:         frZ     ?? null,
+      confidence_at_block:  confidence ?? null,
+      virtual_exit_price:   null,
+      virtual_pnl_pct:      null,
+      resolved:             false,
+    });
+    if (shadows.length > 200) shadows = shadows.slice(0, 200);
+    fs.writeFileSync(SHADOW_TRADES_FILE, JSON.stringify(shadows, null, 2));
+    console.log(`[shadow] recorded ${reason} | side=${side} entry=${entryPrice} frZ=${frZ}`);
+    return id;
+  } catch(e) {
+    console.error('[shadow] record failed:', e.message);
+    return null;
+  }
+}
+
+function scheduleShadowOutcome(id, entryPrice, side) {
+  if (!id) return;
+  const leverage  = parseInt(process.env.LEVERAGE || '2');
+  const entryFee  = parseFloat(process.env.ENTRY_FEE_PCT || '0.0006');
+  const exitFee   = parseFloat(process.env.EXIT_FEE_PCT  || '0.0006');
+  const feePct    = (entryFee + exitFee) * leverage * 100; // %
+
+  setTimeout(async () => {
+    try {
+      const ticker    = await bitget.getTicker('BTCUSDT');
+      const exitPrice = parseFloat(ticker?.data?.[0]?.lastPr || 0);
+      if (!exitPrice) return;
+
+      const dir           = side === 'long' ? 1 : -1;
+      const raw           = (exitPrice - entryPrice) / entryPrice * dir;
+      const virtual_pnl   = parseFloat((raw * leverage * 100 - feePct).toFixed(4));
+      const virtual_result = virtual_pnl > 0 ? 'win' : 'loss';
+
+      let shadows = [];
+      if (fs.existsSync(SHADOW_TRADES_FILE)) {
+        shadows = JSON.parse(fs.readFileSync(SHADOW_TRADES_FILE, 'utf8'));
+      }
+      const entry = shadows.find(s => s.id === id);
+      if (entry) {
+        entry.virtual_exit_price = exitPrice;
+        entry.virtual_pnl_pct    = virtual_pnl;
+        entry.virtual_result     = virtual_result;
+        entry.resolved           = true;
+        fs.writeFileSync(SHADOW_TRADES_FILE, JSON.stringify(shadows, null, 2));
+        console.log(`[shadow] resolved ${entry.reason} | side=${side} pnl=${virtual_pnl}% (${virtual_result})`);
+      }
+    } catch(e) {
+      console.error('[shadow] outcome failed:', e.message);
+    }
+  }, SHADOW_CHECK_MS);
+}
+
 
 // ── Crowd Risk Event保存 ──────────────────────────────────────────
 function saveCrowdEvent(crowd, risk, decision, market, price) {
@@ -36,7 +165,8 @@ function saveCrowdEvent(crowd, risk, decision, market, price) {
 }
 
 // ── 毎サイクル スナップショット保存 ──────────────────────────────
-function saveSnapshot(market, risk, crowd, decision, price, audit) {
+// Case 1: debate情報を追加
+function saveSnapshot(market, risk, crowd, decision, price, audit, debate) {
   try {
     let snaps = [];
     if (fs.existsSync(SNAPSHOTS_FILE)) {
@@ -62,7 +192,13 @@ function saveSnapshot(market, risk, crowd, decision, price, audit) {
       action: decision?.action || 'hold',
       size_pct: decision?.size_pct || 0,
       confidence: decision?.confidence || 0,
-      audit: audit ? { approved: audit.approved, feedback: audit.feedback, scenarios: audit.scenarios || [] } : null
+      audit: audit ? { approved: audit.approved, feedback: audit.feedback, scenarios: audit.scenarios || [] } : null,
+      // Case 1: 多段ディベート可観測性
+      debateRounds:      debate?.rounds      ?? null,
+      converged:         debate?.converged   ?? null,
+      disagreementIndex: debate?.disagreementIndex ?? null,
+      // Case 4: confidence較正
+      calibration: debate?._calibration ?? null,
     });
     fs.writeFileSync(SNAPSHOTS_FILE, JSON.stringify(snaps));
   } catch(e) {
@@ -87,8 +223,6 @@ function loadFRHistory(n = 288) {
 }
 
 // ── 再起動時のprevSources復元（OI momentumの連続性確保）──────────
-// 直前スナップショットのsourcesを復元。ただし10分(2サイクル)超に古い
-// 場合は比較対象として不適切なので空で返す（異常時の安全装置）。
 function loadPrevSources(maxAgeMs = 10 * 60 * 1000) {
   try {
     if (!fs.existsSync(SNAPSHOTS_FILE)) return [];
@@ -182,6 +316,31 @@ Respond in JSON. reasoning must be ONE sentence, max 10 words, no hedging.
 { "action": "long"|"short"|"hold", "confidence": 0-1, "reasoning": "..." }
 `;
 
+// ── Case 1: ARCHITECT再提案プロンプト ─────────────────────────────
+const ARCHITECT_REVISE_PROMPT = (market, risk, prevProposal, auditFeedback, round) => `
+You are the Architect. This is revision round ${round}/${MAX_DEBATE_ROUNDS}.
+The Auditor rejected your previous proposal. Revise your confidence or reasoning.
+You may NOT change direction — only adjust confidence or add counter-argument.
+
+Your previous proposal: ${JSON.stringify(prevProposal)}
+Auditor's objection: "${auditFeedback}"
+
+Direction Signal: ${JSON.stringify(market.directionSignal)}
+Bitget L/S Ratio: ${market.longShortRatio ? `L${(market.longShortRatio.longRatio*100).toFixed(1)}% / S${(market.longShortRatio.shortRatio*100).toFixed(1)}%` : 'N/A'}
+riskLevel: ${risk.riskLevel} | sizeMultiplier: ${risk.sizeMultiplier}
+
+Rules:
+- Keep action = "${prevProposal.action}" (direction is locked, do not change it).
+- If the objection is valid: lower confidence by 0.1–0.2.
+- If you believe the objection is wrong: maintain confidence but provide a counter-argument.
+- Minimum confidence to trade: 0.4. If you drop below 0.4, change action to "hold".
+- Cap confidence at 0.9.
+- reasoning must be ONE sentence max 10 words, directly addressing the objection.
+
+Respond in JSON:
+{ "action": "long"|"short"|"hold", "confidence": 0-1, "reasoning": "..." }
+`;
+
 // ── AUDITOR (Red Team) ───────────────────────────────────────────
 function buildCrowdSection(crowd) {
   if (!crowd.hasCrowdRisk) return 'none';
@@ -223,6 +382,18 @@ const AUDITOR_PROMPT = function(proposal, risk, crowd, pos) {
     '}';
 };
 
+// ── Case 1: Auditorラウンド対応ラッパー ───────────────────────────
+function buildAuditorPrompt(proposal, risk, crowd, pos, round, prevAuditFeedback) {
+  const base = AUDITOR_PROMPT(proposal, risk, crowd, pos);
+  if (round === 1) return base;
+  return base +
+    `\n\nThis is audit round ${round}/${MAX_DEBATE_ROUNDS}. ` +
+    `Your previous objection was: "${prevAuditFeedback}". ` +
+    `The Architect has revised their proposal (new confidence: ${proposal.confidence}). ` +
+    `Re-evaluate with fresh eyes. If the risk remains unaddressed, set approved=false again. ` +
+    `If the revision adequately addressed your concern, you may set approved=true.`;
+}
+
 const ARBITER_PROMPT = (proposal, audit, risk) => `
 You are the Arbiter. Make the final decision.
 
@@ -242,8 +413,9 @@ reasoning must follow this EXACT format:
 `;
 
 // ── LLM呼び出し（フォールバック付き）──────────────────────────────
-async function callLLM(prompt, fallback = {}) {
+async function callLLM(prompt, fallback = {}, model = null) {
   try {
+    const useModel = model || process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash-lite';
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -251,7 +423,7 @@ async function callLLM(prompt, fallback = {}) {
         'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`
       },
       body: JSON.stringify({
-        model: process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash-lite',
+        model: useModel,
         max_tokens: 1024,
         messages: [{ role: 'user', content: prompt }],
         response_format: { type: 'json_object' }
@@ -268,6 +440,193 @@ async function callLLM(prompt, fallback = {}) {
     console.warn(`[llm] fetch failed: ${e.message} → fallback`);
     return fallback;
   }
+}
+
+// ── Case 4: Disagreement Index計算 ───────────────────────────────
+// 0 = 完全合意 (round1でapproved=true、confidence差が小さい)
+// 1 = 最大不一致 (maxRound到達、最終audit未承認、confidence乖離大)
+// 構成:
+//   roundScore  (0〜0.5): ラウンド数に比例
+//   rejectScore (0 or 0.3): 最終audit.approved=falseなら+0.3
+//   confScore   (0〜0.2): confidence乖離に比例
+function buildDisagreementIndex(rounds, proposals, audits) {
+  if (!proposals.length || !audits.length) return 0;
+
+  const finalAudit    = audits[audits.length - 1];
+  const finalProposal = proposals[proposals.length - 1];
+
+  const roundScore = ((rounds - 1) / Math.max(MAX_DEBATE_ROUNDS - 1, 1)) * 0.5;
+  const rejectScore = finalAudit.approved ? 0 : 0.3;
+  const confGap = Math.abs((finalProposal.confidence || 0) - (finalAudit.confidence || 0));
+  const confScore = Math.min(confGap, 1) * 0.2;
+
+  return parseFloat(Math.min(roundScore + rejectScore + confScore, 1.0).toFixed(3));
+}
+
+// ── 方向ゲート: LLMが方向を無視するバグを防ぐ ───────────────────
+// direction=neutral → 強制hold
+// action ≠ directionSignal.direction → 強制hold + 警告ログ
+function enforceDirectionGate(proposal, directionSignal) {
+  const dir = directionSignal?.direction;
+  if (dir === 'neutral' || !dir) {
+    if (proposal.action !== 'hold') {
+      console.warn(`[gate] neutral signal → forced hold (llm proposed ${proposal.action})`);
+      proposal.action = 'hold';
+      proposal.confidence = 0;
+    }
+    return proposal;
+  }
+  if (proposal.action !== 'hold' && proposal.action !== dir) {
+    console.warn(`[gate] direction mismatch: signal=${dir} llm=${proposal.action} → forced hold`);
+    proposal.action = 'hold';
+    proposal.confidence = 0;
+  }
+  return proposal;
+}
+
+// ── Case 4: Confidence較正 → ポジションサイジング ─────────────────
+// frZをbucket分けし、post_mortems実績winRateとブレンドして較正
+// サンプル不足(<3件)時はrawをそのまま返す
+function calibrateConfidence(rawConfidence, frZ, postMortems) {
+  const absZ = Math.abs(frZ || 0);
+  const bucket = absZ < 1 ? 'low' : absZ < 2 ? 'medium' : 'high';
+
+  if (!postMortems || postMortems.length === 0) {
+    return { calibrated: rawConfidence, winRate: null, n: 0, bucket, note: 'no history' };
+  }
+
+  const matching = postMortems.filter(m => {
+    const mZ = Math.abs(m.frZ_at_entry || 0);
+    if (bucket === 'low')    return mZ < 1;
+    if (bucket === 'medium') return mZ >= 1 && mZ < 2;
+    return mZ >= 2;
+  });
+
+  const n = matching.length;
+  if (n < 3) {
+    return { calibrated: rawConfidence, winRate: null, n, bucket, note: 'insufficient samples' };
+  }
+
+  const wins = matching.filter(m => m.result === 'win').length;
+  const winRate = parseFloat((wins / n).toFixed(3));
+
+  // history weightはサンプル数に比例して増加、最大0.4(n>=10で上限)
+  const historyWeight = parseFloat(Math.min(n / 10, 0.4).toFixed(2));
+  const calibrated = parseFloat(
+    ((rawConfidence * (1 - historyWeight)) + (winRate * historyWeight)).toFixed(3)
+  );
+
+  return { calibrated, winRate, n, bucket, historyWeight, raw: rawConfidence };
+}
+
+// ── Case 1: 多段ディベートループ ─────────────────────────────────
+async function runDebate(market, risk, crowd, pos) {
+  const proposals = [];
+  const audits    = [];
+  let converged   = false;
+  let rounds      = 0;
+
+  // Round 1: Architect初回提案
+  const firstProposal = await callLLM(ARCHITECT_PROMPT(market, risk), {
+    action: 'hold', confidence: 0, reasoning: 'LLM unavailable — safe hold'
+  });
+  enforceDirectionGate(firstProposal, market.directionSignal);
+  proposals.push(firstProposal);
+  rounds = 1;
+  console.log(`[architect R1] action=${firstProposal.action} confidence=${firstProposal.confidence}`);
+
+  // holdなら即終了(Auditorスキップ、Disagreement=0)
+  if (firstProposal.action === 'hold') {
+    const holdAudit = { approved: false, confidence: 0, feedback: 'hold — audit skipped', scenarios: [] };
+    audits.push(holdAudit);
+    converged = true;
+    console.log(`[debate] hold — skipping debate`);
+    return {
+      proposal: firstProposal,
+      audit:    holdAudit,
+      proposals, audits,
+      rounds, converged,
+      disagreementIndex: 0
+    };
+  }
+
+  // Round 1 Auditor
+  const firstAudit = await callLLM(
+    buildAuditorPrompt(firstProposal, risk, crowd, pos, 1, null),
+    { approved: false, confidence: 0, feedback: 'LLM unavailable — conservative reject', scenarios: [] }
+  );
+  audits.push(firstAudit);
+  console.log(`[auditor R1] approved=${firstAudit.approved} confidence=${firstAudit.confidence}`);
+
+  if (firstAudit.approved) {
+    converged = true;
+    console.log(`[debate] converged at round 1`);
+  }
+
+  let currentProposal = firstProposal;
+  let currentAudit    = firstAudit;
+
+  // Round 2以降: 未収束 & maxRounds未達なら継続
+  while (!converged && rounds < MAX_DEBATE_ROUNDS) {
+    rounds++;
+    console.log(`[debate] R${rounds}: Auditor rejected — Architect revising...`);
+
+    // Architect再提案 (direction固定、confidence調整のみ)
+    const revisedProposal = await callLLM(
+      ARCHITECT_REVISE_PROMPT(market, risk, currentProposal, currentAudit.feedback, rounds),
+      {
+        action:     currentProposal.action,
+        confidence: parseFloat(Math.max((currentProposal.confidence || 0.5) - 0.15, 0.3).toFixed(2)),
+        reasoning:  'revision fallback'
+      },
+      process.env.OPENROUTER_MODEL_REVISION || process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash-lite'
+    );
+    enforceDirectionGate(revisedProposal, market.directionSignal);
+    proposals.push(revisedProposal);
+    console.log(`[architect R${rounds}] confidence=${revisedProposal.confidence} (was ${currentProposal.confidence})`);
+
+    // holdに転じた場合は終了
+    if (revisedProposal.action === 'hold') {
+      const skipAudit = { approved: false, confidence: 0, feedback: 'revised to hold', scenarios: [] };
+      audits.push(skipAudit);
+      converged       = true;
+      currentProposal = revisedProposal;
+      currentAudit    = skipAudit;
+      console.log(`[debate] Architect revised to hold at R${rounds}`);
+      break;
+    }
+
+    // Auditor再評価
+    const revisedAudit = await callLLM(
+      buildAuditorPrompt(revisedProposal, risk, crowd, pos, rounds, currentAudit.feedback),
+      { approved: false, confidence: 0, feedback: 'LLM unavailable — conservative reject', scenarios: [] }
+    );
+    audits.push(revisedAudit);
+    console.log(`[auditor R${rounds}] approved=${revisedAudit.approved} confidence=${revisedAudit.confidence}`);
+
+    currentProposal = revisedProposal;
+    currentAudit    = revisedAudit;
+
+    if (revisedAudit.approved) {
+      converged = true;
+      console.log(`[debate] converged at round ${rounds}`);
+    }
+  }
+
+  if (!converged) {
+    console.log(`[debate] max rounds (${MAX_DEBATE_ROUNDS}) reached without convergence`);
+  }
+
+  const disagreementIndex = buildDisagreementIndex(rounds, proposals, audits);
+  console.log(`[debate] rounds=${rounds} converged=${converged} disagreementIndex=${disagreementIndex}`);
+
+  return {
+    proposal: currentProposal,
+    audit:    currentAudit,
+    proposals, audits,
+    rounds, converged,
+    disagreementIndex
+  };
 }
 
 let openPosition = null;
@@ -308,19 +667,51 @@ async function runCycle(server) {
       console.log(`[crowd] no risk detected`);
     }
 
-    const proposal = await callLLM(ARCHITECT_PROMPT(market, risk), {
-      action: 'hold', confidence: 0, reasoning: 'LLM unavailable — safe hold'
-    });
-    console.log(`[architect] action=${proposal.action} confidence=${proposal.confidence}`);
+    // ── 案5: サーキットブレーカー ─────────────────────────────────
+    const cbPostMortems = loadRecentPostMortems(20);
+    const cb = checkCircuitBreaker(cbPostMortems);
+    if (cb.blocked) {
+      console.log(`[circuit_breaker] BLOCKED: ${cb.reason} | ${JSON.stringify(cb)}`);
+      const [cbTicker, cbAssets] = await Promise.all([
+        bitget.getTicker(SYMBOL),
+        bitget.getAccountAssets()
+      ]);
+      const cbPrice   = parseFloat(cbTicker?.data?.[0]?.lastPr || 0);
+      const cbBalance = cbAssets?.data?.[0]?.available || '0';
+      const holdDecision = { action: 'hold', size_pct: 0, confidence: 0, reasoning: `circuit_breaker: ${cb.reason}` };
+      saveSnapshot(market, risk, crowd, holdDecision, cbPrice, null, null);
+      if (server.updateState) server.updateState({
+        market, risk, crowd,
+        proposal:  { action: 'hold', confidence: 0, reasoning: cb.reason },
+        audit:     null,
+        decision:  holdDecision,
+        timestamp, openPosition,
+        accountBalance: cbBalance,
+        circuitBreaker: cb
+      });
+      return;
+    }
 
-    const audit = proposal.action === 'hold'
-      ? { approved: false, confidence: 0, feedback: 'hold — audit skipped' }
-      : await callLLM(AUDITOR_PROMPT(proposal, risk, crowd, openPosition), {
-          approved: false, confidence: 0, feedback: 'LLM unavailable — conservative reject'
-        });
-    console.log(`[auditor] approved=${audit.approved} confidence=${audit.confidence}`);
+    // ── Case 1: 多段ディベート (Architect + Auditor ループ) ──────
+    const debate = await runDebate(market, risk, crowd, openPosition);
+    const { proposal, audit } = debate;
 
-    const rawDecision = await callLLM(ARBITER_PROMPT(proposal, audit, risk), {
+    // ── 案3: Shadow Trade — auditor_rejected ─────────────────────
+    const _shadowAuditorRejected = (proposal.action !== 'hold' && !audit.approved);
+
+    // ── Case 4: Confidence較正 ────────────────────────────────────
+    const allPostMortems = loadRecentPostMortems(20);
+    const calibration = calibrateConfidence(
+      proposal.confidence,
+      market.directionSignal?.frZ ?? 0,
+      allPostMortems
+    );
+    const calibratedProposal = proposal.action === 'hold'
+      ? proposal
+      : { ...proposal, confidence: calibration.calibrated, rawConfidence: proposal.confidence };
+    console.log(`[calibrate] bucket=${calibration.bucket} n=${calibration.n} winRate=${calibration.winRate ?? 'N/A'} raw=${proposal.confidence}→cal=${calibration.calibrated}`);
+
+    const rawDecision = await callLLM(ARBITER_PROMPT(calibratedProposal, audit, risk), {
       action: 'hold', confidence: 0, size_pct: 0, reasoning: 'LLM unavailable — safe hold'
     });
     console.log(`[arbiter] action=${rawDecision.action} confidence=${rawDecision.confidence} size_pct=${rawDecision.size_pct}`);
@@ -333,6 +724,21 @@ async function runCycle(server) {
     const accountBalance = assetsRes?.data?.[0]?.available || '0';
     const price = parseFloat(ticker?.data?.[0]?.lastPr || 0);
 
+    // ── 案3: Shadow Trade記録 (price確定後) ──────────────────────
+    if (price > 0) {
+      const frZ_now = market.directionSignal?.frZ ?? null;
+      // auditor_rejected: AuditorがArchitectをブロック
+      if (_shadowAuditorRejected) {
+        const sid = recordShadowTrade('auditor_rejected', proposal.action, price, frZ_now, proposal.confidence);
+        scheduleShadowOutcome(sid, price, proposal.action);
+      }
+      // regime_gate: RegimeGateがArbiterをブロック
+      if (rawDecision.action !== 'hold' && decision.action === 'hold') {
+        const sid = recordShadowTrade('regime_gate', rawDecision.action, price, frZ_now, rawDecision.confidence);
+        scheduleShadowOutcome(sid, price, rawDecision.action);
+      }
+    }
+
     if (crowd.hasCrowdRisk) {
       saveCrowdEvent(crowd, risk, decision, market, price);
       if (price > 0) {
@@ -341,7 +747,9 @@ async function runCycle(server) {
       }
     }
 
-    saveSnapshot(market, risk, crowd, decision, price, audit);
+    // Case 1+4: debate+calibration情報をsnapshotに保存
+    const debateWithCal = { ...debate, _calibration: { raw: proposal.confidence, ...calibration } };
+    saveSnapshot(market, risk, crowd, decision, price, audit, debateWithCal);
 
     if (decision.action === 'long' || decision.action === 'short') {
       if (decision.confidence >= 0.4 && decision.size_pct > 0 && price > 0) {
@@ -384,7 +792,9 @@ async function runCycle(server) {
               unrealizedPL: '0',
               takeProfit: tpPrice,
               stopLoss: slPrice,
-              frZ_at_entry: market.directionSignal?.frZ ?? null
+              frZ_at_entry: market.directionSignal?.frZ ?? null,
+              frZ_min_during_hold: market.directionSignal?.frZ ?? null,
+              frZ_max_during_hold: market.directionSignal?.frZ ?? null,
             };
           } else {
             console.error(`[execute] order failed: ${JSON.stringify(order)}`);
@@ -400,7 +810,18 @@ async function runCycle(server) {
       console.log(`[execute] hold`);
     }
 
+    // frZ min/max during hold を毎サイクル更新
     if (openPosition) {
+      const currentFrZ = market.directionSignal?.frZ ?? null;
+      if (currentFrZ !== null) {
+        if (openPosition.frZ_min_during_hold === undefined || currentFrZ < openPosition.frZ_min_during_hold) {
+          openPosition.frZ_min_during_hold = currentFrZ;
+        }
+        if (openPosition.frZ_max_during_hold === undefined || currentFrZ > openPosition.frZ_max_during_hold) {
+          openPosition.frZ_max_during_hold = currentFrZ;
+        }
+      }
+
       const positions = await bitget.getPositions();
       const pos = positions?.data?.find(p => p.symbol === SYMBOL && parseFloat(p.total) > 0);
       if (!pos) {
@@ -409,7 +830,23 @@ async function runCycle(server) {
       }
     }
 
-    if (server.updateState) server.updateState({ market, risk, crowd, proposal, audit, decision, timestamp, openPosition, accountBalance });
+    // Case 1: debate情報をUIに反映
+    if (server.updateState) server.updateState({
+      market, risk, crowd, proposal, audit, decision,
+      timestamp, openPosition, accountBalance,
+      debate: {
+        rounds:            debate.rounds,
+        converged:         debate.converged,
+        disagreementIndex: debate.disagreementIndex
+      },
+      calibration: {
+        raw:        proposal.confidence,
+        calibrated: calibration.calibrated,
+        winRate:    calibration.winRate,
+        n:          calibration.n,
+        bucket:     calibration.bucket
+      }
+    });
 
   } catch (err) {
     console.error(`[error] ${err.message}`);
@@ -421,6 +858,18 @@ module.exports = { runCycle };
 // ── Post-Mortem Agent ─────────────────────────────────────────────
 const POSTMORTEM_FILE = process.env.POSTMORTEM_FILE || '/home/agent/perceptrade/post_mortems.json';
 
+// ── frZ Reversion 計算 ────────────────────────────────────────────
+function computeReversion(entry, close) {
+  if (entry === null || entry === undefined || close === null || close === undefined) return null;
+  if (Math.abs(entry) < 0.01) return null;
+  const ratio = (Math.abs(entry) - Math.abs(close)) / Math.abs(entry);
+  return {
+    frZ_revert_ratio:  parseFloat(ratio.toFixed(4)),
+    frZ_reverted:      ratio > 0,
+    frZ_sign_flipped:  (entry * close) < 0,
+  };
+}
+
 async function runPostMortem(closedPosition, exitPrice, closeReason) {
   try {
     if (!closedPosition) return;
@@ -428,8 +877,8 @@ async function runPostMortem(closedPosition, exitPrice, closeReason) {
     const side       = closedPosition.holdSide || closedPosition.side || 'unknown';
 
     const PM_LEVERAGE  = parseFloat(process.env.LEVERAGE || '2');
-    const PM_ENTRY_FEE = parseFloat(process.env.ENTRY_FEE_PCT || '0.0006'); // taker
-    const PM_EXIT_FEE  = parseFloat(process.env.EXIT_FEE_PCT  || '0.0006'); // taker (TP/SL market)
+    const PM_ENTRY_FEE = parseFloat(process.env.ENTRY_FEE_PCT || '0.0006');
+    const PM_EXIT_FEE  = parseFloat(process.env.EXIT_FEE_PCT  || '0.0006');
 
     let pnl = { raw: null, leveraged: null, fee_pct: null, net: null, usdt: null };
     if (entryPrice > 0) {
@@ -449,7 +898,6 @@ async function runPostMortem(closedPosition, exitPrice, closeReason) {
     }
     const pnlPct = pnl.net;
 
-    // 期間中のcrowd eventsを取得
     let recentCrowdEvents = [];
     try {
       if (fs.existsSync(CROWD_EVENTS_FILE)) {
@@ -458,7 +906,6 @@ async function runPostMortem(closedPosition, exitPrice, closeReason) {
       }
     } catch {}
 
-    // 最新snapshotからfrZを取得
     let currentFrZ = null;
     try {
       if (fs.existsSync(SNAPSHOTS_FILE)) {
@@ -466,6 +913,11 @@ async function runPostMortem(closedPosition, exitPrice, closeReason) {
         currentFrZ = snaps[0]?.frZ ?? null;
       }
     } catch {}
+
+    const reversion = computeReversion(
+      closedPosition.frZ_at_entry ?? null,
+      currentFrZ
+    );
 
     const prompt = `You are a trading post-mortem analyst. Write a brief analysis of this closed trade.
 
@@ -475,7 +927,11 @@ Trade summary:
 - Exit price: $${exitPrice}
 - PnL: ${pnlPct !== null ? pnlPct + '%' : 'unknown'}
 - Close reason: ${closeReason}
+- frZ at entry: ${closedPosition.frZ_at_entry ?? 'N/A'}
 - frZ at close: ${currentFrZ ?? 'N/A'}
+- frZ revert ratio: ${reversion?.frZ_revert_ratio ?? 'N/A'} (>0 = reverted toward 0, <0 = extended further)
+- frZ min during hold: ${closedPosition.frZ_min_during_hold ?? 'N/A'}
+- frZ max during hold: ${closedPosition.frZ_max_during_hold ?? 'N/A'}
 - Recent crowd events: ${recentCrowdEvents.length > 0 ? recentCrowdEvents.join('; ') : 'none'}
 
 Write ONE concise sentence explaining why this trade won or lost, focusing on whether the contrarian FR signal played out as expected. Be specific about frZ and price action.
@@ -499,21 +955,26 @@ Respond ONLY with JSON: {"result":"win"|"loss"|"unknown","pnl_pct":${pnlPct ?? n
     let mortems = [];
     if (fs.existsSync(POSTMORTEM_FILE)) mortems = JSON.parse(fs.readFileSync(POSTMORTEM_FILE, 'utf8'));
     mortems.unshift({
-      ts:          new Date().toISOString(),
+      ts:                  new Date().toISOString(),
       side,
-      entry_price: entryPrice,
-      exit_price:  exitPrice,
-      pnl_pct:        pnl.net,
-      pnl_pct_raw:    pnl.raw,
-      pnl_pct_lev:    pnl.leveraged,
-      fee_pct:        pnl.fee_pct,
-      pnl_usdt:       pnl.usdt,
-      leverage:       PM_LEVERAGE,
-      result:      parsed.result,
-      analysis:    parsed.analysis,
-      close_reason: closeReason,
-      frZ_at_close: currentFrZ,
-      frZ_at_entry: closedPosition.frZ_at_entry ?? null
+      entry_price:         entryPrice,
+      exit_price:          exitPrice,
+      pnl_pct:             pnl.net,
+      pnl_pct_raw:         pnl.raw,
+      pnl_pct_lev:         pnl.leveraged,
+      fee_pct:             pnl.fee_pct,
+      pnl_usdt:            pnl.usdt,
+      leverage:            PM_LEVERAGE,
+      result:              parsed.result,
+      analysis:            parsed.analysis,
+      close_reason:        closeReason,
+      frZ_at_entry:        closedPosition.frZ_at_entry ?? null,
+      frZ_at_close:        currentFrZ,
+      frZ_revert_ratio:    reversion?.frZ_revert_ratio  ?? null,
+      frZ_reverted:        reversion?.frZ_reverted       ?? null,
+      frZ_sign_flipped:    reversion?.frZ_sign_flipped   ?? null,
+      frZ_min_during_hold: closedPosition.frZ_min_during_hold ?? null,
+      frZ_max_during_hold: closedPosition.frZ_max_during_hold ?? null,
     });
     if (mortems.length > 20) mortems = mortems.slice(0, 20);
     fs.writeFileSync(POSTMORTEM_FILE, JSON.stringify(mortems, null, 2));
@@ -524,7 +985,6 @@ Respond ONLY with JSON: {"result":"win"|"loss"|"unknown","pnl_pct":${pnlPct ?? n
 }
 
 function schedulePostMortem(closedPosition, closeReason) {
-  // 5秒後に価格取得してpost-mortem実行
   setTimeout(async () => {
     try {
       const ticker = await bitget.getTicker('BTCUSDT');

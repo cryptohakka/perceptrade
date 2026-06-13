@@ -15,9 +15,8 @@
   --green: #4ad295; --text: #d4eaf4; --muted: #a0beca; --label: #7c9baa;
 }
 html, body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
-.wrap { padding: 1.25rem 1rem; max-width: 960px; margin: 0 auto; }
+.wrap { padding: 1.25rem 1rem; max-width: 1080px; margin: 0 auto; }
 
-/* header */
 .header { display: flex; align-items: center; gap: 10px; margin-bottom: 1.25rem; }
 .header h1 { font-size: 17px; font-weight: 500; color: var(--accent); letter-spacing: 0.08em; font-family: 'Space Mono', monospace; }
 .tab-nav { display: flex; gap: 4px; margin-left: 16px; }
@@ -31,29 +30,24 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 .status-text { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
 
-/* internal tabs */
 .htabs { display: flex; gap: 2px; margin-bottom: 14px; background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; padding: 3px; }
 .htab { flex: 1; font-size: 10px; font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; padding: 6px 4px; border-radius: 5px; border: none; background: none; color: var(--label); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
 .htab:hover { color: var(--muted); }
 .htab.active { background: var(--surface2); color: var(--accent); border: 1px solid var(--border); }
 
-/* panes */
 .pane { display: none; }
 .pane.active { display: block; }
 
-/* card */
 .card { background: var(--surface); border: 1px solid var(--border2); border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 12px; }
 .card-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 14px; font-family: 'Space Mono', monospace; }
 
-/* stat chips */
 .stat-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
 .stat-chip { background: var(--surface); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 14px; flex: 1; min-width: 90px; }
 .stat-chip-label { font-size: 9px; color: var(--label); font-family: 'Space Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
 .stat-chip-val { font-size: 22px; font-weight: 700; font-family: 'Space Mono', monospace; line-height: 1; }
 
-/* table */
 .h-table { width: 100%; border-collapse: collapse; font-family: 'Space Mono', monospace; font-size: 10px; }
-.h-table th { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--border); color: var(--label); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 400; }
+.h-table th { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--border); color: var(--label); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 400; white-space: nowrap; }
 .h-table th.r { text-align: right; }
 .h-table td { padding: 7px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--muted); vertical-align: middle; }
 .h-table tr:last-child td { border-bottom: none; }
@@ -62,26 +56,30 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
 .h-table td.loss   { color: var(--red); }
 .h-table tr.hl { background: rgba(240,201,74,0.04); }
 
-/* range buttons */
 .range-btns { display: flex; gap: 4px; margin-bottom: 12px; }
 .range-btn { font-size: 9px; font-family: 'Space Mono', monospace; padding: 3px 10px; border-radius: 4px; border: 1px solid var(--border2); background: none; color: var(--label); cursor: pointer; transition: all 0.15s; }
 .range-btn.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(168,223,240,0.3); }
 
-/* chart */
 .chart-wrap { width: 100%; height: 220px; margin-bottom: 14px; }
 #frzChart { width: 100%; height: 100%; display: block; }
 
-/* misc */
 .empty { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); padding: 28px 0; text-align: center; }
 .loading { color: var(--label); font-size: 11px; font-family: 'Space Mono', monospace; padding: 12px 0; }
 .btn-more { background: none; border: 1px solid var(--border2); color: var(--muted); font-family: 'Space Mono', monospace; font-size: 10px; padding: 4px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px; transition: all 0.15s; }
 .btn-more:hover { color: var(--accent); border-color: var(--accent); }
+
+/* revert bar */
+.rev-bar-bg { height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; position: relative; }
+.rev-bar-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+.badge { font-size: 8px; padding: 1px 5px; border-radius: 3px; font-weight: 600; letter-spacing: 0.04em; }
+.badge-rev  { background: rgba(74,210,149,0.15);  color: #4ad295; }
+.badge-ext  { background: rgba(240,90,90,0.15);   color: #f05a5a; }
+.badge-flip { background: rgba(240,201,74,0.15);  color: #f0c94a; }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <!-- Header -->
   <div class="header">
     <svg viewBox="0 0 28 28" fill="none" style="width:26px;height:26px;flex-shrink:0">
       <circle cx="14" cy="14" r="13" stroke="#a8dff0" stroke-width="1.5"/>
@@ -101,7 +99,6 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
     </div>
   </div>
 
-  <!-- Internal tabs -->
   <div class="htabs">
     <button class="htab active"  onclick="switchTab('trades')">Trade History</button>
     <button class="htab"         onclick="switchTab('signals')">FR Z-Score</button>
@@ -120,7 +117,7 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
     </div>
   </div>
 
-  <!-- ② FR Z-Score Signal History -->
+  <!-- ② FR Z-Score -->
   <div id="pane-signals" class="pane">
     <div class="card">
       <div class="card-title">FR Z-Score · Time Series</div>
@@ -130,9 +127,7 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
         <button class="range-btn"        onclick="setRange('24H',this)">24H</button>
         <button class="range-btn"        onclick="setRange('ALL',this)">ALL</button>
       </div>
-      <div class="chart-wrap">
-        <canvas id="frzChart"></canvas>
-      </div>
+      <div class="chart-wrap"><canvas id="frzChart"></canvas></div>
       <div class="stat-row" id="signalStats"></div>
     </div>
   </div>
@@ -166,17 +161,18 @@ html, body { background: var(--bg); color: var(--text); font-family: -apple-syst
       <div id="regimeTableWrap"><div class="loading">Loading...</div></div>
     </div>
   </div>
+
   <!-- ⑥ Post-Mortem -->
   <div id="pane-postmortem" class="pane">
     <div class="stat-row" id="postmortemStats"></div>
     <div class="card">
-      <div class="card-title">Trade Post-Mortem Analysis</div>
+      <div class="card-title">Trade Post-Mortem Analysis · frZ Reversion Tracking</div>
       <div id="postmortemTableWrap"><div class="loading">Loading...</div></div>
     </div>
   </div>
+
 </div>
 <script>
-// ─── tab switching ───────────────────────────────────────────────
 const TAB_NAMES = ['trades','signals','outcomes','protection','regime','postmortem'];
 const loadedTabs = new Set(['trades']);
 
@@ -190,13 +186,12 @@ function switchTab(name) {
     if (name==='outcomes')   loadOutcomes();
     if (name==='signals')    loadSignals();
     if (name==='protection') loadProtection();
-    if (name==='regime')      loadRegime();
-    if (name==='postmortem')  loadPostMortem();
+    if (name==='regime')     loadRegime();
+    if (name==='postmortem') loadPostMortem();
   }
   if (name==='signals') setTimeout(renderSignalChart, 60);
 }
 
-// ─── helpers ────────────────────────────────────────────────────
 function chip(label, val, color) {
   return `<div class="stat-chip">
     <div class="stat-chip-label">${label}</div>
@@ -204,23 +199,13 @@ function chip(label, val, color) {
   </div>`;
 }
 
-function fmtDur(ms) {
-  if (!ms || ms <= 0) return '—';
-  const s = Math.floor(ms/1000);
-  if (s < 60)  return s + 's';
-  const m = Math.floor(s/60);
-  if (m < 60)  return m + 'm';
-  return Math.floor(m/60) + 'h' + (m%60 ? (m%60)+'m' : '');
-}
-
 function fmtTs(ts) {
   if (!ts) return '—';
-  const d = new Date(typeof ts==="number" ? ts : (/^\d+$/.test(String(ts)) ? parseInt(ts) : ts));
-  return d.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit'}) + ' '
-       + d.toTimeString().slice(0,5);
+  const d = new Date(typeof ts==='number' ? ts : (/^\d+$/.test(String(ts)) ? parseInt(ts) : ts));
+  return d.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit'}) + ' ' + d.toTimeString().slice(0,5);
 }
 
-// ─── ① TRADE HISTORY ────────────────────────────────────────────
+// ─── ① TRADES ───────────────────────────────────────────────────
 async function loadTrades() {
   try {
     const res = await fetch('/api/trades');
@@ -228,100 +213,74 @@ async function loadTrades() {
     renderTrades(await res.json());
   } catch(e) {
     document.getElementById('tradeStats').innerHTML = '';
-    document.getElementById('tradeTableWrap').innerHTML =
-      `<div class="empty">Trade history endpoint not available.<br>
-       <span style="font-size:9px;color:var(--label);">Add GET /api/trades to server.js — see patch below.</span></div>`;
+    document.getElementById('tradeTableWrap').innerHTML = '<div class="empty">Trade history unavailable.</div>';
   }
 }
 
 function renderTrades(raw) {
   const allOrders = Array.isArray(raw) ? raw : (raw.entrustedList || raw.data || raw.list || []);
   const trades = allOrders.filter(t => t.tradeSide === 'close' && t.status === 'filled');
-  if (!trades.length) {
-    document.getElementById('tradeTableWrap').innerHTML = '<div class="empty">No closed trades found.</div>';
-    return;
-  }
+  if (!trades.length) { document.getElementById('tradeTableWrap').innerHTML = '<div class="empty">No closed trades found.</div>'; return; }
 
   const pnls = trades.map(t => parseFloat(t.totalProfits || 0));
   const wins = pnls.filter(p => p > 0).length;
-  const totalPnl = pnls.reduce((a,b)=>a+b, 0);
-  const winRate  = pnls.length ? (wins/pnls.length*100).toFixed(1)+'%' : '—';
-  const best  = pnls.length ? Math.max(...pnls) : 0;
-  const worst = pnls.length ? Math.min(...pnls) : 0;
-
+  const totalPnl = pnls.reduce((a,b)=>a+b,0);
   const totalFee = trades.reduce((a,t) => a + parseFloat(t.fee || 0), 0);
   const netPnl = totalPnl + totalFee;
+  const winRate = pnls.length ? (wins/pnls.length*100).toFixed(1)+'%' : '—';
+
   document.getElementById('tradeStats').innerHTML =
-    chip('Trades',   trades.length) +
+    chip('Trades', trades.length) +
     chip('Win Rate', winRate, parseFloat(winRate) >= 50 ? 'var(--green)' : 'var(--red)') +
-    chip('Gross PnL',(totalPnl>=0?'+':'')+totalPnl.toFixed(2)+' U', totalPnl>=0?'var(--green)':'var(--red)') +
-    chip('Fees',     totalFee.toFixed(2)+' U', 'var(--red)') +
-    chip('Net PnL',  (netPnl>=0?'+':'')+netPnl.toFixed(2)+' U', netPnl>=0?'var(--green)':'var(--red)');
+    chip('Gross PnL', (totalPnl>=0?'+':'')+totalPnl.toFixed(2)+' U', totalPnl>=0?'var(--green)':'var(--red)') +
+    chip('Fees', totalFee.toFixed(2)+' U', 'var(--red)') +
+    chip('Net PnL', (netPnl>=0?'+':'')+netPnl.toFixed(2)+' U', netPnl>=0?'var(--green)':'var(--red)');
 
   let h = '<div style="overflow-x:auto"><table class="h-table"><thead><tr>';
-  ['Time','Side','Size','Entry','Exit','Gross PnL','Fee','Net'].forEach((c,i) =>
-    h += `<th class="${i>=2?'r':''}">${c}</th>`
-  );
+  ['Time','Side','Size','Entry','Exit','Gross PnL','Fee','Net'].forEach((c,i) => h += `<th class="${i>=2?'r':''}">${c}</th>`);
   h += '</tr></thead><tbody>';
-
   trades.slice(0,200).forEach(t => {
-    const pnl   = parseFloat(t.totalProfits || 0);
-    const fee   = parseFloat(t.fee || 0);
-    const net   = pnl + fee;
-    const entry = parseFloat(t.posAvg || 0);
-    const exit  = parseFloat(t.priceAvg || 0);
-    const qty   = parseFloat(t.size || 0);
+    const pnl = parseFloat(t.totalProfits||0), fee = parseFloat(t.fee||0), net = pnl+fee;
+    const entry = parseFloat(t.posAvg||0), exit = parseFloat(t.priceAvg||0), qty = parseFloat(t.size||0);
     const isLong = t.posSide === 'long';
     h += `<tr>
       <td style="color:var(--label);white-space:nowrap;">${fmtTs(t.cTime)}</td>
       <td style="font-weight:700;color:${isLong?'var(--green)':'var(--red)'};">${isLong?'LONG':'SHORT'}</td>
       <td class="r">${qty.toFixed(4)}</td>
       <td class="r">${entry?'$'+entry.toLocaleString():'—'}</td>
-      <td class="r">${exit ?'$'+exit.toLocaleString() :'—'}</td>
+      <td class="r">${exit?'$'+exit.toLocaleString():'—'}</td>
       <td class="r ${pnl>=0?'profit':'loss'}">${(pnl>=0?'+':'')+pnl.toFixed(3)}</td>
       <td class="r" style="color:var(--label);">${fee.toFixed(3)}</td>
       <td class="r ${net>=0?'profit':'loss'}">${(net>=0?'+':'')+net.toFixed(3)}</td>
     </tr>`;
   });
   h += '</tbody></table></div>';
-  if (trades.length > 200) h += `<div style="margin-top:8px;font-size:9px;color:var(--label);font-family:'Space Mono',monospace;">Showing 200 of ${trades.length} trades.</div>`;
   document.getElementById('tradeTableWrap').innerHTML = h;
 }
 
-// ─── ② FR Z-SCORE CHART ─────────────────────────────────────────
-let signalData = [];
-let chartRange = '6H';
+// ─── ② FR Z-SCORE ───────────────────────────────────────────────
+let signalData = [], chartRange = '6H';
 
 async function loadSignals() {
   try {
-    const res = await fetch('/api/snapshots');
-    const raw = await res.json();
-    signalData = (Array.isArray(raw) ? raw : []).sort((a,b) => new Date(a.timestamp)-new Date(b.timestamp));
-    renderSignalChart();
-    renderSignalStats();
-  } catch(e) {
-    document.getElementById('signalStats').innerHTML = `<div class="empty">Failed to load signal data.</div>`;
-  }
+    const raw = await fetch('/api/snapshots').then(r => r.json());
+    signalData = (Array.isArray(raw)?raw:[]).sort((a,b)=>new Date(a.timestamp)-new Date(b.timestamp));
+    renderSignalChart(); renderSignalStats();
+  } catch(e) { document.getElementById('signalStats').innerHTML = '<div class="empty">Failed.</div>'; }
 }
 
 function setRange(r, btn) {
   chartRange = r;
   document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  renderSignalChart();
-  renderSignalStats();
+  renderSignalChart(); renderSignalStats();
 }
 
 function getFilteredSignals() {
-  const now   = Date.now();
-  const msMap = { '1H':3600000, '6H':21600000, '24H':86400000, 'ALL':Infinity };
-  const ms    = msMap[chartRange] || Infinity;
-  let data = signalData.filter(s => now - new Date(s.timestamp).getTime() <= ms);
-  // downsample to max 600 points
-  if (data.length > 600) {
-    const step = Math.ceil(data.length/600);
-    data = data.filter((_,i) => i%step===0 || i===data.length-1);
-  }
+  const now = Date.now();
+  const msMap = {'1H':3600000,'6H':21600000,'24H':86400000,'ALL':Infinity};
+  let data = signalData.filter(s => now - new Date(s.timestamp).getTime() <= (msMap[chartRange]||Infinity));
+  if (data.length > 600) { const step=Math.ceil(data.length/600); data=data.filter((_,i)=>i%step===0||i===data.length-1); }
   return data;
 }
 
@@ -329,350 +288,261 @@ function renderSignalChart() {
   const canvas = document.getElementById('frzChart');
   if (!canvas) return;
   const data = getFilteredSignals();
-
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width  = canvas.offsetWidth  * dpr;
-  canvas.height = canvas.offsetHeight * dpr;
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-
-  const W = canvas.offsetWidth, H = canvas.offsetHeight;
-  const PL=40, PR=12, PT=14, PB=24;
-  const CW=W-PL-PR, CH=H-PT-PB;
-
+  const dpr = window.devicePixelRatio||1;
+  canvas.width = canvas.offsetWidth*dpr; canvas.height = canvas.offsetHeight*dpr;
+  const ctx = canvas.getContext('2d'); ctx.scale(dpr,dpr);
+  const W=canvas.offsetWidth, H=canvas.offsetHeight;
+  const PL=40,PR=12,PT=14,PB=24, CW=W-PL-PR, CH=H-PT-PB;
   ctx.clearRect(0,0,W,H);
-
-  if (data.length < 2) {
-    ctx.fillStyle = 'rgba(124,155,170,0.5)';
-    ctx.font = '11px "Space Mono", monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('No data for selected range', W/2, H/2);
-    return;
+  if (data.length<2) {
+    ctx.fillStyle='rgba(124,155,170,0.5)'; ctx.font='11px "Space Mono",monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('No data for selected range',W/2,H/2); return;
   }
-
-  const minZ=-3, maxZ=3;
-  const toX = i => PL + (i/(data.length-1))*CW;
-  const toY = z => PT + (1-(z-minZ)/(maxZ-minZ))*CH;
-
-  // Background zones
-  [
-    [ 2.0,  3.0, 'rgba(240,90,90,0.16)'],
-    [ 1.5,  2.0, 'rgba(240,90,90,0.07)'],
-    [-1.5,  1.5, 'rgba(255,255,255,0.025)'],
-    [-2.0, -1.5, 'rgba(74,210,149,0.07)'],
-    [-3.0, -2.0, 'rgba(74,210,149,0.16)'],
-  ].forEach(([from,to,color]) => {
-    ctx.fillStyle = color;
-    ctx.fillRect(PL, toY(to), CW, toY(from)-toY(to));
+  const toX = i => PL+(i/(data.length-1))*CW;
+  const toY = z => PT+(1-(z+3)/6)*CH;
+  [[ 2.0, 3.0,'rgba(240,90,90,0.16)'],[1.5,2.0,'rgba(240,90,90,0.07)'],[-1.5,1.5,'rgba(255,255,255,0.025)'],[-2.0,-1.5,'rgba(74,210,149,0.07)'],[-3.0,-2.0,'rgba(74,210,149,0.16)']].forEach(([from,to,c])=>{
+    ctx.fillStyle=c; ctx.fillRect(PL,toY(to),CW,toY(from)-toY(to));
   });
-
-  // Threshold lines
-  [
-    [ 2.0, 'rgba(240,90,90,0.45)',   [3,3]],
-    [ 1.5, 'rgba(255,255,255,0.22)', [5,4]],
-    [ 0,   'rgba(255,255,255,0.08)', []   ],
-    [-1.5, 'rgba(255,255,255,0.22)', [5,4]],
-    [-2.0, 'rgba(74,210,149,0.45)', [3,3]],
-  ].forEach(([z,color,dash]) => {
-    ctx.strokeStyle=color; ctx.setLineDash(dash); ctx.lineWidth=1;
+  [[2.0,'rgba(240,90,90,0.45)',[3,3]],[1.5,'rgba(255,255,255,0.22)',[5,4]],[0,'rgba(255,255,255,0.08)',[]],[-1.5,'rgba(255,255,255,0.22)',[5,4]],[-2.0,'rgba(74,210,149,0.45)',[3,3]]].forEach(([z,c,d])=>{
+    ctx.strokeStyle=c; ctx.setLineDash(d); ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(PL,toY(z)); ctx.lineTo(PL+CW,toY(z)); ctx.stroke();
   });
   ctx.setLineDash([]);
-
-  // frZ line — per-segment color
-  ctx.lineWidth = 1.5;
-  for (let i=1; i<data.length; i++) {
-    const z0  = Math.max(-3,Math.min(3, data[i-1].frZ??0));
-    const z1  = Math.max(-3,Math.min(3, data[i].frZ??0));
-    const abs = Math.abs(z1);
-    ctx.strokeStyle = abs>=2.0 ? (z1>0?'rgba(240,90,90,1)':'rgba(74,210,149,1)')
-                    : abs>=1.5 ? (z1>0?'rgba(240,90,90,0.75)':'rgba(74,210,149,0.75)')
-                    :             'rgba(168,223,240,0.45)';
+  ctx.lineWidth=1.5;
+  for (let i=1;i<data.length;i++) {
+    const z0=Math.max(-3,Math.min(3,data[i-1].frZ??0)), z1=Math.max(-3,Math.min(3,data[i].frZ??0));
+    const abs=Math.abs(z1);
+    ctx.strokeStyle=abs>=2?(z1>0?'rgba(240,90,90,1)':'rgba(74,210,149,1)'):abs>=1.5?(z1>0?'rgba(240,90,90,0.75)':'rgba(74,210,149,0.75)'):'rgba(168,223,240,0.45)';
     ctx.beginPath(); ctx.moveTo(toX(i-1),toY(z0)); ctx.lineTo(toX(i),toY(z1)); ctx.stroke();
   }
-
-  // Current value dot
-  const last = data[data.length-1];
-  const lz   = Math.max(-3,Math.min(3,last.frZ??0));
-  const dotC = Math.abs(lz)>=1.5 ? (lz>0?'#f05a5a':'#4ad295') : '#a8dff0';
+  const last=data[data.length-1], lz=Math.max(-3,Math.min(3,last.frZ??0));
+  const dotC=Math.abs(lz)>=1.5?(lz>0?'#f05a5a':'#4ad295'):'#a8dff0';
   ctx.fillStyle=dotC; ctx.shadowColor=dotC; ctx.shadowBlur=7;
-  ctx.beginPath(); ctx.arc(toX(data.length-1),toY(lz),3.5,0,Math.PI*2); ctx.fill();
-  ctx.shadowBlur=0;
-
-  // Y axis labels
-  ctx.fillStyle='rgba(124,155,170,0.85)';
-  ctx.font=`9px "Space Mono",monospace`;
-  ctx.textAlign='right'; ctx.textBaseline='middle';
-  [-3,-2,-1.5,0,1.5,2,3].forEach(z =>
-    ctx.fillText(z>0?`+${z}`:`${z}`, PL-5, toY(z))
-  );
-
-  // X axis time labels
-  ctx.fillStyle='rgba(124,155,170,0.6)';
-  ctx.font=`8px "Space Mono",monospace`;
-  ctx.textBaseline='top';
-  const fmtChartT = ts => {
-    const d=new Date(ts);
-    return (d.getMonth()+1)+'/'+d.getDate()+' '+d.toTimeString().slice(0,5);
-  };
-  [[0,'left'],[Math.floor((data.length-1)/2),'center'],[data.length-1,'right']].forEach(([idx,align]) => {
+  ctx.beginPath(); ctx.arc(toX(data.length-1),toY(lz),3.5,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
+  ctx.fillStyle='rgba(124,155,170,0.85)'; ctx.font='9px "Space Mono",monospace'; ctx.textAlign='right'; ctx.textBaseline='middle';
+  [-3,-2,-1.5,0,1.5,2,3].forEach(z=>ctx.fillText(z>0?`+${z}`:`${z}`,PL-5,toY(z)));
+  ctx.fillStyle='rgba(124,155,170,0.6)'; ctx.font='8px "Space Mono",monospace'; ctx.textBaseline='top';
+  const fmtChartT=ts=>{const d=new Date(ts);return(d.getMonth()+1)+'/'+d.getDate()+' '+d.toTimeString().slice(0,5);};
+  [[0,'left'],[Math.floor((data.length-1)/2),'center'],[data.length-1,'right']].forEach(([idx,align])=>{
     ctx.textAlign=align;
-    const x = idx===0?PL : idx===data.length-1?PL+CW : toX(idx);
-    ctx.fillText(fmtChartT(data[idx].timestamp), x, H-PB+5);
+    ctx.fillText(fmtChartT(data[idx].timestamp), idx===0?PL:idx===data.length-1?PL+CW:toX(idx), H-PB+5);
   });
 }
 
 function renderSignalStats() {
   const data = getFilteredSignals();
   if (!data.length) { document.getElementById('signalStats').innerHTML=''; return; }
-
-  const triggers  = data.filter(s => Math.abs(s.frZ??0) >= 1.5).length;
-  const extreme   = data.filter(s => Math.abs(s.frZ??0) >= 2.0).length;
-  const oiBlocked = data.filter(s => {
-    const ds = s.directionSignal||{};
-    return Math.abs(s.frZ??0)>=1.5 && (ds.oiMomentum??0)>0.003;
-  }).length;
-  const noTrade   = data.filter(s => Math.abs(s.frZ??0)<1.5).length;
-  const pct = n => (n/data.length*100).toFixed(0)+'%';
-
+  const triggers=data.filter(s=>Math.abs(s.frZ??0)>=1.5).length;
+  const extreme=data.filter(s=>Math.abs(s.frZ??0)>=2.0).length;
+  const oiBlocked=data.filter(s=>Math.abs(s.frZ??0)>=1.5&&(s.directionSignal?.oiMomentum??0)>0.003).length;
+  const noTrade=data.filter(s=>Math.abs(s.frZ??0)<1.5).length;
+  const pct=n=>(n/data.length*100).toFixed(0)+'%';
   document.getElementById('signalStats').innerHTML =
-    chip('Snapshots',    data.length) +
-    chip('Triggers ≥1.5σ', triggers,   triggers>0?'var(--yellow)':'var(--muted)') +
-    chip('Extreme ≥2σ',  extreme,    extreme>0?'var(--red)':'var(--muted)') +
-    chip('OI Blocked',   oiBlocked,  oiBlocked>0?'var(--yellow)':'var(--muted)') +
-    chip('No Trade %',   pct(noTrade),   'var(--label)') +
-    chip('Trade Zone %', pct(triggers), 'var(--accent)');
+    chip('Snapshots',data.length)+chip('Triggers ≥1.5σ',triggers,triggers>0?'var(--yellow)':'var(--muted)')+
+    chip('Extreme ≥2σ',extreme,extreme>0?'var(--red)':'var(--muted)')+chip('OI Blocked',oiBlocked,oiBlocked>0?'var(--yellow)':'var(--muted)')+
+    chip('No Trade %',pct(noTrade),'var(--label)')+chip('Trade Zone %',pct(triggers),'var(--accent)');
 }
 
-// ResizeObserver for chart
 const chartWrap = document.querySelector('.chart-wrap');
-if (chartWrap) {
-  new ResizeObserver(() => {
-    if (document.getElementById('pane-signals').classList.contains('active')) renderSignalChart();
-  }).observe(chartWrap);
-}
+if (chartWrap) new ResizeObserver(()=>{ if(document.getElementById('pane-signals').classList.contains('active')) renderSignalChart(); }).observe(chartWrap);
 
 // ─── ③ CROWD OUTCOMES ───────────────────────────────────────────
 async function loadOutcomes() {
   try {
-    const res  = await fetch('/api/outcomes');
-    const raw  = await res.json();
-    renderOutcomes(Array.isArray(raw) ? raw : []);
-  } catch(e) {
-    document.getElementById('outcomeTableWrap').innerHTML = '<div class="empty">Failed to load outcome data.</div>';
-  }
+    const raw = await fetch('/api/outcomes').then(r=>r.json());
+    renderOutcomes(Array.isArray(raw)?raw:[]);
+  } catch(e) { document.getElementById('outcomeTableWrap').innerHTML='<div class="empty">Failed.</div>'; }
 }
 
 function renderOutcomes(data) {
-  if (!data.length) {
-    document.getElementById('outcomeTableWrap').innerHTML = '<div class="empty">No crowd outcome data yet.</div>';
-    return;
-  }
-
-  // Verdict: FR spike up → expected DOWN; FR spike down → expected UP
-  const results = data.map(ev => {
-    const m = (ev.alertSummary||'').match(/([+-][\d.]+)%/);
-    const frChg = m ? parseFloat(m[1]) : null;
-    const chg1h = ev.priceChanges?.['1h']?.changePct ?? null;
-    let correct = null;
-    if (frChg!==null && chg1h!==null) correct = (frChg>0) === (chg1h<0);
-    return { ...ev, frChg, chg1h, correct };
+  if (!data.length) { document.getElementById('outcomeTableWrap').innerHTML='<div class="empty">No crowd outcome data yet.</div>'; return; }
+  const results=data.map(ev=>{
+    const m=(ev.alertSummary||'').match(/([+-][\d.]+)%/);
+    const frChg=m?parseFloat(m[1]):null, chg1h=ev.priceChanges?.['1h']?.changePct??null;
+    let correct=null; if(frChg!==null&&chg1h!==null) correct=(frChg>0)===(chg1h<0);
+    return{...ev,frChg,chg1h,correct};
   });
-
-  const scored   = results.filter(r=>r.correct!==null);
-  const nCorrect = scored.filter(r=>r.correct).length;
-  const rate     = scored.length ? (nCorrect/scored.length*100).toFixed(1) : '—';
-  const avgMov   = scored.length
-    ? (scored.reduce((a,b)=>a+(b.chg1h??0),0)/scored.length).toFixed(3) : '—';
-
-  document.getElementById('outcomeStats').innerHTML =
-    chip('Events',       data.length) +
-    chip('Correct',      nCorrect,  'var(--green)') +
-    chip('Success Rate', rate+'%',  parseFloat(rate)>=50?'var(--green)':'var(--red)') +
-    chip('Avg 1h Move',  (parseFloat(avgMov)>=0?'+':'')+avgMov+'%',
-         parseFloat(avgMov)<0?'var(--red)':'var(--muted)');
-
-  let h = '<div style="overflow-x:auto"><table class="h-table"><thead><tr>';
-  ['Time','Alert','Entry','1h Exit','1h Chg','Verdict'].forEach((c,i) =>
-    h += `<th class="${i>=2?'r':''}">${c}</th>`
-  );
-  h += '</tr></thead><tbody>';
-
-  results.forEach(ev => {
-    const chgCls = ev.chg1h!=null ? (ev.chg1h>=0?'profit':'loss') : '';
-    const verdict = ev.correct===true  ? '<span style="color:var(--green);font-weight:700;">✓</span>'
-                  : ev.correct===false ? '<span style="color:var(--red);">✗</span>'
-                  : '<span style="color:var(--label);">—</span>';
-    h += `<tr>
-      <td style="color:var(--label);white-space:nowrap;">${fmtTs(ev.eventTimestamp)}</td>
-      <td style="max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;">${ev.alertSummary||'—'}</td>
-      <td class="r">${ev.entryPrice?'$'+parseFloat(ev.entryPrice).toLocaleString():'—'}</td>
-      <td class="r">${ev.priceChanges?.['1h']?.exitPrice?'$'+parseFloat(ev.priceChanges['1h'].exitPrice).toLocaleString():'—'}</td>
-      <td class="r ${chgCls}">${ev.chg1h!=null?(ev.chg1h>=0?'+':'')+ev.chg1h.toFixed(3)+'%':'—'}</td>
-      <td style="text-align:center;">${verdict}</td>
-    </tr>`;
+  const scored=results.filter(r=>r.correct!==null), nCorrect=scored.filter(r=>r.correct).length;
+  const rate=scored.length?(nCorrect/scored.length*100).toFixed(1):'—';
+  const avgMov=scored.length?(scored.reduce((a,b)=>a+(b.chg1h??0),0)/scored.length).toFixed(3):'—';
+  document.getElementById('outcomeStats').innerHTML=
+    chip('Events',data.length)+chip('Correct',nCorrect,'var(--green)')+
+    chip('Success Rate',rate+'%',parseFloat(rate)>=50?'var(--green)':'var(--red)')+
+    chip('Avg 1h Move',(parseFloat(avgMov)>=0?'+':'')+avgMov+'%',parseFloat(avgMov)<0?'var(--red)':'var(--muted)');
+  let h='<div style="overflow-x:auto"><table class="h-table"><thead><tr>';
+  ['Time','Alert','Entry','1h Exit','1h Chg','Verdict'].forEach((c,i)=>h+=`<th class="${i>=2?'r':''}">${c}</th>`);
+  h+='</tr></thead><tbody>';
+  results.forEach(ev=>{
+    const chgCls=ev.chg1h!=null?(ev.chg1h>=0?'profit':'loss'):'';
+    const verdict=ev.correct===true?'<span style="color:var(--green);font-weight:700;">✓</span>':ev.correct===false?'<span style="color:var(--red);">✗</span>':'<span style="color:var(--label);">—</span>';
+    h+=`<tr><td style="color:var(--label);white-space:nowrap;">${fmtTs(ev.eventTimestamp)}</td><td style="max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:9px;">${ev.alertSummary||'—'}</td><td class="r">${ev.entryPrice?'$'+parseFloat(ev.entryPrice).toLocaleString():'—'}</td><td class="r">${ev.priceChanges?.['1h']?.exitPrice?'$'+parseFloat(ev.priceChanges['1h'].exitPrice).toLocaleString():'—'}</td><td class="r ${chgCls}">${ev.chg1h!=null?(ev.chg1h>=0?'+':'')+ev.chg1h.toFixed(3)+'%':'—'}</td><td style="text-align:center;">${verdict}</td></tr>`;
   });
-  h += '</tbody></table></div>';
-  document.getElementById('outcomeTableWrap').innerHTML = h;
+  h+='</tbody></table></div>';
+  document.getElementById('outcomeTableWrap').innerHTML=h;
 }
 
 // ─── ④ PROTECTION LOG ───────────────────────────────────────────
-let allProt    = [];
-let protExpanded = false;
-const PROT_PREVIEW = 20;
+let allProt=[], protExpanded=false;
+const PROT_PREVIEW=20;
 
 async function loadProtection() {
   try {
-    const res = await fetch('/api/crowd-events');
-    allProt = await res.json();
-    if (!Array.isArray(allProt)) allProt = [];
+    allProt = await fetch('/api/crowd-events').then(r=>r.json());
+    if (!Array.isArray(allProt)) allProt=[];
     renderProtection();
-  } catch(e) {
-    document.getElementById('protectionTableWrap').innerHTML = '<div class="empty">Failed to load protection log.</div>';
-  }
+  } catch(e) { document.getElementById('protectionTableWrap').innerHTML='<div class="empty">Failed.</div>'; }
 }
 
 function renderProtection() {
-  const el   = document.getElementById('protectionTableWrap');
-  const more = document.getElementById('protectionMore');
-
-  if (!allProt.length) {
-    el.innerHTML = '<div class="empty">No protection events recorded.</div>';
-    if (more) more.style.display = 'none';
-    return;
-  }
-
-  const withRed  = allProt.filter(e => (e.reduction_pct||0) > 0.01);
-  const avgRed   = withRed.length ? withRed.reduce((a,b)=>a+(b.reduction_pct||0),0)/withRed.length : 0;
-  const maxRed   = withRed.length ? Math.max(...withRed.map(e=>e.reduction_pct||0)) : 0;
-
-  document.getElementById('protectionStats').innerHTML =
-    chip('Total Events',   allProt.length) +
-    chip('With Reduction', withRed.length,               withRed.length>0?'var(--yellow)':'var(--muted)') +
-    chip('Avg Reduction',  withRed.length?(avgRed*100).toFixed(0)+'%':'—', 'var(--yellow)') +
-    chip('Max Reduction',  withRed.length?(maxRed*100).toFixed(0)+'%':'—', 'var(--red)');
-
-  const shown = protExpanded ? allProt : allProt.slice(0, PROT_PREVIEW);
-  let h = '<div style="overflow-x:auto"><table class="h-table"><thead><tr>';
-  ['Time','Exchange','Event','Original','Final','Reduction'].forEach((c,i) =>
-    h += `<th class="${i>=3?'r':''}">${c}</th>`
-  );
-  h += '</tr></thead><tbody>';
-
-  shown.forEach(ev => {
-    const exchange = ev.alerts?.[0]?.exchange?.toUpperCase() || '—';
-    const evType   = ev.alerts?.[0]?.type==='fr_outlier' ? 'FR outlier'
-                   : ev.alerts?.[0]?.type==='oi_concentration' ? 'OI spike' : 'FR spike';
-    const orig     = ev.original_size_pct!=null ? (ev.original_size_pct*100).toFixed(0)+'%' : '—';
-    const fin      = ((ev.size_pct||0)*100).toFixed(0)+'%';
-    const red      = ev.reduction_pct!=null ? (ev.reduction_pct*100).toFixed(0)+'%' : '—';
-    const hasRed   = (ev.reduction_pct||0) > 0.01;
-
-    h += `<tr class="${hasRed?'hl':''}">
-      <td style="color:var(--label);white-space:nowrap;">${fmtTs(ev.timestamp)}</td>
-      <td style="color:var(--red);">${exchange}</td>
-      <td>${evType}</td>
-      <td class="r">${orig}</td>
-      <td class="r">${fin}</td>
-      <td class="r" style="color:${hasRed?'var(--yellow)':'var(--label)'};font-weight:${hasRed?'700':'400'};">
-        ${hasRed?'−'+red:'—'}
-      </td>
-    </tr>`;
+  const el=document.getElementById('protectionTableWrap'), more=document.getElementById('protectionMore');
+  if (!allProt.length) { el.innerHTML='<div class="empty">No protection events recorded.</div>'; if(more)more.style.display='none'; return; }
+  const withRed=allProt.filter(e=>(e.reduction_pct||0)>0.01);
+  const avgRed=withRed.length?withRed.reduce((a,b)=>a+(b.reduction_pct||0),0)/withRed.length:0;
+  const maxRed=withRed.length?Math.max(...withRed.map(e=>e.reduction_pct||0)):0;
+  document.getElementById('protectionStats').innerHTML=
+    chip('Total Events',allProt.length)+chip('With Reduction',withRed.length,withRed.length>0?'var(--yellow)':'var(--muted)')+
+    chip('Avg Reduction',withRed.length?(avgRed*100).toFixed(0)+'%':'—','var(--yellow)')+chip('Max Reduction',withRed.length?(maxRed*100).toFixed(0)+'%':'—','var(--red)');
+  const shown=protExpanded?allProt:allProt.slice(0,PROT_PREVIEW);
+  let h='<div style="overflow-x:auto"><table class="h-table"><thead><tr>';
+  ['Time','Exchange','Event','Original','Final','Reduction'].forEach((c,i)=>h+=`<th class="${i>=3?'r':''}">${c}</th>`);
+  h+='</tr></thead><tbody>';
+  shown.forEach(ev=>{
+    const exchange=ev.alerts?.[0]?.exchange?.toUpperCase()||'—';
+    const evType=ev.alerts?.[0]?.type==='fr_outlier'?'FR outlier':ev.alerts?.[0]?.type==='oi_concentration'?'OI spike':'FR spike';
+    const orig=ev.original_size_pct!=null?(ev.original_size_pct*100).toFixed(0)+'%':'—';
+    const fin=((ev.size_pct||0)*100).toFixed(0)+'%';
+    const red=ev.reduction_pct!=null?(ev.reduction_pct*100).toFixed(0)+'%':'—';
+    const hasRed=(ev.reduction_pct||0)>0.01;
+    h+=`<tr class="${hasRed?'hl':''}"><td style="color:var(--label);white-space:nowrap;">${fmtTs(ev.timestamp)}</td><td style="color:var(--red);">${exchange}</td><td>${evType}</td><td class="r">${orig}</td><td class="r">${fin}</td><td class="r" style="color:${hasRed?'var(--yellow)':'var(--label)'};font-weight:${hasRed?'700':'400'};">${hasRed?'−'+red:'—'}</td></tr>`;
   });
-  h += '</tbody></table></div>';
-  el.innerHTML = h;
+  h+='</tbody></table></div>';
+  el.innerHTML=h;
+  if(more){if(allProt.length>PROT_PREVIEW){more.style.display='';more.querySelector('button').textContent=protExpanded?'Show less':`Show all ${allProt.length} events`;}else more.style.display='none';}
+}
+function toggleProtection() { protExpanded=!protExpanded; renderProtection(); }
 
-  if (more) {
-    if (allProt.length > PROT_PREVIEW) {
-      more.style.display = '';
-      more.querySelector('button').textContent = protExpanded
-        ? 'Show less' : `Show all ${allProt.length} events`;
-    } else { more.style.display='none'; }
-  }
+// ─── ⑤ REGIME LOG ───────────────────────────────────────────────
+async function loadRegime() {
+  const wrap=document.getElementById('regimeTableWrap'), stats=document.getElementById('regimeStats');
+  try {
+    const rows=await fetch('/api/regime').then(r=>r.json());
+    if (!rows.length) { wrap.innerHTML='<div class="loading">No data yet</div>'; return; }
+    const counts={};
+    rows.forEach(r=>counts[r.regime]=(counts[r.regime]||0)+1);
+    const dominant=Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+    stats.innerHTML=chip('Total',rows.length,'')+chip('Dominant',dominant,'#f0c94a')+chip('Latest',rows[0].regime,'#4ade80');
+    const C={mean_reverting:'#4ade80',trending_up:'#60a5fa',trending_down:'#f87171',chop:'#a78bfa'};
+    wrap.innerHTML=`<table class="h-table"><thead><tr><th>Time</th><th>Regime</th><th class="r">Conf</th><th>Reasoning</th></tr></thead><tbody>${
+      rows.map(r=>`<tr><td>${fmtTs(r.ts)}</td><td><span style="color:${C[r.regime]||'#aaa'};font-weight:600">${r.regime}</span></td><td class="r">${(r.confidence*100).toFixed(0)}%</td><td style="color:var(--muted);font-size:9px;max-width:320px">${r.reasoning||'—'}</td></tr>`).join('')
+    }</tbody></table>`;
+  } catch(e) { wrap.innerHTML='<div class="loading">Error</div>'; }
 }
 
-function toggleProtection() {
-  protExpanded = !protExpanded;
-  renderProtection();
+// ─── ⑥ POST-MORTEM (enhanced) ───────────────────────────────────
+async function loadPostMortem() {
+  const wrap=document.getElementById('postmortemTableWrap'), stats=document.getElementById('postmortemStats');
+  try {
+    const rows=await fetch('/api/mortems').then(r=>r.json());
+    if (!rows.length) { wrap.innerHTML='<div class="loading">No post-mortems yet</div>'; return; }
+
+    const wins   = rows.filter(r=>r.result==='win').length;
+    const wr     = (wins/rows.length*100).toFixed(0);
+    const avgPnl = (rows.reduce((a,r)=>a+(r.pnl_pct||0),0)/rows.length).toFixed(2);
+    const avgFee = (rows.reduce((a,r)=>a+(r.fee_pct||0),0)/rows.length).toFixed(3);
+
+    // reversion analytics
+    const withRev    = rows.filter(r=>r.frZ_revert_ratio!=null);
+    const reverted   = withRev.filter(r=>r.frZ_reverted===true);
+    const revertWins = reverted.filter(r=>r.result==='win');
+    const revertWR   = reverted.length?(revertWins.length/reverted.length*100).toFixed(0):null;
+    const avgRatio   = withRev.length?(withRev.reduce((a,r)=>a+r.frZ_revert_ratio,0)/withRev.length).toFixed(3):null;
+
+    stats.innerHTML =
+      chip('Total',      rows.length,   '') +
+      chip('Win Rate',   wr+'%',        parseFloat(wr)>=50?'var(--green)':'var(--red)') +
+      chip('Avg Net',    (avgPnl>=0?'+':'')+avgPnl+'%', avgPnl>=0?'var(--green)':'var(--red)') +
+      chip('Avg Fee',    '-'+avgFee+'%','var(--red)') +
+      (avgRatio!=null ? chip('Avg Revert', avgRatio,      'var(--yellow)') : '') +
+      (revertWR!=null ? chip('Revert WR',  revertWR+'%',  'var(--green)')  : '');
+
+    const rowsHtml = rows.map(r => {
+      const ratio   = r.frZ_revert_ratio;
+      const barW    = ratio!=null ? Math.min(100,Math.max(0,ratio*100)).toFixed(0) : 0;
+      const barCol  = ratio>0?'#4ad295':ratio<0?'#f05a5a':'#7c9baa';
+
+      const badges = [
+        r.frZ_reverted===true  ? '<span class="badge badge-rev">REV</span>'  : '',
+        r.frZ_reverted===false ? '<span class="badge badge-ext">EXT</span>'  : '',
+        r.frZ_sign_flipped     ? '<span class="badge badge-flip">FLIP</span>': '',
+      ].filter(Boolean).join(' ');
+
+      const revertCell = ratio!=null ? `
+        <div style="display:flex;flex-direction:column;gap:3px;min-width:110px">
+          <div style="display:flex;align-items:center;gap:5px">
+            <div class="rev-bar-bg" style="flex:1">
+              <div class="rev-bar-fill" style="width:${barW}%;background:${barCol}"></div>
+            </div>
+            <span style="font-size:9px;color:${barCol};min-width:36px">${ratio.toFixed(3)}</span>
+          </div>
+          <div style="display:flex;gap:3px">${badges}</div>
+        </div>` : '<span style="color:var(--label)">—</span>';
+
+      const frZEntry = r.frZ_at_entry!=null ? r.frZ_at_entry.toFixed(2) : '?';
+      const frZClose = r.frZ_at_close!=null ? r.frZ_at_close.toFixed(2) : '?';
+      const frZCell  = `<span style="color:var(--label);font-size:9px;white-space:nowrap">${frZEntry} → ${frZClose}</span>`;
+
+      const holdMin = r.frZ_min_during_hold!=null ? r.frZ_min_during_hold.toFixed(2) : '?';
+      const holdMax = r.frZ_max_during_hold!=null ? r.frZ_max_during_hold.toFixed(2) : '?';
+      const holdCell = (r.frZ_min_during_hold!=null||r.frZ_max_during_hold!=null)
+        ? `<span style="color:var(--label);font-size:9px;white-space:nowrap">[${holdMin}, ${holdMax}]</span>`
+        : '—';
+
+      const pnl = r.pnl_pct||0;
+      return `<tr>
+        <td style="color:var(--label);white-space:nowrap;font-size:9px">${fmtTs(r.ts)}</td>
+        <td style="color:${r.side==='long'?'var(--green)':'var(--red)'};font-weight:700;font-size:10px">${(r.side||'—').toUpperCase()}</td>
+        <td class="r" style="font-size:9px">$${(r.entry_price||0).toLocaleString()}</td>
+        <td class="r" style="font-size:9px">$${(r.exit_price||0).toLocaleString()}</td>
+        <td class="r ${pnl>=0?'profit':'loss'}" style="font-weight:700">${pnl>=0?'+':''}${pnl.toFixed(2)}%</td>
+        <td class="r" style="color:var(--label);font-size:9px">${r.fee_pct!=null?'-'+r.fee_pct.toFixed(3)+'%':'—'}</td>
+        <td style="font-size:9px;color:var(--label)">${r.close_reason||'—'}</td>
+        <td>${frZCell}</td>
+        <td>${holdCell}</td>
+        <td>${revertCell}</td>
+        <td style="color:var(--muted);font-size:9px;max-width:220px;line-height:1.5">${r.analysis||'—'}</td>
+      </tr>`;
+    }).join('');
+
+    wrap.innerHTML = `<div style="overflow-x:auto"><table class="h-table">
+      <thead><tr>
+        <th>Time</th><th>Side</th>
+        <th class="r">Entry</th><th class="r">Exit</th>
+        <th class="r">Net%</th><th class="r">Fee%</th>
+        <th>Reason</th>
+        <th>frZ in→out</th>
+        <th>Hold range</th>
+        <th>Reversion</th>
+        <th>Analysis</th>
+      </tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table></div>`;
+
+  } catch(e) { wrap.innerHTML='<div class="loading">Error: '+e.message+'</div>'; }
 }
 
 // ─── init ────────────────────────────────────────────────────────
 loadTrades();
 
-// status dot
-(async()=>{
-  try{
-    const r=await fetch("/api/state");
-    const d=await r.json();
-    const dot=document.getElementById("statusDot");
-    if(dot)dot.className="status-dot"+(d&&Object.keys(d).length?" live":"");
-    const txt=document.getElementById("statusText");if(txt)txt.textContent=d&&Object.keys(d).length?"LIVE":"—";
-  }catch(e){
-    const dot=document.getElementById("statusDot");
-    if(dot)dot.className="status-dot error";
-  }
-})();
-setInterval(async()=>{
-  try{
-    const r=await fetch("/api/state");
-    const d=await r.json();
-    const dot=document.getElementById("statusDot");
-    if(dot)dot.className="status-dot"+(d&&Object.keys(d).length?" live":"");
-    const txt=document.getElementById("statusText");if(txt)txt.textContent=d&&Object.keys(d).length?"LIVE":"—";
-  }catch(e){
-    const dot=document.getElementById("statusDot");
-    if(dot)dot.className="status-dot error";
-  }
-},10000);
-
-// ─── ⑤ Regime Log ──────────────────────────────────────────────
-async function loadRegime() {
-  const wrap = document.getElementById('regimeTableWrap');
-  const stats = document.getElementById('regimeStats');
+async function refreshStatus() {
   try {
-    const rows = await fetch('/api/regime').then(r => r.json());
-    if (!rows.length) { wrap.innerHTML = '<div class="loading">No data yet</div>'; return; }
-    const counts = {};
-    rows.forEach(r => counts[r.regime] = (counts[r.regime]||0)+1);
-    const dominant = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
-    stats.innerHTML = chip('Total',rows.length,'') + chip('Dominant',dominant,'#f0c94a') + chip('Latest',rows[0].regime,'#4ade80');
-    const C = {mean_reverting:'#4ade80',trending_up:'#60a5fa',trending_down:'#f87171',chop:'#a78bfa'};
-    wrap.innerHTML = `<table class="h-table"><thead><tr><th>Time</th><th>Regime</th><th class="r">Conf</th><th>Reasoning</th></tr></thead><tbody>${
-      rows.map(r=>`<tr>
-        <td>${fmtTs(r.ts)}</td>
-        <td><span style="color:${C[r.regime]||'#aaa'};font-weight:600">${r.regime}</span></td>
-        <td class="r">${(r.confidence*100).toFixed(0)}%</td>
-        <td style="color:var(--muted);font-size:9px;max-width:320px">${r.reasoning||'—'}</td>
-      </tr>`).join('')
-    }</tbody></table>`;
-  } catch(e) { wrap.innerHTML = '<div class="loading">Error</div>'; }
+    const d=await fetch('/api/state').then(r=>r.json());
+    const alive=d&&Object.keys(d).length;
+    document.getElementById('statusDot').className='status-dot'+(alive?' live':'');
+    document.getElementById('statusText').textContent=alive?'LIVE':'—';
+  } catch(e) { document.getElementById('statusDot').className='status-dot error'; }
 }
-
-// ─── ⑥ Post-Mortem ─────────────────────────────────────────────
-async function loadPostMortem() {
-  const wrap = document.getElementById('postmortemTableWrap');
-  const stats = document.getElementById('postmortemStats');
-  try {
-    const rows = await fetch('/api/mortems').then(r => r.json());
-    if (!rows.length) { wrap.innerHTML = '<div class="loading">No post-mortems yet</div>'; return; }
-    const wins = rows.filter(r=>r.result==='win').length;
-    const avgPnl = (rows.reduce((a,r)=>a+(r.pnl_pct||0),0)/rows.length).toFixed(2);
-    stats.innerHTML = chip('Total',rows.length,'') + chip('Win Rate',(wins/rows.length*100).toFixed(0)+'%','#4ade80') + chip('Avg PnL',avgPnl+'%',avgPnl>=0?'#4ade80':'#f87171');
-    wrap.innerHTML = `<table class="h-table"><thead><tr><th>Time</th><th>Side</th><th class="r">Entry</th><th class="r">Exit</th><th class="r">PnL%</th><th>Reason</th><th>Analysis</th></tr></thead><tbody>${
-      rows.map(r=>`<tr>
-        <td>${fmtTs(r.ts)}</td>
-        <td style="color:${r.side==='long'?'#4ade80':'#f87171'}">${r.side||'—'}</td>
-        <td class="r">$${(r.entry_price||0).toLocaleString()}</td>
-        <td class="r">$${(r.exit_price||0).toLocaleString()}</td>
-        <td class="r ${r.pnl_pct>=0?'profit':'loss'}">${r.pnl_pct>=0?'+':''}${r.pnl_pct?.toFixed(2)||'0.00'}%</td>
-        <td style="font-size:9px">${r.close_reason||'—'}</td>
-        <td style="color:var(--muted);font-size:9px;max-width:280px">${r.analysis||'—'}</td>
-      </tr>`).join('')
-    }</tbody></table>`;
-  } catch(e) { wrap.innerHTML = '<div class="loading">Error</div>'; }
-}
-
+refreshStatus();
+setInterval(refreshStatus, 10000);
 </script>
 </body>
 </html>

@@ -47,13 +47,15 @@ app.get('/api/state', (req, res) => {
 app.updateState = (state) => { latestState = state; };
 
 
+app.get(`/api/sweep-latest`, (req, res) => { try { const dir = require(`path`).join(__dirname, `backtest/output`); const files = require(`fs`).readdirSync(dir).filter(f => f.startsWith(`sweep_`) && f.includes(`_strategy`)).sort(); if (!files.length) return res.json(null); res.json(JSON.parse(require(`fs`).readFileSync(require(`path`).join(dir, files[files.length-1]), `utf8`))); } catch(e) { res.status(500).json({error: e.message}); } });
+app.get(`/sweep`, (req, res) => res.sendFile(require(`path`).join(__dirname, `public`, `sweep.html`)));
 app.get('/history', (req, res) => res.sendFile(require('path').join(__dirname, 'public', 'history.html')));
 app.get('/api/trades', async (req, res) => {
   try {
     const data = await bitget.getClosedOrders('BTCUSDT', 100);
     const raw = data?.data?.entrustedList || data?.entrustedList || data?.data || data?.list;
     const all = Array.isArray(raw) ? raw : [];
-    const cutoff = new Date("2026-06-06T00:00:00Z").getTime();
+    const cutoff = new Date("2026-06-11T13:00:00Z").getTime();
     const filtered = all.filter(t => {
       const ts = parseInt(t.cTime || t.createTime || t.uTime || 0);
       return ts >= cutoff && t.tradeSide === 'close';
@@ -71,7 +73,7 @@ app.get('/api/status-dump', async (req, res) => {
     const post_mortems = JSON.parse(fs.readFileSync('/home/agent/perceptrade/post_mortems.json', 'utf8'));
     const tradeData    = await bitget.getClosedOrders('BTCUSDT', 100);
     const raw          = tradeData?.data?.entrustedList || tradeData?.entrustedList || tradeData?.data || tradeData?.list;
-    const cutoff       = new Date("2026-06-06T00:00:00Z").getTime();
+    const cutoff       = new Date("2026-06-11T13:00:00Z").getTime();
     const allTrades    = (Array.isArray(raw) ? raw : []).filter(t => {
       const ts = parseInt(t.cTime || t.createTime || t.uTime || 0);
       return ts >= cutoff && t.tradeSide === 'close';

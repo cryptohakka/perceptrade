@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PercepTrade — Sweep Analyzer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg:      #0a0c0f;
+    --bg2:     #111418;
+    --bg3:     #181c22;
+    --border:  #1e2530;
+    --text:    #c8d0dc;
+    --muted:   #4a5568;
+    --accent:  #00d4aa;
+    --red:     #ff4d6d;
+    --yellow:  #ffd166;
+    --blue:    #4facfe;
+    --win:     #00d4aa;
+    --loss:    #ff4d6d;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+  }
+  header h1 { font-size: 15px; font-weight: 600; color: var(--accent); letter-spacing: 0.08em; }
+  header span { color: var(--muted); font-size: 11px; }
+
+  .upload-zone {
+    border: 1px dashed var(--border);
+    background: var(--bg2);
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 28px;
+  }
+  .upload-zone:hover { border-color: var(--accent); background: var(--bg3); }
+  .upload-zone.drag { border-color: var(--accent); background: var(--bg3); }
+  .upload-zone p { color: var(--muted); margin-bottom: 8px; }
+  .upload-zone .hint { font-size: 11px; color: var(--muted); }
+  #fileInput { display: none; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 16px;
+  }
+  .panel-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  /* Heatmap */
+  .heatmap-wrap { overflow-x: auto; }
+  table.heatmap {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 11px;
+  }
+  table.heatmap th {
+    padding: 4px 8px;
+    color: var(--muted);
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+  }
+  table.heatmap td {
+    padding: 5px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: outline 0.1s;
+    white-space: nowrap;
+    font-size: 11px;
+  }
+  table.heatmap td:hover { outline: 1px solid var(--accent); }
+  table.heatmap td.selected { outline: 2px solid var(--accent); }
+
+  /* Top results table */
+  table.results {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 11px;
+  }
+  table.results th {
+    padding: 5px 8px;
+    color: var(--muted);
+    font-weight: 400;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  table.results th:first-child { text-align: left; }
+  table.results td {
+    padding: 5px 8px;
+    text-align: right;
+    border-bottom: 1px solid #0f1318;
+    cursor: pointer;
+  }
+  table.results td:first-child { text-align: left; }
+  table.results tr:hover td { background: var(--bg3); }
+  table.results tr.selected td { background: #0d1a16; }
+
+  .pos { color: var(--win); }
+  .neg { color: var(--loss); }
+  .neu { color: var(--yellow); }
+
+  /* Trade detail */
+  .trade-list { display: flex; flex-direction: column; gap: 8px; }
+  .trade-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 8px;
+    align-items: start;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .trade-card:hover { border-color: var(--accent); }
+  .trade-card.win { border-left: 2px solid var(--win); }
+  .trade-card.loss { border-left: 2px solid var(--loss); }
+  .trade-side {
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 2px 6px;
+    text-transform: uppercase;
+  }
+  .trade-side.long { background: #0d2e20; color: var(--win); }
+  .trade-side.short { background: #2e0d1a; color: var(--loss); }
+  .trade-meta { font-size: 10px; color: var(--muted); line-height: 1.8; }
+  .trade-pnl { font-size: 13px; font-weight: 600; text-align: right; }
+  .trade-frz { font-size: 10px; color: var(--muted); text-align: right; margin-top: 2px; }
+
+  /* Revert bar */
+  .revert-bar-wrap { margin-top: 3px; display: flex; align-items: center; gap: 6px; }
+  .revert-bar-bg {
+    flex: 1; height: 3px; background: var(--border);
+    position: relative;
+  }
+  .revert-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+  .revert-val { font-size: 10px; color: var(--accent); min-width: 36px; text-align: right; }
+
+  /* Stats bar */
+  .stats-row {
+    display: flex; gap: 20px; flex-wrap: wrap;
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+  }
+  .stat { display: flex; flex-direction: column; gap: 2px; }
+  .stat-label { font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .stat-value { font-size: 15px; font-weight: 600; }
+
+  .full-width { grid-column: 1 / -1; }
+  .empty { color: var(--muted); text-align: center; padding: 32px; font-size: 11px; }
+
+  .axis-label {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>PERCEPTRADE / SWEEP ANALYZER</h1>
+  <span id="meta">no data loaded</span>
+</header>
+
+<div style="margin-bottom:12px">
+  <button onclick="loadLatest()" style="background:var(--accent);color:#000;border:none;padding:8px 20px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:0.06em;">LOAD LATEST SWEEP</button>
+  <span id="loadStatus" style="margin-left:12px;font-size:11px;color:var(--muted)"></span>
+</div>
+
+<div class="upload-zone" id="dropZone">
+  <p>Drop <code>sweep_*.json</code> here or click to open</p>
+  <p class="hint">backtest/output/sweep_*.json</p>
+  <input type="file" id="fileInput" accept=".json">
+</div>
+
+<div id="main" style="display:none">
+
+  <div class="stats-row" id="statsBar"></div>
+
+  <div class="grid">
+    <!-- Heatmap: PnL by extreme × tp (sl fixed to best) -->
+    <div class="panel">
+      <div class="panel-title">PnL Heatmap — extreme × tp (best sl per cell)</div>
+      <div class="axis-label">↓ FR_Z_EXTREME &nbsp;→ TP_PCT</div>
+      <div class="heatmap-wrap" id="heatmapWrap"></div>
+    </div>
+
+    <!-- Top 10 ranked results -->
+    <div class="panel">
+      <div class="panel-title">Top Results — ranked by PnL</div>
+      <div style="overflow-x:auto">
+        <table class="results" id="resultsTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>extreme</th>
+              <th>tp</th>
+              <th>sl</th>
+              <th>trades</th>
+              <th>wr%</th>
+              <th>pnl%</th>
+              <th>avg_rev</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Trade detail for selected param set -->
+    <div class="panel full-width">
+      <div class="panel-title" id="tradeDetailTitle">TRADES — select a result above</div>
+      <div id="tradeDetail"><div class="empty">select a parameter combination to inspect trades</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let allResults = [];
+let selectedIdx = null;
+
+// ── Load latest from server ───────────────────────────────────────
+async function loadLatest() {
+  const status = document.getElementById('loadStatus');
+  status.textContent = 'loading...';
+  try {
+    const res = await fetch('/api/sweep-latest');
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    if (!data) throw new Error('no sweep files found');
+    allResults = data.results || [];
+    document.getElementById('meta').textContent =
+      `${allResults.length} combinations · ${data.generated?.slice(0,19).replace('T',' ')}`;
+    document.getElementById('dropZone').style.display = 'none';
+    document.getElementById('main').style.display = 'block';
+    status.textContent = 'loaded ✓';
+    render();
+  } catch(e) {
+    status.textContent = 'error: ' + e.message;
+  }
+}
+
+// ── Upload / drag ─────────────────────────────────────────────────
+const dropZone  = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if (f) loadFile(f);
+});
+fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+
+function loadFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      allResults = data.results || [];
+      document.getElementById('meta').textContent =
+        `${allResults.length} combinations · ${data.generated?.slice(0,19).replace('T',' ')}`;
+      document.getElementById('dropZone').style.display = 'none';
+      document.getElementById('main').style.display = 'block';
+      render();
+    } catch(err) { alert('Invalid JSON: ' + err.message); }
+  };
+  reader.readAsText(file);
+}
+
+// ── Color scale for heatmap ───────────────────────────────────────
+function pnlColor(val, min, max) {
+  if (val == null) return '#111418';
+  const norm = (val - min) / (max - min || 1);
+  // red → yellow → green
+  if (norm < 0.5) {
+    const t = norm * 2;
+    const r = Math.round(255);
+    const g = Math.round(77 + (209 - 77) * t);
+    const b = Math.round(109 * (1 - t));
+    return `rgba(${r},${g},${b},0.7)`;
+  } else {
+    const t = (norm - 0.5) * 2;
+    const r = Math.round(255 * (1 - t) + 0 * t);
+    const g = Math.round(209 + (212 - 209) * t);
+    const b = Math.round(0 + 170 * t);
+    return `rgba(${r},${g},${b},0.7)`;
+  }
+}
+
+// ── Render ────────────────────────────────────────────────────────
+function render() {
+  renderStats();
+  renderHeatmap();
+  renderTable();
+}
+
+function renderStats() {
+  const sorted = [...allResults].sort((a,b) => b.summary.total_pnl_net - a.summary.total_pnl_net);
+  const best = sorted[0];
+  const pnls = allResults.map(r => r.summary.total_pnl_net).filter(v => v != null);
+  const pos  = pnls.filter(v => v > 0).length;
+
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat">
+      <span class="stat-label">Best PnL</span>
+      <span class="stat-value ${best.summary.total_pnl_net >= 0 ? 'pos' : 'neg'}">
+        ${best.summary.total_pnl_net > 0 ? '+' : ''}${best.summary.total_pnl_net}%
+      </span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Best Params</span>
+      <span class="stat-value" style="font-size:12px">
+        ext=${best.params.FR_Z_EXTREME} tp=${best.params.TP_PCT} sl=${best.params.SL_PCT}
+      </span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Profitable</span>
+      <span class="stat-value pos">${pos} / ${pnls.length}</span>
+    </div>
+    <div class="stat">
+      <span class="stat-label">Best WR</span>
+      <span class="stat-value">${Math.max(...allResults.map(r => r.summary.win_rate || 0))}%</span>
+    </div>
+  `;
+}
+
+function renderHeatmap() {
+  const extremes = [...new Set(allResults.map(r => r.params.FR_Z_EXTREME))].sort((a,b)=>a-b);
+  const tps      = [...new Set(allResults.map(r => r.params.TP_PCT))].sort((a,b)=>a-b);
+
+  // For each (extreme, tp) cell: pick best sl by pnl
+  const cellMap = {};
+  allResults.forEach(r => {
+    const k = `${r.params.FR_Z_EXTREME}_${r.params.TP_PCT}`;
+    if (!cellMap[k] || r.summary.total_pnl_net > cellMap[k].summary.total_pnl_net) {
+      cellMap[k] = r;
+    }
+  });
+
+  const vals = Object.values(cellMap).map(r => r.summary.total_pnl_net).filter(v => v != null);
+  const min  = Math.min(...vals);
+  const max  = Math.max(...vals);
+
+  let html = '<table class="heatmap"><thead><tr><th>ext \\ tp</th>';
+  tps.forEach(tp => { html += `<th>${(tp*100).toFixed(1)}%</th>`; });
+  html += '</tr></thead><tbody>';
+
+  extremes.forEach(ext => {
+    html += `<tr><th>${ext}</th>`;
+    tps.forEach(tp => {
+      const k = `${ext}_${tp}`;
+      const r = cellMap[k];
+      const pnl = r?.summary.total_pnl_net;
+      const wr  = r?.summary.win_rate;
+      const bg  = pnlColor(pnl, min, max);
+      const ri  = allResults.indexOf(r);
+      html += `<td style="background:${bg}" data-idx="${ri}" title="sl=${r?.params.SL_PCT} trades=${r?.summary.total}">
+        <div style="font-weight:600">${pnl != null ? (pnl > 0 ? '+' : '') + pnl + '%' : '-'}</div>
+        <div style="font-size:10px;opacity:0.7">wr ${wr ?? '-'}%</div>
+      </td>`;
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('heatmapWrap').innerHTML = html;
+
+  document.querySelectorAll('table.heatmap td[data-idx]').forEach(td => {
+    td.addEventListener('click', () => selectResult(parseInt(td.dataset.idx)));
+  });
+}
+
+function renderTable() {
+  const sorted = [...allResults]
+    .map((r, i) => ({ ...r, _origIdx: i }))
+    .sort((a, b) => b.summary.total_pnl_net - a.summary.total_pnl_net)
+    .slice(0, 15);
+
+  const tbody = document.getElementById('resultsBody');
+  tbody.innerHTML = sorted.map((r, rank) => {
+    const s = r.summary;
+    const pnlClass = s.total_pnl_net > 0 ? 'pos' : 'neg';
+    return `<tr data-idx="${r._origIdx}" ${r._origIdx === selectedIdx ? 'class="selected"' : ''}>
+      <td class="muted">${rank+1}</td>
+      <td>${r.params.FR_Z_EXTREME}</td>
+      <td>${(r.params.TP_PCT*100).toFixed(1)}%</td>
+      <td>${(r.params.SL_PCT*100).toFixed(1)}%</td>
+      <td>${s.total}</td>
+      <td>${s.win_rate}%</td>
+      <td class="${pnlClass}">${s.total_pnl_net > 0 ? '+' : ''}${s.total_pnl_net}%</td>
+      <td>${s.avg_revert_ratio ?? '-'}</td>
+    </tr>`;
+  }).join('');
+
+  tbody.querySelectorAll('tr').forEach(tr => {
+    tr.addEventListener('click', () => selectResult(parseInt(tr.dataset.idx)));
+  });
+}
+
+function selectResult(idx) {
+  selectedIdx = idx;
+  renderTable();
+
+  // highlight heatmap cell
+  document.querySelectorAll('table.heatmap td').forEach(td => {
+    td.classList.toggle('selected', parseInt(td.dataset.idx) === idx);
+  });
+
+  const r = allResults[idx];
+  if (!r || !r.trades) {
+    document.getElementById('tradeDetailTitle').textContent = 'TRADES — no trade detail in this sweep file';
+    document.getElementById('tradeDetail').innerHTML = '<div class="empty">re-run sweep with trade output enabled</div>';
+    return;
+  }
+
+  renderTrades(r);
+}
+
+function renderTrades(result) {
+  const { trades, params, summary } = result;
+  document.getElementById('tradeDetailTitle').textContent =
+    `TRADES — extreme=${params.FR_Z_EXTREME} tp=${params.TP_PCT} sl=${params.SL_PCT}  [${summary.total} trades, WR ${summary.win_rate}%, PnL ${summary.total_pnl_net > 0 ? '+' : ''}${summary.total_pnl_net}%]`;
+
+  if (!trades || trades.length === 0) {
+    document.getElementById('tradeDetail').innerHTML = '<div class="empty">no trades</div>';
+    return;
+  }
+
+  const html = trades.map((t, i) => {
+    const ratio = t.frZ_revert_ratio;
+    const ratioBarW = ratio != null ? Math.min(100, Math.max(0, ratio * 100)) : 0;
+    const ratioColor = ratio > 0 ? 'var(--accent)' : ratio < 0 ? 'var(--loss)' : 'var(--muted)';
+    const pnlStr = (t.pnl_net > 0 ? '+' : '') + t.pnl_net + '%';
+
+    return `<div class="trade-card ${t.result}">
+      <span class="trade-side ${t.side}">${t.side}</span>
+      <div class="trade-meta">
+        <div>${t.entry_ts?.slice(5,16).replace('T',' ')} → ${t.exit_ts?.slice(11,16)} &nbsp;·&nbsp; ${t.close_reason}</div>
+        <div>entry $${t.entry_price?.toLocaleString()} → exit $${t.exit_price?.toLocaleString()}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:2px">
+          <span style="color:var(--muted)">revert</span>
+          <div class="revert-bar-bg" style="width:120px">
+            <div class="revert-bar-fill" style="width:${ratioBarW}%;background:${ratioColor}"></div>
+          </div>
+          <span style="color:${ratioColor};font-size:10px">${ratio != null ? ratio.toFixed(3) : 'n/a'}</span>
+          ${t.frZ_sign_flipped ? '<span style="color:var(--yellow);font-size:10px">FLIP</span>' : ''}
+        </div>
+      </div>
+      <div>
+        <div class="trade-pnl ${t.result === 'win' ? 'pos' : 'neg'}">${pnlStr}</div>
+        <div class="trade-frz">frZ ${t.frZ_at_entry ?? '?'} → ${t.frZ_at_close ?? '?'}</div>
+        <div class="trade-frz">min ${t.frZ_min_during_hold ?? '?'} / max ${t.frZ_max_during_hold ?? '?'}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('tradeDetail').innerHTML = `<div class="trade-list">${html}</div>`;
+}
+</script>
+</body>
+</html>
